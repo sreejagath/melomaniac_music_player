@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 
@@ -64,13 +65,14 @@ class _PlaylistState extends State<Playlist> {
     '12:30',
   ];
 
-List music = [
+  List music = [
     {
       'title': 'Malare',
       'artist': 'Rajesh Murugan',
       'url': 'assets/music/song.mp3'
     }
   ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -146,120 +148,125 @@ List music = [
                           return ListTile(
                             leading: Icon(Icons.music_note),
                             title: TextButton(
-                              
-                              style: TextButton.styleFrom(alignment: Alignment.centerLeft),
+                              style: TextButton.styleFrom(
+                                  alignment: Alignment.centerLeft),
                               child: Text(trackTitle[index]),
                               onPressed: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CurrentMusic(musicList: music,)));
+                                        builder: (context) => CurrentMusic(
+
+                                              musicList: music,
+                                            )));
                               },
                             ),
                             subtitle: Text(trackArtist[index]),
                             trailing: PopupMenuButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            itemBuilder: (context) => [
-                                  const PopupMenuItem(
-                                      child: Text('Add to queue')),
-                                  const PopupMenuItem(
-                                      child: Text('Add to playlist')),
-                                  PopupMenuItem(
-                                      child: TextButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                              shape: const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0))),
-                                              content: Column(
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/images/image1.jpg',
-                                                    width: 100,
-                                                    height: 100,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 30,
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: const [
-                                                      Text(
-                                                        'Title : On My Way',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Genera',
-                                                            fontSize: 20.0,
-                                                            color:
-                                                                Colors.black),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                itemBuilder: (context) => [
+                                      const PopupMenuItem(
+                                          child: Text('Add to queue')),
+                                      const PopupMenuItem(
+                                          child: Text('Add to playlist')),
+                                      PopupMenuItem(
+                                          child: TextButton(
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      10.0))),
+                                                  content: Column(
+                                                    children: [
+                                                      Image.asset(
+                                                        'assets/images/image1.jpg',
+                                                        width: 100,
+                                                        height: 100,
                                                       ),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 30,
                                                       ),
-                                                      Text(
-                                                        'Artist : Ed Sheeran',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Genera',
-                                                            fontSize: 15.0,
-                                                            color: Color(
-                                                                0xFF3A6878)),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: const [
+                                                          Text(
+                                                            'Title : On My Way',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Genera',
+                                                                fontSize: 20.0,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 30,
+                                                          ),
+                                                          Text(
+                                                            'Artist : Ed Sheeran',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Genera',
+                                                                fontSize: 15.0,
+                                                                color: Color(
+                                                                    0xFF3A6878)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 30,
+                                                          ),
+                                                          Text(
+                                                              'Artist : Ed Sheeran',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Genera',
+                                                                  fontSize:
+                                                                      15.0,
+                                                                  color: Color(
+                                                                      0xFF3A6878))),
+                                                          SizedBox(
+                                                            height: 30,
+                                                          ),
+                                                          Text('Year : 2019',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Genera',
+                                                                  fontSize:
+                                                                      15.0,
+                                                                  color: Color(
+                                                                      0xFF3A6878))),
+                                                        ],
                                                       ),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 30,
                                                       ),
-                                                      Text(
-                                                          'Artist : Ed Sheeran',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Genera',
-                                                              fontSize: 15.0,
-                                                              color: Color(
-                                                                  0xFF3A6878))),
-                                                      SizedBox(
-                                                        height: 30,
+                                                      ElevatedButton(
+                                                        onPressed: () {},
+                                                        child: const Text(
+                                                            'Search Lyrics'),
                                                       ),
-                                                      Text('Year : 2019',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Genera',
-                                                              fontSize: 15.0,
-                                                              color: Color(
-                                                                  0xFF3A6878))),
                                                     ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 30,
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () {},
-                                                    child:
-                                                        const Text('Search Lyrics'),
-                                                  ),
-                                                ],
-                                              )));
-                                    },
-                                    child: const Text(
-                                      'Song Info',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  )),
-                                  const PopupMenuItem(
-                                      child: Text('View Album')),
-                                  const PopupMenuItem(child: Text('Share')),
-                                ]),
+                                                  )));
+                                        },
+                                        child: const Text(
+                                          'Song Info',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      )),
+                                      const PopupMenuItem(
+                                          child: Text('View Album')),
+                                      const PopupMenuItem(child: Text('Share')),
+                                    ]),
                           );
                         },
                       ),
-
                     );
                   });
             },

@@ -4,18 +4,55 @@ import 'package:audioplayers/audioplayers.dart';
 
 class CurrentMusic extends StatefulWidget {
   final List musicList;
-  const CurrentMusic({Key? key, required this.musicList}) : super(key: key);
+  const CurrentMusic({
+    Key? key,
+    required this.musicList,
+  }) : super(key: key);
 
   @override
   _CurrentMusicState createState() => _CurrentMusicState();
 }
 
 class _CurrentMusicState extends State<CurrentMusic> {
+  AudioCache audioCache =
+      AudioCache(prefix: 'assets/music/', fixedPlayer: AudioPlayer());
   AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+  bool isPlaying = false;
+  String currentSong = "";
+
+  @override
+  void initState() {
+    super.initState();
+    audioCache.play('song.mp3');
+    isPlaying = true;
+  }
+
+  IconData btnIcon = Icons.pause;
+
   //late String tracks = this.tracks;
   @override
   Widget build(BuildContext context) {
     List music = widget.musicList;
+
+    // void playMusic(String url) async {
+    //   if (isPlaying && currentSong != url) {
+    //     audioPlayer.pause();
+    //     int result = await audioPlayer.play(url);
+    //     if (result == 1) {
+    //       setState(() {
+    //         currentSong = url;
+    //       });
+    //     } else if (!isPlaying) {
+    //       int result = await audioPlayer.play(url);
+    //       if (result == 1) {
+    //         setState(() {
+    //           isPlaying = true;
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -124,16 +161,24 @@ class _CurrentMusicState extends State<CurrentMusic> {
               radius: 30,
               backgroundColor: Colors.black,
               child: IconButton(
-                  color: Colors.black,
-                  //padding: EdgeInsets.all(20),
-                  iconSize: 35,
-                  icon: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    // do something
-                  }),
+                iconSize: 35,
+                icon: Icon(btnIcon),
+                onPressed: () {
+                  if (isPlaying) {
+                    audioPlayer.pause();
+                    setState(() {
+                      isPlaying = false;
+                      btnIcon = Icons.play_arrow;
+                    });
+                  } else {
+                    audioPlayer.resume();
+                    setState(() {
+                      isPlaying = true;
+                      btnIcon = Icons.pause;
+                    });
+                  }
+                },
+              ),
             ),
             const Icon(Icons.skip_next),
           ])

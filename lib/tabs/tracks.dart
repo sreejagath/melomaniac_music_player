@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/main.dart';
 import 'package:music_player/tabs/player.dart';
@@ -60,6 +61,8 @@ class _TracksState extends State<Tracks> {
 
   @override
   Widget build(BuildContext context) {
+    AudioCache audioCache = AudioCache(prefix: 'assets/music/');
+    AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
     //List mu = music[0].toList();
     //final _tracks = music;
     return ListView.builder(
@@ -181,8 +184,9 @@ class _TracksState extends State<Tracks> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                CurrentMusic(musicList: music)));
+                            builder: (context) => CurrentMusic(
+                                musicList: music,)));
+                    audioCache.play('song.mp3');
                   },
                 ),
                 const Divider(

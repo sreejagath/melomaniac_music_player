@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
@@ -25,6 +26,8 @@ class _HomePageState extends State<HomePage>
   // ignore: unused_field
   late TabController _tabController;
   static int _selectedIndex = 0;
+  AudioPlayer audioPlayer = AudioPlayer();
+  AudioCache audioCache = AudioCache();
 
   List music = [
     {
@@ -48,13 +51,15 @@ class _HomePageState extends State<HomePage>
   static List<Widget> _widgetOptions = <Widget>[
     Tracklist(),
     SearchTrack(),
-    CurrentMusic(musicList: [
-    {
-      'title': 'Malare',
-      'artist': 'Rajesh Murugan',
-      'url': 'assets/music/song.mp3'
-    }
-  ]),
+    CurrentMusic(
+      musicList: [
+        {
+          'title': 'Malare',
+          'artist': 'Rajesh Murugan',
+          'url': 'assets/music/song.mp3'
+        }
+      ],
+    ),
     Playlist(),
     Settings(),
   ];
@@ -117,7 +122,9 @@ class _HomePageState extends State<HomePage>
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return CurrentMusic(musicList: music,);
+            return CurrentMusic(
+              musicList: music,
+            );
           }));
         },
         child: const Icon(
