@@ -37,6 +37,7 @@ dependencies:
   tab_indicator_styler: ^2.0.0
   persistent_bottom_nav_bar: ^4.0.2
   audioplayers: ^0.20.1
+  just_audio: ^0.9.13
 
 dev_dependencies:
   flutter_test:

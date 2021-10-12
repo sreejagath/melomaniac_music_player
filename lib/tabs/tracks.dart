@@ -53,7 +53,7 @@ class _TracksState extends State<Tracks> {
   List music = [
     {
       'title': 'Malare',
-      'artist': 'Rajesh Murugan',
+      'artist': 'Rajesh Murugeshan',
       'url': 'assets/music/song.mp3',
       'image': 'assets/images/malare.jpg'
     },
@@ -61,8 +61,6 @@ class _TracksState extends State<Tracks> {
 
   @override
   Widget build(BuildContext context) {
-    AudioCache audioCache = AudioCache(prefix: 'assets/music/');
-    AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
     //List mu = music[0].toList();
     //final _tracks = music;
     return ListView.builder(
@@ -186,7 +184,6 @@ class _TracksState extends State<Tracks> {
                         MaterialPageRoute(
                             builder: (context) => CurrentMusic(
                                 musicList: music,)));
-                    audioCache.play('song.mp3');
                   },
                 ),
                 const Divider(

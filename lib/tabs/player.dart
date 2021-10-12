@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/tracks.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
 class CurrentMusic extends StatefulWidget {
   final List musicList;
@@ -14,18 +14,21 @@ class CurrentMusic extends StatefulWidget {
 }
 
 class _CurrentMusicState extends State<CurrentMusic> {
-  AudioCache audioCache =
-      AudioCache(prefix: 'assets/music/', fixedPlayer: AudioPlayer());
-  AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
   bool isPlaying = false;
   String currentSong = "";
+  AudioPlayer audioPlayer= AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    audioCache.play('song.mp3');
-    isPlaying = true;
+    audioPlayer.setAsset('assets/music/song.mp3');
+    audioPlayer.play();
   }
+  @override
+void dispose() {
+  audioPlayer.dispose();
+  super.dispose();
+}
 
   IconData btnIcon = Icons.pause;
 
@@ -127,7 +130,9 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          isPlaying = true;
+                        },
                         icon: const Icon(Icons.favorite_border)),
                     const SizedBox(
                       width: 10,
@@ -171,12 +176,13 @@ class _CurrentMusicState extends State<CurrentMusic> {
                       btnIcon = Icons.play_arrow;
                     });
                   } else {
-                    audioPlayer.resume();
+                    audioPlayer.play();
                     setState(() {
                       isPlaying = true;
                       btnIcon = Icons.pause;
                     });
                   }
+                  print(isPlaying);
                 },
               ),
             ),
