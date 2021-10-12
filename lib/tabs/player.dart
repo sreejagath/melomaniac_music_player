@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/tracks.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CurrentMusic extends StatefulWidget {
   final List musicList;
@@ -16,19 +18,29 @@ class CurrentMusic extends StatefulWidget {
 class _CurrentMusicState extends State<CurrentMusic> {
   bool isPlaying = false;
   String currentSong = "";
-  AudioPlayer audioPlayer= AudioPlayer();
+  AudioPlayer audioPlayer = AudioPlayer();
+  late Stream<DurationState> _durationState;
 
   @override
   void initState() {
     super.initState();
     audioPlayer.setAsset('assets/music/song.mp3');
     audioPlayer.play();
+    _durationState = Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
+        audioPlayer.positionStream,
+        audioPlayer.playbackEventStream,
+        (position, playbackEvent) => DurationState(
+              progress: position,
+              buffered: playbackEvent.bufferedPosition,
+              total: playbackEvent.duration!,
+            ));
   }
+
   @override
-void dispose() {
-  audioPlayer.dispose();
-  super.dispose();
-}
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   IconData btnIcon = Icons.pause;
 
@@ -75,7 +87,7 @@ void dispose() {
       body: Column(
         children: [
           const SizedBox(
-            height: 50,
+            height: 100,
           ),
           Container(
               height: 200,
@@ -143,23 +155,47 @@ void dispose() {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              children: [
-                const Text('00:00'),
-                Expanded(
-                  child: SliderTheme(
-                      data: const SliderThemeData(
-                        thumbColor: Colors.black,
-                        inactiveTrackColor: Colors.grey,
-                      ),
-                      child: Slider(value: 0, onChanged: (value) {})),
+          StreamBuilder<DurationState>(
+            stream: _durationState,
+            builder: (context, snapshot) {
+              final durationState = snapshot.data;
+              final progress = durationState?.progress ?? Duration.zero;
+              final buffered = durationState?.buffered ?? Duration.zero;
+              final total = durationState?.total ?? Duration.zero;
+              return Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ProgressBar(
+                  progress: progress,
+                  buffered: buffered,
+                  total: total,
+                  onSeek: (duration) {
+                    audioPlayer.seek(duration);
+                  },
+                  thumbColor: Colors.black,
+                  baseBarColor: Colors.grey,
+                  bufferedBarColor: Colors.grey,
+                  progressBarColor: Colors.black,
                 ),
-                const Text('03:40')
-              ],
-            ),
+              );
+            },
           ),
+          // Padding(
+          //   padding: const EdgeInsets.all(15.0),
+          //   child: Row(
+          //     children: [
+          //       const Text('00:00'),
+          //       Expanded(
+          //         child: SliderTheme(
+          //             data: const SliderThemeData(
+          //               thumbColor: Colors.black,
+          //               inactiveTrackColor: Colors.grey,
+          //             ),
+          //             child: Slider(value: 0, onChanged: (value) {})),
+          //       ),
+          //       const Text('03:40')
+          //     ],
+          //   ),
+          // ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             const Icon(Icons.skip_previous),
             CircleAvatar(
@@ -192,4 +228,12 @@ void dispose() {
       ),
     );
   }
+}
+
+class DurationState {
+  const DurationState(
+      {required this.progress, required this.buffered, required this.total});
+  final Duration progress;
+  final Duration buffered;
+  final Duration total;
 }
