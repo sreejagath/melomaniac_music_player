@@ -1,6 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/main.dart';
 import 'package:music_player/tabs/player.dart';
 
 class Tracks extends StatefulWidget {
@@ -100,6 +98,7 @@ class _TracksState extends State<Tracks> {
                             const PopupMenuItem(child: Text('Add to playlist')),
                             PopupMenuItem(
                               child: const Text('Song Info'),
+                              value: 3,
                               onTap: () {
                                 showDialog(
                                     context: context,
@@ -183,7 +182,8 @@ class _TracksState extends State<Tracks> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CurrentMusic(
-                                musicList: music,)));
+                                  musicList: music,
+                                )));
                   },
                 ),
                 const Divider(

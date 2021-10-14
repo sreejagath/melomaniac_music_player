@@ -55,21 +55,6 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
               value: percent * widget.duration.inMilliseconds.toDouble(),
               activeColor: Colors.black,
               inactiveColor: Colors.grey,
-              // style: const SliderStyle(
-              //   variant: Colors.black,
-              //   accent: Colors.white,
-              // ),
-              // onChangeEnd: (newValue) {
-              //   setState(() {
-              //     listenOnlyUserInterraction = false;
-              //     widget.seekTo(_visibleValue);
-              //   });
-              // },
-              // onChangeStart: (_) {
-              //   setState(() {
-              //     listenOnlyUserInterraction = true;
-              //   });
-              // },
               onChanged: (newValue) {
                 setState(() {
                   final to = Duration(milliseconds: newValue.floor());

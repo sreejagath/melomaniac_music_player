@@ -38,10 +38,6 @@ class _SettingsState extends State<Settings> {
                 leading: Icon(Icons.share),
               ),
               const ListTile(
-                title: Text('About'),
-                leading: Icon(Icons.notes),
-              ),
-              const ListTile(
                 title: Text('Terms & Conditions'),
                 leading: Icon(Icons.book),
               ),
@@ -51,6 +47,10 @@ class _SettingsState extends State<Settings> {
               ),
             ],
           ),
+          const ListTile(
+                title: Text('About'),
+                leading: Icon(Icons.notes),
+              ),
           const SizedBox(
             height: 20,
           ),

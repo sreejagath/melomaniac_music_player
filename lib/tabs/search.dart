@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/tabs/player.dart';
 
 class SearchTrack extends StatefulWidget {
   const SearchTrack({Key? key}) : super(key: key);
@@ -8,6 +9,14 @@ class SearchTrack extends StatefulWidget {
 }
 
 class _SearchTrackState extends State<SearchTrack> {
+  List music = [
+    {
+      'title': 'Malare',
+      'artist': 'Rajesh Murugeshan',
+      'url': 'assets/music/song.mp3',
+      'image': 'assets/images/malare.jpg'
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -25,13 +34,65 @@ class _SearchTrackState extends State<SearchTrack> {
               // focusedBorder: UnderlineInputBorder(
               //   borderSide: BorderSide(color: Colors.black),),
               border: OutlineInputBorder(
-
                 borderRadius: BorderRadius.circular(10),
-                
               ),
             ),
           ),
         ),
+        SizedBox(
+          height: 15,
+        ),
+        Column(
+          children: [
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: music.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage(music[index]['image']),
+                      ),
+                      title: Text(
+                        music[index]['title'],
+                        style: const TextStyle(
+                          fontFamily: 'Genera',
+                          fontSize: 15.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                      subtitle: Text(
+                        music[index]['artist'],
+                        style: const TextStyle(
+                          fontFamily: 'Genera',
+                          fontSize: 15.0,
+                          color: Color(0xFF3A6878),
+                        ),
+                      ),
+                      onTap: () {
+                        print(music[index]);
+                        print(music);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CurrentMusic(
+                                      musicList: music,
+                                    )));
+                      },
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      height: 10,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        )
       ])),
     );
   }
