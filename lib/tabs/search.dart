@@ -39,7 +39,7 @@ class _SearchTrackState extends State<SearchTrack> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         Column(

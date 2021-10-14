@@ -73,7 +73,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
           const SizedBox(
             height: 100,
           ),
-          Container(
+          SizedBox(
               height: 200,
               width: 200,
               child: ClipRRect(
@@ -94,17 +94,17 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     children: [
                       Text(
                         music[0]['title'],
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Genera',
                             fontSize: 20),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Text(
                         music[0]['artist'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Genera',
                         ),
@@ -138,19 +138,22 @@ class _CurrentMusicState extends State<CurrentMusic> {
           assetsAudioPlayer.builderRealtimePlayingInfos(
               builder: (context, RealtimePlayingInfos? infos) {
             if (infos == null) {
-              return SizedBox();
+              return const SizedBox();
             }
             //print('infos: $infos');
             return Column(
               children: [
-                PositionSeekWidget(
-                  currentPosition: infos.currentPosition,
-                  duration: infos.duration,
-                  seekTo: (to) {
-                    assetsAudioPlayer.seek(to);
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: PositionSeekWidget(
+                    currentPosition: infos.currentPosition,
+                    duration: infos.duration,
+                    seekTo: (to) {
+                      assetsAudioPlayer.seek(to);
+                    },
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Row(
@@ -158,20 +161,20 @@ class _CurrentMusicState extends State<CurrentMusic> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        assetsAudioPlayer.seekBy(Duration(seconds: -10));
+                        assetsAudioPlayer.seekBy(const Duration(seconds: -10));
                       },
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     IconButton(
                       onPressed: () {
-                        assetsAudioPlayer.seekBy(Duration(seconds: -10));
+                        assetsAudioPlayer.seekBy(const Duration(seconds: -10));
                       },
-                      icon: Icon(Icons.skip_previous),
+                      icon: const Icon(Icons.skip_previous),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     CircleAvatar(
@@ -199,23 +202,23 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     IconButton(
                       onPressed: () {
-                        assetsAudioPlayer.seekBy(Duration(seconds: -10));
+                        assetsAudioPlayer.seekBy(const Duration(seconds: -10));
                       },
-                      icon: Icon(Icons.skip_next),
+                      icon: const Icon(Icons.skip_next),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12,
                     ),
                     IconButton(
                       onPressed: () {
-                        assetsAudioPlayer.seekBy(Duration(seconds: 10));
+                        assetsAudioPlayer.seekBy(const Duration(seconds: 10));
                       },
-                      icon: Icon(Icons.arrow_forward),
+                      icon: const Icon(Icons.arrow_forward),
                     ),
                   ],
                 )
