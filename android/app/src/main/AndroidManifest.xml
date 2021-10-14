@@ -2,6 +2,8 @@
     package="com.example.music_player">
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    flutter pub add on_audio_query<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
         android:label="music_player"
         android:icon="@mipmap/ic_launcher">

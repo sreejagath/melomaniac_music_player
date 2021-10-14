@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:music_player/player/position_seek_widget.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class CurrentMusic extends StatefulWidget {
   final List musicList;
@@ -22,19 +23,36 @@ class _CurrentMusicState extends State<CurrentMusic> {
   @override
   void initState() {
     super.initState();
-    assetsAudioPlayer.open(
-        Audio(
-          "assets/music/song.mp3",
-          metas: Metas(
-            title: widget.musicList[0]['title'],
-            artist: widget.musicList[0]['artist'],
-            //album: "CountryAlbum",
-            image: MetasImage.asset(
-                widget.musicList[0]['image']), //can be MetasImage.network
+    print(widget.musicList);
+    if (widget.musicList[0]['asset'] == 'true') {
+      assetsAudioPlayer.open(
+          Audio(
+            widget.musicList[0]['uri'],
+            metas: Metas(
+              title: widget.musicList[0]['title'],
+              artist: widget.musicList[0]['artist'],
+              //album: "CountryAlbum",
+              image: MetasImage.asset(
+                  widget.musicList[0]['id']), //can be MetasImage.network
+            ),
           ),
-        ),
-        autoStart: true,
-        showNotification: true);
+          autoStart: true,
+          showNotification: true);
+    } else if (widget.musicList[0]['asset'] == 'false') {
+      assetsAudioPlayer.open(
+          Audio.file(
+            widget.musicList[0]['uri'],
+            metas: Metas(
+              title: widget.musicList[0]['title'],
+              artist: widget.musicList[0]['artist'],
+              //album: "CountryAlbum",
+              // image: MetasImage.asset(
+              //     widget.musicList[0]['id']), //can be MetasImage.network
+            ),
+          ),
+          autoStart: true,
+          showNotification: true);
+    }
   }
 
   @override
@@ -71,14 +89,21 @@ class _CurrentMusicState extends State<CurrentMusic> {
       body: Column(
         children: [
           const SizedBox(
-            height: 100,
+            height: 50,
           ),
           SizedBox(
-              height: 200,
-              width: 200,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.asset(music[0]['image']))),
+            height: 150,
+            width: 150,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: widget.musicList[0]['asset'] =='true'
+                  ? Image.asset(music[0]['id'])
+                  : QueryArtworkWidget(
+                      id: music[0]['id'],
+                      type: ArtworkType.AUDIO,
+                    ),
+            ),
+          ),
           const SizedBox(
             height: 20,
           ),

@@ -156,7 +156,6 @@ class _PlaylistState extends State<Playlist> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => CurrentMusic(
-
                                               musicList: music,
                                             )));
                               },

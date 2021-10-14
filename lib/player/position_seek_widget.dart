@@ -46,7 +46,10 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
         children: <Widget>[
           SizedBox(
             width: 40,
-            child: Text(durationToString(widget.currentPosition)),
+            child: Text(
+              durationToString(widget.currentPosition),
+              style: TextStyle(fontWeight:FontWeight.bold,)
+            ),
           ),
           Expanded(
             child: Slider(
@@ -65,7 +68,8 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
           ),
           SizedBox(
             width: 40,
-            child: Text(durationToString(widget.duration)),
+            child: Text(durationToString(widget.duration),
+              style: TextStyle(fontWeight:FontWeight.bold,)),
           ),
         ],
       ),

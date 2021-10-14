@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Tracks extends StatefulWidget {
   const Tracks({Key? key}) : super(key: key);
@@ -9,6 +11,7 @@ class Tracks extends StatefulWidget {
 }
 
 class _TracksState extends State<Tracks> {
+  final OnAudioQuery _audioQuery = OnAudioQuery();
   List<String> trackTitle = [
     'On My Way',
     'Thunder',
@@ -52,16 +55,36 @@ class _TracksState extends State<Tracks> {
     {
       'title': 'Malare',
       'artist': 'Rajesh Murugeshan',
-      'url': 'assets/music/song.mp3',
-      'image': 'assets/images/malare.jpg'
+      'uri': 'assets/music/song.mp3',
+      'id': 'assets/images/malare.jpg',
+      'asset': 'true'
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    requestPermission();
+  }
+
+  requestPermission() async {
+    // Web platform don't support permissions methods.
+    if (!kIsWeb) {
+      bool permissionStatus = await _audioQuery.permissionsStatus();
+      if (!permissionStatus) {
+        await _audioQuery.permissionsRequest();
+      }
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     //List mu = music[0].toList();
     //final _tracks = music;
     return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       itemCount: music.length,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -72,7 +95,7 @@ class _TracksState extends State<Tracks> {
                 ListTile(
                   leading: CircleAvatar(
                     radius: 25,
-                    backgroundImage: AssetImage(music[index]['image']),
+                    backgroundImage: AssetImage(music[index]['id']),
                   ),
                   title: Text(
                     music[index]['title'],
@@ -190,11 +213,92 @@ class _TracksState extends State<Tracks> {
                   color: Colors.black,
                   height: 10,
                 ),
+                FutureBuilder<List<SongModel>>(
+                  // Default values:
+                  future: _audioQuery.querySongs(
+                    sortType: null,
+                    orderType: OrderType.ASC_OR_SMALLER,
+                    uriType: UriType.EXTERNAL,
+                    ignoreCase: true,
+                  ),
+                  builder: (context, item) {
+                    // Loading content
+                    if (item.data == null)
+                      return const CircularProgressIndicator();
+
+                    // When you try "query" without asking for [READ] or [Library] permission
+                    // the plugin will return a [Empty] list.
+                    if (item.data!.isEmpty) return const Text("Nothing found!");
+
+                    // You can use [item.data!] direct or you can create a:
+                    // List<SongModel> songs = item.data!;
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: item.data!.length,
+                      itemBuilder: (context, index) {
+                        List data = [
+                          {
+                            'title': item.data![index].title,
+                            'artist': item.data![index].artist,
+                            'uri': item.data![index].uri,
+                            'id': item.data![index].id,
+                            'asset': 'false'
+                          }
+                        ];
+                        return ListTile(
+                            title: Text(
+                              item.data![index].title,
+                              style: const TextStyle(
+                                fontFamily: 'Genera',
+                                fontSize: 15.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                            subtitle: Text(
+                              item.data![index].artist ?? "No Artist",
+                              style: const TextStyle(
+                                fontFamily: 'Genera',
+                                fontSize: 15.0,
+                                color: Color(0xFF3A6878),
+                              ),
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_rounded),
+                            // This Widget will query/load image. Just add the id and type.
+                            // You can use/create your own widget/method using [queryArtwork].
+                            leading: QueryArtworkWidget(
+                              id: item.data![index].id,
+                              type: ArtworkType.AUDIO,
+                            ),
+                            //onTap: openPage(data),
+                            onTap: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          CurrentMusic(musicList: data)));
+                              print(data);
+                            });
+                      },
+                    );
+                  },
+                ),
+                const Divider(
+                  color: Colors.black,
+                  height: 10,
+                ),
               ],
             ),
           ),
         );
       },
     );
+  }
+
+  openPage(List audio) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => CurrentMusic(musicList: music)));
   }
 }

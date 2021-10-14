@@ -33,7 +33,8 @@ class _HomePageState extends State<HomePage>
     {
       'title': 'Malare',
       'artist': 'Rajesh Murugan',
-      'url': 'assets/music/song.mp3'
+      'url': 'assets/music/song.mp3',
+      'id': 'assets/images/malare.jpg'
     }
   ];
   @override
