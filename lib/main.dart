@@ -102,10 +102,13 @@ class _HomePageState extends State<HomePage>
             label: 'Search',
           ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.music_note_rounded,
-                color: Colors.black,
-                size: 0,
+              icon: Visibility(
+                visible: false,
+                child: Icon(
+                  Icons.music_note_rounded,
+                  color: Colors.black,
+                  size: 0,
+                ),
               ),
               label: ''),
           BottomNavigationBarItem(

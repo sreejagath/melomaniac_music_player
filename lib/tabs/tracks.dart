@@ -225,13 +225,7 @@ class _TracksState extends State<Tracks> {
                     // Loading content
                     if (item.data == null)
                       return const CircularProgressIndicator();
-
-                    // When you try "query" without asking for [READ] or [Library] permission
-                    // the plugin will return a [Empty] list.
                     if (item.data!.isEmpty) return const Text("Nothing found!");
-
-                    // You can use [item.data!] direct or you can create a:
-                    // List<SongModel> songs = item.data!;
                     return ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
@@ -246,46 +240,51 @@ class _TracksState extends State<Tracks> {
                             'asset': 'false'
                           }
                         ];
-                        return ListTile(
-                            title: Text(
-                              item.data![index].title,
-                              style: const TextStyle(
-                                fontFamily: 'Genera',
-                                fontSize: 15.0,
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ListTile(
+                                  title: Text(
+                                    item.data![index].title,
+                                    style: const TextStyle(
+                                      fontFamily: 'Genera',
+                                      fontSize: 15.0,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    item.data![index].artist ?? "No Artist",
+                                    style: const TextStyle(
+                                      fontFamily: 'Genera',
+                                      fontSize: 15.0,
+                                      color: Color(0xFF3A6878),
+                                    ),
+                                  ),
+                                  trailing:
+                                      const Icon(Icons.arrow_forward_rounded),
+                                  leading: QueryArtworkWidget(
+                                    id: item.data![index].id,
+                                    type: ArtworkType.AUDIO,
+                                  ),
+                                  //onTap: openPage(data),
+                                  onTap: () async {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                CurrentMusic(musicList: data)));
+                                    print(data);
+                                  }),
+                              const Divider(
                                 color: Colors.black,
+                                height: 10,
                               ),
-                            ),
-                            subtitle: Text(
-                              item.data![index].artist ?? "No Artist",
-                              style: const TextStyle(
-                                fontFamily: 'Genera',
-                                fontSize: 15.0,
-                                color: Color(0xFF3A6878),
-                              ),
-                            ),
-                            trailing: const Icon(Icons.arrow_forward_rounded),
-                            // This Widget will query/load image. Just add the id and type.
-                            // You can use/create your own widget/method using [queryArtwork].
-                            leading: QueryArtworkWidget(
-                              id: item.data![index].id,
-                              type: ArtworkType.AUDIO,
-                            ),
-                            //onTap: openPage(data),
-                            onTap: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          CurrentMusic(musicList: data)));
-                              print(data);
-                            });
+                            ],
+                          ),
+                        );
                       },
                     );
                   },
-                ),
-                const Divider(
-                  color: Colors.black,
-                  height: 10,
                 ),
               ],
             ),

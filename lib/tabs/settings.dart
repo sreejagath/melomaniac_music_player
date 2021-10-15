@@ -8,7 +8,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool _switchValue = false;
+  bool notification = false;
   @override
   Widget build(BuildContext context) {
     //List view of settings
@@ -28,9 +28,9 @@ class _SettingsState extends State<Settings> {
                 leading: const Icon(Icons.notifications),
                 trailing: Switch(
                   onChanged: (value) => setState(() {
-                    _switchValue = value;
+                    notification = value;
                   }),
-                  value: _switchValue,
+                  value: notification,
                 ),
               ),
               const ListTile(
@@ -48,9 +48,9 @@ class _SettingsState extends State<Settings> {
             ],
           ),
           const ListTile(
-                title: Text('About'),
-                leading: Icon(Icons.notes),
-              ),
+            title: Text('About'),
+            leading: Icon(Icons.notes),
+          ),
           const SizedBox(
             height: 20,
           ),
