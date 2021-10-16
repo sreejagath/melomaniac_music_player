@@ -2,16 +2,27 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
-import 'package:music_player/tabs/tracks.dart';
-import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:music_player/tabs/search.dart';
 import 'package:music_player/tabs/playlist.dart';
 import 'package:music_player/tabs/settings.dart';
+import 'package:hive/hive.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
-void main() {
-  runApp(MaterialApp(
+final OnAudioQuery _audioQuery = OnAudioQuery();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MaterialApp(
     home: HomePage(),
   ));
+
+  //var musicBox = await Hive.openBox('musicBox');
+  List musicList = await _audioQuery.querySongs();
+  // await musicBox.put('music', musicList);
+  // List music = musicBox.get('music');
+  // print(music);
+
+  print(musicList);
 }
 
 class HomePage extends StatefulWidget {

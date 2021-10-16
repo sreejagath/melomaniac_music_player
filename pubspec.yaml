@@ -46,6 +46,7 @@ dependencies:
       url: https://github.com/tsvillain/Flutter-Neumorphic.git
   path: ^1.8.0
   on_audio_query: ^2.4.2
+  hive: ^2.0.4
 
 dev_dependencies:
   flutter_test:
