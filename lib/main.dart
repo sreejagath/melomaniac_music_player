@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
@@ -7,22 +9,34 @@ import 'package:music_player/tabs/playlist.dart';
 import 'package:music_player/tabs/settings.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:music_player/tracks_model/data_model.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
+List musicData = [];
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MaterialApp(
     home: HomePage(),
   ));
-
-  //var musicBox = await Hive.openBox('musicBox');
-  List musicList = await _audioQuery.querySongs();
-  // await musicBox.put('music', musicList);
-  // List music = musicBox.get('music');
-  // print(music);
-
-  print(musicList);
+  await Hive.initFlutter();
+  Hive.registerAdapter(MusicModelAdapter());
+  var musicBox = await Hive.openBox('musicBox');
+  List<SongModel> musicList = await _audioQuery.querySongs();
+  musicList.forEach((element) {
+    musicData.add({
+      'title': element.title,
+      'artist': element.artist,
+      'id': element.id,
+      'uri': element.uri,
+      'album': element.album
+    });
+  });
+  for (var i = 0; i < musicList.length; i++) {
+    musicBox.put(i, musicData);
+  }
 }
 
 class HomePage extends StatefulWidget {
