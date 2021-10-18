@@ -10,7 +10,8 @@ import 'package:music_player/tabs/settings.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/tracks_model/data_model.dart';
+import 'package:music_player/db_model/data_model.dart';
+import 'package:get/get.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
@@ -18,7 +19,7 @@ List musicData = [];
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MaterialApp(
+  runApp(GetMaterialApp(
     home: HomePage(),
   ));
   await Hive.initFlutter();
