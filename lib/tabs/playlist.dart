@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_print
+
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:music_player/db_model/playlist_model.dart';
 import 'package:music_player/tabs/player.dart';
+import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/tracks.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
@@ -20,18 +24,17 @@ class _PlaylistState extends State<Playlist> {
   void initState() {
     super.initState();
     musicSearch();
-    Hive.registerAdapter(PlaylistModelAdapter());
   }
 
   musicSearch() async {
     var musicBox = await Hive.openBox('musicBox');
-
+    var playlistBox = await Hive.openBox('playlistBox');
     setState(() {
       musics = musicBox.get(1);
     });
   }
 
-  List<String> Playlist = [
+  List<String> PlaylistsData = [
     'Sleepy',
     'Romantic',
     'Rahman Hits',
@@ -93,11 +96,6 @@ class _PlaylistState extends State<Playlist> {
       'url': 'assets/music/song.mp3'
     }
   ];
-
-  List PlaylistData = [];
-  Widget add = Text('Add');
-  bool addtoPlaylist = false;
-
   @override
   Widget build(BuildContext context) {
     TextEditingController _playlist = TextEditingController();
@@ -111,120 +109,33 @@ class _PlaylistState extends State<Playlist> {
             child: Row(children: [
               TextButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20.0))),
-                    backgroundColor: Colors.white,
-                    context: context,
-                    builder: (context) => Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18),
-                        child: Form(
-                            child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 20,
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Add to Playlist'),
+                          content: TextField(
+                            controller: _playlist,
+                            decoration: InputDecoration(
+                              hintText: 'Playlist Name',
                             ),
-                            const Text('New Playlist',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            const SizedBox(
-                              height: 20,
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text('Add'),
+                              onPressed: () {},
                             ),
-                            TextFormField(
-                                controller: _playlist,
-                                decoration: const InputDecoration(
-                                  hintText: 'New Playlist',
-                                  prefixIcon: Icon(Icons.add),
-                                )),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  List playdata = [];
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('Tracks'),
-                                          content: Container(
-                                              width: double.minPositive,
-                                              child: ListView.builder(
-                                                  scrollDirection:
-                                                      Axis.vertical,
-                                                  shrinkWrap: true,
-                                                  itemCount: musics.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    List data = [
-                                                      {
-                                                        'title': musics[index]
-                                                            ['title'],
-                                                        'artist': musics[index]
-                                                            ['artist'],
-                                                        'uri': musics[index]
-                                                            ['uri'],
-                                                        'id': musics[index]
-                                                            ['id'],
-                                                        'asset': 'false'
-                                                      }
-                                                    ];
-                                                    return Column(
-                                                      children: [
-                                                        ListTile(
-                                                            title: Text(
-                                                              musics[index]
-                                                                  ['title'],
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontFamily:
-                                                                    'Genera',
-                                                                fontSize: 15.0,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-                                                            ),
-                                                            subtitle: Text(
-                                                              musics[index][
-                                                                      'artist'] ??
-                                                                  "No Artist",
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontFamily:
-                                                                    'Genera',
-                                                                fontSize: 15.0,
-                                                                color: Color(
-                                                                    0xFF3A6878),
-                                                              ),
-                                                            ),
-                                                            leading: Checkbox(
-                                                                activeColor: Color(
-                                                                    0xFF3A6878),
-                                                                value:
-                                                                    isChecked[
-                                                                        index],
-                                                                onChanged:
-                                                                    (checked) {
-                                                                  setState(() {
-                                                                    isChecked[
-                                                                            index] =
-                                                                        checked!;
-                                                                  });
-                                                                  playdata = [
-                                                                    {}
-                                                                  ];
-                                                                })),
-                                                      ],
-                                                    );
-                                                  })),
-                                        );
-                                      });
-                                },
-                                child: const Text('Create'))
+                            TextButton(
+                              child: Text('Cancel'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                           ],
-                        ))),
-                  );
+                        );
+                      });
                 },
+                
                 child: Row(
                   children: [
                     Icon(Icons.add),
@@ -428,7 +339,7 @@ class _PlaylistState extends State<Playlist> {
                 return ListTile(
                   leading: const Icon(Icons.music_note, color: Colors.black),
                   title: Text(
-                    Playlist[index],
+                    PlaylistsData[index],
                     style: const TextStyle(
                         fontWeight: FontWeight.w500, fontFamily: 'Genera'),
                   ),
@@ -515,7 +426,7 @@ class _PlaylistState extends State<Playlist> {
                           ]),
                 );
               },
-              itemCount: Playlist.length,
+              itemCount: PlaylistsData.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
             ),

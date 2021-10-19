@@ -2,6 +2,7 @@
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/db_model/playlist_model.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
@@ -24,6 +25,7 @@ Future main() async {
   ));
   await Hive.initFlutter();
   Hive.registerAdapter(MusicModelAdapter());
+  Hive.registerAdapter(PlaylistModelAdapter());
   var musicBox = await Hive.openBox('musicBox');
   List<SongModel> musicList = await _audioQuery.querySongs();
   musicList.forEach((element) {
