@@ -113,7 +113,6 @@ class _PlaylistState extends State<Playlist> {
                             TextButton(
                               child: Text('Add'),
                               onPressed: () async {
-                                
                                 var playlistBox =
                                     await Hive.openBox('playlistBox');
                                 setState(() {
@@ -121,13 +120,17 @@ class _PlaylistState extends State<Playlist> {
                                     {'playlist': _playlist.text, 'tracks': []}
                                   ];
                                   playlistBox.addAll(playlists);
+                                  playlistData.add(playlistBox
+                                      .getAt(playlistBox.length - 1));
                                   //reassemble();
                                 });
-                                
-                                SnackBar(
-                                  content:
-                                      Text('Created Playlist Successfully'),
+                                String playlistName = _playlist.text;
+                                final snackBar = SnackBar(
+                                  content: Text(
+                                      'Created  Playlist $playlistName Successfully !'),
+
                                 );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                 Navigator.pop(context);
                               },
                             ),
