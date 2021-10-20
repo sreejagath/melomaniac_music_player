@@ -3,6 +3,7 @@ import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hive/hive.dart';
+import 'package:music_player/db_model/data_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Tracks extends StatefulWidget {
@@ -29,20 +30,13 @@ class _TracksState extends State<Tracks> {
   @override
   void initState() {
     super.initState();
-    requestPermission();
+    musicListing();
   }
 
-  requestPermission() async {
-    // Web platform don't support permissions methods.
-    if (!kIsWeb) {
-      bool permissionStatus = await _audioQuery.permissionsStatus();
-      if (!permissionStatus) {
-        await _audioQuery.permissionsRequest();
-      }
-    }
+  musicListing() async {
     var musicBox = await Hive.openBox('musicBox');
     setState(() {
-      musics = musicBox.get(1);
+      musics = musicBox.get(0);
     });
   }
 
@@ -50,7 +44,8 @@ class _TracksState extends State<Tracks> {
   Widget build(BuildContext context) {
     //List mu = music[0].toList();
     //final _tracks = music;
-    return ListView.builder(
+    return musics==null ? Center(child: CircularProgressIndicator()) :
+    ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: music.length,

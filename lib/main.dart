@@ -13,17 +13,25 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Hive.initFlutter();
+  if (!kIsWeb) {
+    bool permissionStatus = await _audioQuery.permissionsStatus();
+    if (!permissionStatus) {
+      await _audioQuery.permissionsRequest();
+    }
+  }
   runApp(GetMaterialApp(
     home: HomePage(),
   ));
-  await Hive.initFlutter();
+  //requestPermission();
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
   var musicBox = await Hive.openBox('musicBox');

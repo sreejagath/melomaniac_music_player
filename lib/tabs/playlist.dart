@@ -20,6 +20,7 @@ class Playlist extends StatefulWidget {
 class _PlaylistState extends State<Playlist> {
   List musics = [];
   List playlists = [];
+  List playlistData = [];
   @override
   void initState() {
     super.initState();
@@ -31,24 +32,12 @@ class _PlaylistState extends State<Playlist> {
     var playlistBox = await Hive.openBox('playlistBox');
     setState(() {
       musics = musicBox.get(1);
+      for (var i = 0; i < playlistBox.length; i++) {
+        playlistData.add(playlistBox.getAt(i));
+      }
     });
+    print(playlistData);
   }
-
-  List<String> PlaylistsData = [
-    'Sleepy',
-    'Romantic',
-    'Rahman Hits',
-    'Malayalam',
-    'Tamil'
-  ];
-
-  List<String> PlaylistCount = [
-    '234 Songs',
-    '122 Songs',
-    '12 Songs',
-    '26 Songs',
-    '28 Songs',
-  ];
 
   List<String> trackTitle = [
     'On My Way',
@@ -123,10 +112,27 @@ class _PlaylistState extends State<Playlist> {
                           actions: [
                             TextButton(
                               child: Text('Add'),
-                              onPressed: () {},
+                              onPressed: () async {
+                                
+                                var playlistBox =
+                                    await Hive.openBox('playlistBox');
+                                setState(() {
+                                  playlists = [
+                                    {'playlist': _playlist.text, 'tracks': []}
+                                  ];
+                                  playlistBox.addAll(playlists);
+                                  //reassemble();
+                                });
+                                
+                                SnackBar(
+                                  content:
+                                      Text('Created Playlist Successfully'),
+                                );
+                                Navigator.pop(context);
+                              },
                             ),
                             TextButton(
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -135,7 +141,6 @@ class _PlaylistState extends State<Playlist> {
                         );
                       });
                 },
-                
                 child: Row(
                   children: [
                     Icon(Icons.add),
@@ -335,100 +340,117 @@ class _PlaylistState extends State<Playlist> {
                   });
             },
             child: ListView.builder(
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: const Icon(Icons.music_note, color: Colors.black),
-                  title: Text(
-                    PlaylistsData[index],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontFamily: 'Genera'),
-                  ),
-                  subtitle: Text(
-                    PlaylistCount[index],
-                    style: const TextStyle(fontFamily: 'Genera'),
-                  ),
-                  trailing: PopupMenuButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                                child: TextButton(
-                              onPressed: () => showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Confirmation'),
-                                  content:
-                                      const Text('Are you sure to Delete ?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: const Text('OK'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              child: const Text('Delete Playlist',
-                                  style: TextStyle(color: Colors.red)),
-                            )),
-                            PopupMenuItem(
-                                child: TextButton(
-                                    child: const Text(
-                                      'Rename',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              content: Form(
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      TextFormField(
-                                                          decoration:
-                                                              const InputDecoration(
-                                                        labelText:
-                                                            'Current Name',
-                                                      ))
-                                                    ]),
-                                              ),
-                                              title: const Text('Rename'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: const Text('OK'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Cancel'),
-                                                ),
-                                              ],
-                                            );
-                                          });
-                                    })),
-                            PopupMenuItem(
-                                child: TextButton(
-                                    onPressed: () {},
-                                    child: const Text(
-                                      'Add Tracks',
-                                      style: TextStyle(color: Colors.black),
-                                    ))),
-                          ]),
-                );
-              },
-              itemCount: PlaylistsData.length,
+              itemCount: playlistData.length,
               shrinkWrap: true,
+              scrollDirection: Axis.vertical,
               physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                //print(playlistData[index]['playlist']);
+                //print(index);
+                return playlistData.length == 0
+                    ? Container(
+                        child: Center(
+                          child: Text('No Playlist'),
+                        ),
+                      )
+                    : ListTile(
+                        leading:
+                            const Icon(Icons.music_note, color: Colors.black),
+                        title: Text(
+                          playlistData[index]['playlist'] ?? '',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Genera'),
+                        ),
+                        subtitle: Text(
+                          playlistData[index]['tracks'].length.toString() +
+                              ' Songs',
+                          style: const TextStyle(fontFamily: 'Genera'),
+                        ),
+                        trailing: PopupMenuButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                      child: TextButton(
+                                    onPressed: () => showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                        title: const Text('Confirmation'),
+                                        content: const Text(
+                                            'Are you sure to Delete ?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {},
+                                            child: const Text('OK'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    child: const Text('Delete Playlist',
+                                        style: TextStyle(color: Colors.red)),
+                                  )),
+                                  PopupMenuItem(
+                                      child: TextButton(
+                                          child: const Text(
+                                            'Rename',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Form(
+                                                      child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            TextFormField(
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                              labelText:
+                                                                  'Current Name',
+                                                            ))
+                                                          ]),
+                                                    ),
+                                                    title: const Text('Rename'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {},
+                                                        child: const Text('OK'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          })),
+                                  PopupMenuItem(
+                                      child: TextButton(
+                                          onPressed: () {},
+                                          child: const Text(
+                                            'Add Tracks',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ))),
+                                ]),
+                      );
+              },
             ),
           ),
         ],

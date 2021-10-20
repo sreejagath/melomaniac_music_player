@@ -5,5 +5,5 @@ part 'data_model.g.dart';
 @HiveType(typeId: 0)
 class MusicModel extends HiveObject {
   @HiveField(0)
-  late List musicData;
+  late List? musicData;
 }
