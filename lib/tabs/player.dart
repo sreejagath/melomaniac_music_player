@@ -24,21 +24,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
   void initState() {
     super.initState();
     print(widget.musicList);
-    // if (widget.musicList[0]['asset'] == 'true') {
-    //   assetsAudioPlayer.open(
-    //       Audio(
-    //         widget.musicList[0]['uri'],
-    //         metas: Metas(
-    //           title: widget.musicList[0]['title'],
-    //           artist: widget.musicList[0]['artist'],
-    //           //album: "CountryAlbum",
-    //           image: MetasImage.asset(
-    //               widget.musicList[0]['id']), //can be MetasImage.network
-    //         ),
-    //       ),
-    //       autoStart: true,
-    //       showNotification: true);
-    // } else if (widget.musicList[0]['asset'] == 'false') {
       assetsAudioPlayer.open(
           Audio.file(
             widget.musicList[0]['uri'],
@@ -96,9 +81,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
             width: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: widget.musicList[0]['asset'] =='true'
-                  ? Image.asset(music[0]['id'])
-                  : QueryArtworkWidget(
+              child: QueryArtworkWidget(
                       id: music[0]['id'],
                       type: ArtworkType.AUDIO,
                     ),
@@ -232,7 +215,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     ),
                     IconButton(
                       onPressed: () {
-                        assetsAudioPlayer.seekBy(const Duration(seconds: -10));
+                        assetsAudioPlayer.seekBy(const Duration(seconds: 10));
                       },
                       icon: const Icon(Icons.skip_next),
                     ),
