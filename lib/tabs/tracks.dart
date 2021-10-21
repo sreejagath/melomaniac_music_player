@@ -56,6 +56,7 @@ class _TracksState extends State<Tracks> {
             shrinkWrap: true,
             itemCount: musics.length,
             itemBuilder: (BuildContext context, int index) {
+              print(musics);
               List data = [
                 {
                   'title': musics[index]['title'],
@@ -92,7 +93,7 @@ class _TracksState extends State<Tracks> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         itemBuilder: (context) => [
-                              const PopupMenuItem(child: Text('Add to queue')),
+                              //const PopupMenuItem(child: Text('Add to queue')),
                               PopupMenuItem(
                                   child: TextButton(
                                 child: Text('Add to playlist'),
@@ -237,8 +238,8 @@ class _TracksState extends State<Tracks> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  CurrentMusic(musicList: data)));
+                              builder: (BuildContext context) => CurrentMusic(
+                                  musicList: musics, currentIndex: index)));
                     },
                   )
                 ],

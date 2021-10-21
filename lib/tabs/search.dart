@@ -90,6 +90,7 @@ class _SearchTrackState extends State<SearchTrack> {
                                   MaterialPageRoute(
                                       builder: (context) => CurrentMusic(
                                             musicList: musicList,
+                                            currentIndex: index,
                                           )));
                             },
                           ),
@@ -162,7 +163,8 @@ class _SearchTrackState extends State<SearchTrack> {
                                           MaterialPageRoute(
                                               builder: (BuildContext context) =>
                                                   CurrentMusic(
-                                                      musicList: data)));
+                                                      musicList: data,
+                                                      currentIndex: index)));
                                       print(data);
                                     }),
                                 const Divider(

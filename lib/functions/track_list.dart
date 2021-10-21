@@ -62,7 +62,7 @@ class _MusicListState extends State<MusicList> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              CurrentMusic(musicList: data)));
+                              CurrentMusic(musicList: data,currentIndex: index,)));
                 },
               )
             ],

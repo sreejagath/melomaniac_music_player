@@ -36,13 +36,16 @@ Future main() async {
   Hive.registerAdapter(PlaylistModelAdapter());
   var musicBox = await Hive.openBox('musicBox');
   List<SongModel> musicList = await _audioQuery.querySongs();
+
   musicList.forEach((element) {
     musicData.add({
       'title': element.title,
       'artist': element.artist,
       'id': element.id,
       'uri': element.uri,
-      'album': element.album
+      'album': element.album,
+      'duration': element.duration,
+      'isFavorite': false,
     });
   });
   for (var i = 0; i < musicList.length; i++) {
@@ -96,6 +99,7 @@ class _HomePageState extends State<HomePage>
           'url': 'assets/music/song.mp3'
         }
       ],
+      currentIndex: 0,
     ),
     Playlist(),
     Settings(),
@@ -164,6 +168,7 @@ class _HomePageState extends State<HomePage>
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CurrentMusic(
               musicList: music,
+              currentIndex: 0,
             );
           }));
         },

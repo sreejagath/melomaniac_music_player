@@ -230,6 +230,7 @@ class _PlaylistState extends State<Playlist> {
                                     MaterialPageRoute(
                                         builder: (context) => CurrentMusic(
                                               musicList: music,
+                                              currentIndex: index,
                                             )));
                               },
                             ),
@@ -443,14 +444,7 @@ class _PlaylistState extends State<Playlist> {
                                                   );
                                                 });
                                           })),
-                                  PopupMenuItem(
-                                      child: TextButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            'Add Tracks',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ))),
+                                  
                                 ]),
                       );
               },
