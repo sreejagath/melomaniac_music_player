@@ -2,6 +2,7 @@
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
@@ -12,6 +13,7 @@ import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
@@ -34,6 +36,7 @@ Future main() async {
   //requestPermission();
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
+  Hive.registerAdapter(FavoritesModelAdapter());
   var musicBox = await Hive.openBox('musicBox');
   List<SongModel> musicList = await _audioQuery.querySongs();
 
@@ -48,9 +51,10 @@ Future main() async {
       'isFavorite': false,
     });
   });
-  for (var i = 0; i < musicList.length; i++) {
-    musicBox.put(i, musicData);
-  }
+  // for (var i = 0; i < musicList.length; i++) {
+  //   musicBox.put(i, musicData);
+  // }
+  musicBox.add(musicData);
 }
 
 class HomePage extends StatefulWidget {

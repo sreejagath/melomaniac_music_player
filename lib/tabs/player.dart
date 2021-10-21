@@ -3,6 +3,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:music_player/player/position_seek_widget.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:hive/hive.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 
 class CurrentMusic extends StatefulWidget {
@@ -23,6 +24,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
   String currentSong = "";
 
   final assetsAudioPlayer = AssetsAudioPlayer();
+  List playlist = [];
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
       showNotification: true,
       autoStart: true,
     );
+    var favoritesBox = Hive.openBox('favorites');
     // var _player = AssetsAudioPlayer();
     // var _durationState =
     //     Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
@@ -150,6 +153,18 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         setState(() {
                           favIcon = Icons.favorite;
                           colorFav = Colors.red;
+                          music[widget.currentIndex]['isFavorite'] = true;
+
+                          //for (var i = 0; i < music.length; i++) {
+                            if (music[widget.currentIndex]['isFavorite'] == true) {
+                              playlist.add(music[widget.currentIndex]);
+                              //Hive.box('favorites').put(i,playlist);
+                            //}
+                          }
+
+                          print(playlist);
+                          
+                          Hive.box('favorites').addAll(playlist);
                         });
                       },
                       icon: Icon(favIcon, color: colorFav),
@@ -185,12 +200,15 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: ProgressBar(
-
                     progress: infos.currentPosition,
                     total: infos.duration,
                     onSeek: (to) {
                       assetsAudioPlayer.seek(to);
-                      
+                      if (to == infos.duration) {
+                        setState(() {
+                          widget.currentIndex = widget.currentIndex + 1;
+                        });
+                      }
                     },
                     progressBarColor: Colors.black,
                     baseBarColor: Colors.grey[500],
@@ -205,8 +223,13 @@ class _CurrentMusicState extends State<CurrentMusic> {
                   children: [
                     IconButton(
                       onPressed: () {
+                        var snackBar =
+                            SnackBar(content: Text('No Previous Songs'));
                         setState(() {
-                          widget.currentIndex--;
+                          widget.currentIndex == 0
+                              ? ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar)
+                              : widget.currentIndex--;
                           assetsAudioPlayer.previous(keepLoopMode: false);
                         });
                       },
@@ -263,8 +286,15 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     ),
                     IconButton(
                       onPressed: () {
-                        widget.currentIndex++;
-                        assetsAudioPlayer.next(keepLoopMode: false);
+                        var snackBar = SnackBar(content: Text('No Next Songs'));
+                        setState(() {
+                          widget.currentIndex == widget.musicList.length - 1
+                              ? widget.currentIndex = 0
+                              : widget.currentIndex++;
+                          assetsAudioPlayer.next(keepLoopMode: true);
+                        });
+                        print('Current Index\n\n\n');
+                        print(widget.currentIndex);
                       },
                       icon: const Icon(Icons.arrow_forward),
                     ),

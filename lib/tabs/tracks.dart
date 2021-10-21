@@ -38,7 +38,7 @@ class _TracksState extends State<Tracks> {
     var musicBox = await Hive.openBox('musicBox');
     var playlistBox = await Hive.openBox('playlistBox');
     setState(() {
-      musics = musicBox.get(0);
+      musics = musicBox.getAt(0);
       for (var i = 0; i < playlistBox.length; i++) {
         playlists.add(playlistBox.getAt(i));
       }
@@ -56,7 +56,7 @@ class _TracksState extends State<Tracks> {
             shrinkWrap: true,
             itemCount: musics.length,
             itemBuilder: (BuildContext context, int index) {
-              print(musics);
+              //print(musics);
               List data = [
                 {
                   'title': musics[index]['title'],

@@ -30,6 +30,7 @@ class _PlaylistState extends State<Playlist> {
   musicSearch() async {
     var musicBox = await Hive.openBox('musicBox');
     var playlistBox = await Hive.openBox('playlistBox');
+    var favoritesBox = await Hive.openBox('favorites');
     setState(() {
       musics = musicBox.get(1);
       for (var i = 0; i < playlistBox.length; i++) {
@@ -128,9 +129,9 @@ class _PlaylistState extends State<Playlist> {
                                 final snackBar = SnackBar(
                                   content: Text(
                                       'Created  Playlist $playlistName Successfully !'),
-
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                                 Navigator.pop(context);
                               },
                             ),
@@ -343,111 +344,254 @@ class _PlaylistState extends State<Playlist> {
                     );
                   });
             },
-            child: ListView.builder(
-              itemCount: playlistData.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                //print(playlistData[index]['playlist']);
-                //print(index);
-                return playlistData.length == 0
-                    ? Container(
-                        child: Center(
-                          child: Text('No Playlist'),
-                        ),
-                      )
-                    : ListTile(
-                        leading:
-                            const Icon(Icons.music_note, color: Colors.black),
-                        title: Text(
-                          playlistData[index]['playlist'] ?? '',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Genera'),
-                        ),
-                        subtitle: Text(
-                          playlistData[index]['tracks'].length.toString() +
-                              ' Songs',
-                          style: const TextStyle(fontFamily: 'Genera'),
-                        ),
-                        trailing: PopupMenuButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                      child: TextButton(
-                                    onPressed: () => showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertDialog(
-                                        title: const Text('Confirmation'),
-                                        content: const Text(
-                                            'Are you sure to Delete ?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {},
-                                            child: const Text('OK'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text('Cancel'),
-                                          ),
-                                        ],
-                                      ),
+            child: Column(
+              children: [
+                ListTile(
+                    leading: Icon(Icons.favorite),
+                    title: Text('Favorites'),
+                    onTap: () async {
+                      var favBox = await Hive.openBox('favorites');
+
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: ListView.builder(
+                                itemCount: favBox.length,
+                                itemBuilder: (context, index) {
+                                  print('from clicking favorites');
+                                  print(favBox.getAt(index)['title']);
+                                  //print(favBox.getAt(0));
+                                  print('end');
+                                  return ListTile(
+                                    leading: Icon(Icons.music_note),
+                                    title: TextButton(
+                                      style: TextButton.styleFrom(
+                                          alignment: Alignment.centerLeft),
+                                      child: Text(favBox.getAt(index)['title']),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CurrentMusic(
+                                                      musicList: music,
+                                                      currentIndex: index,
+                                                    )));
+                                      },
                                     ),
-                                    child: const Text('Delete Playlist',
-                                        style: TextStyle(color: Colors.red)),
-                                  )),
-                                  PopupMenuItem(
-                                      child: TextButton(
-                                          child: const Text(
-                                            'Rename',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ),
+                                    subtitle: Text(favBox.getAt(index)['artist']),
+                                    trailing: PopupMenuButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        itemBuilder: (context) => [
+                                              const PopupMenuItem(
+                                                  child: Text('Add to queue')),
+                                              const PopupMenuItem(
+                                                  child:
+                                                      Text('Add to playlist')),
+                                              PopupMenuItem(
+                                                  child: TextButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          AlertDialog(
+                                                              shape: const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              content: Column(
+                                                                children: [
+                                                                  Image.asset(
+                                                                    'assets/images/image1.jpg',
+                                                                    width: 100,
+                                                                    height: 100,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 30,
+                                                                  ),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: const [
+                                                                      Text(
+                                                                        'Title : On My Way',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Genera',
+                                                                            fontSize:
+                                                                                20.0,
+                                                                            color:
+                                                                                Colors.black),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                      ),
+                                                                      Text(
+                                                                        'Artist : Ed Sheeran',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Genera',
+                                                                            fontSize:
+                                                                                15.0,
+                                                                            color:
+                                                                                Color(0xFF3A6878)),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                      ),
+                                                                      Text(
+                                                                          'Artist : Ed Sheeran',
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Genera',
+                                                                              fontSize: 15.0,
+                                                                              color: Color(0xFF3A6878))),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                      ),
+                                                                      Text(
+                                                                          'Year : 2019',
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Genera',
+                                                                              fontSize: 15.0,
+                                                                              color: Color(0xFF3A6878))),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 30,
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                    onPressed:
+                                                                        () {},
+                                                                    child: const Text(
+                                                                        'Search Lyrics'),
+                                                                  ),
+                                                                ],
+                                                              )));
+                                                },
+                                                child: const Text(
+                                                  'Song Info',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              )),
+                                              const PopupMenuItem(
+                                                  child: Text('View Album')),
+                                              const PopupMenuItem(
+                                                  child: Text('Share')),
+                                            ]),
+                                  );
+                                },
+                              ),
+                            );
+                          });
+                    }),
+                ListView.builder(
+                  itemCount: playlistData.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    //print(playlistData[index]['playlist']);
+                    //print(index);
+                    return ListTile(
+                      leading:
+                          const Icon(Icons.music_note, color: Colors.black),
+                      title: Text(
+                        playlistData[index]['playlist'] ?? '',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontFamily: 'Genera'),
+                      ),
+                      subtitle: Text(
+                        playlistData[index]['tracks'].length.toString() +
+                            ' Songs',
+                        style: const TextStyle(fontFamily: 'Genera'),
+                      ),
+                      trailing: PopupMenuButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                    child: TextButton(
+                                  onPressed: () => showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text('Confirmation'),
+                                      content: const Text(
+                                          'Are you sure to Delete ?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: const Text('OK'),
+                                        ),
+                                        TextButton(
                                           onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    content: Form(
-                                                      child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            TextFormField(
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                              labelText:
-                                                                  'Current Name',
-                                                            ))
-                                                          ]),
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Text('Delete Playlist',
+                                      style: TextStyle(color: Colors.red)),
+                                )),
+                                PopupMenuItem(
+                                    child: TextButton(
+                                        child: const Text(
+                                          'Rename',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  content: Form(
+                                                    child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          TextFormField(
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                            labelText:
+                                                                'Current Name',
+                                                          ))
+                                                        ]),
+                                                  ),
+                                                  title: const Text('Rename'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {},
+                                                      child: const Text('OK'),
                                                     ),
-                                                    title: const Text('Rename'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {},
-                                                        child: const Text('OK'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          })),
-                                  
-                                ]),
-                      );
-              },
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel'),
+                                                    ),
+                                                  ],
+                                                );
+                                              });
+                                        })),
+                              ]),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],
