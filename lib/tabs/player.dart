@@ -51,6 +51,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
       autoStart: true,
     );
     var favoritesBox = Hive.openBox('favorites');
+    print(Hive.box('musicBox')
+                                        .getAt(widget.currentIndex));
     // var _player = AssetsAudioPlayer();
     // var _durationState =
     //     Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
@@ -149,26 +151,27 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        setState(() {
-                          favIcon = Icons.favorite;
-                          colorFav = Colors.red;
-                          music[widget.currentIndex]['isFavorite'] = true;
-
-                          //for (var i = 0; i < music.length; i++) {
-                            if (music[widget.currentIndex]['isFavorite'] == true) {
-                              playlist.add(music[widget.currentIndex]);
-                              //Hive.box('favorites').put(i,playlist);
-                            //}
-                          }
-
-                          print(playlist);
-                          
-                          Hive.box('favorites').addAll(playlist);
-                        });
-                      },
-                      icon: Icon(favIcon, color: colorFav),
-                    ),
+                        onPressed: () {
+                          music[widget.currentIndex]['isFavorite'] == false
+                              ? setState(() {
+                                  favIcon = Icons.favorite;
+                                  colorFav = Colors.red;
+                                  music[widget.currentIndex]['isFavorite'] =
+                                      true;
+                                  if (music[widget.currentIndex]
+                                          ['isFavorite'] ==
+                                      true) {
+                                    playlist.add(music[widget.currentIndex]);
+                                    Hive.box('favorites').addAll(playlist);
+                                    
+                                  }
+                                })
+                              : print('False');
+                        },
+                        icon: music[widget.currentIndex]['isFavorite'] == true
+                            ? Icon(favIcon = Icons.favorite,
+                                color: colorFav = Colors.red)
+                            : Icon(favIcon, color: colorFav)),
                     const SizedBox(
                       width: 10,
                     ),

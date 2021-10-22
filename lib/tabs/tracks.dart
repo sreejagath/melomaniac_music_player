@@ -56,7 +56,7 @@ class _TracksState extends State<Tracks> {
             shrinkWrap: true,
             itemCount: musics.length,
             itemBuilder: (BuildContext context, int index) {
-              //print(musics);
+              print(musics);
               List data = [
                 {
                   'title': musics[index]['title'],
