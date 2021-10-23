@@ -21,6 +21,7 @@ class _PlaylistState extends State<Playlist> {
   List musics = [];
   List playlists = [];
   List playlistData = [];
+  List favoritesList = [];
   @override
   void initState() {
     super.initState();
@@ -32,12 +33,24 @@ class _PlaylistState extends State<Playlist> {
     var playlistBox = await Hive.openBox('playlistBox');
     var favoritesBox = await Hive.openBox('favorites');
     setState(() {
-      musics = musicBox.get(1);
+      musics = musicBox.get(0);
       for (var i = 0; i < playlistBox.length; i++) {
         playlistData.add(playlistBox.getAt(i));
       }
+      print('Hello');
+      for (var i = 0; i < musics.length; i++) {
+        if (musics[i]['isFavorite'] == true) {
+          //print(musics[i]['title']);
+          favoritesList.add(musics[i]);
+          print(favoritesList);
+        }
+      }
+      //print(musics[0]);
     });
-    print(playlistData);
+    //print(playlistData);
+    //for (var i = 0; i < musics.length; i++) {
+    //print(musics);
+    //}
   }
 
   List<String> trackTitle = [
@@ -98,7 +111,7 @@ class _PlaylistState extends State<Playlist> {
             padding: const EdgeInsets.only(right: 15),
             child: Row(children: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -128,7 +141,7 @@ class _PlaylistState extends State<Playlist> {
                                 String playlistName = _playlist.text;
                                 final snackBar = SnackBar(
                                   content: Text(
-                                      'Created  Playlist $playlistName Successfully !'),
+                                      'Created  Playlist $playlistName Successfully !\nPlease add song manually !\nTracks > Options > Add to playlist'),
                                 );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
@@ -209,179 +222,274 @@ class _PlaylistState extends State<Playlist> {
           const SizedBox(
             height: 15,
           ),
-          GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      child: ListView.builder(
-                        itemCount: trackTitle.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: Icon(Icons.music_note),
-                            title: TextButton(
-                              style: TextButton.styleFrom(
-                                  alignment: Alignment.centerLeft),
-                              child: Text(trackTitle[index]),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CurrentMusic(
-                                              musicList: music,
-                                              currentIndex: index,
-                                            )));
+          // GestureDetector(
+          //   onTap: () async {
+          //     showModalBottomSheet(
+          //         context: context,
+          //         builder: (context) {
+          //           return Container(
+          //             height: MediaQuery.of(context).size.height * 0.5,
+          //             child: ListView.builder(
+          //               itemCount: trackTitle.length,
+          //               itemBuilder: (context, index) {
+          //                 return ListTile(
+          //                   leading: Icon(Icons.music_note),
+          //                   title: TextButton(
+          //                     style: TextButton.styleFrom(
+          //                         alignment: Alignment.centerLeft),
+          //                     child: Text(trackTitle[index]),
+          //                     onPressed: () {
+          //                       Navigator.push(
+          //                           context,
+          //                           MaterialPageRoute(
+          //                               builder: (context) => CurrentMusic(
+          //                                     musicList: music,
+          //                                     currentIndex: index,
+          //                                   )));
+          //                     },
+          //                   ),
+          //                   subtitle: Text(trackArtist[index]),
+          //                   trailing: PopupMenuButton(
+          //                       shape: RoundedRectangleBorder(
+          //                           borderRadius: BorderRadius.circular(10.0)),
+          //                       itemBuilder: (context) => [
+          //                             const PopupMenuItem(
+          //                                 child: Text('Add to queue')),
+          //                             const PopupMenuItem(
+          //                                 child: Text('Add to playlist')),
+          //                             PopupMenuItem(
+          //                                 child: TextButton(
+          //                               onPressed: () {
+          //                                 showDialog(
+          //                                     context: context,
+          //                                     builder: (context) => AlertDialog(
+          //                                         shape:
+          //                                             const RoundedRectangleBorder(
+          //                                                 borderRadius:
+          //                                                     BorderRadius.all(
+          //                                                         Radius.circular(
+          //                                                             10.0))),
+          //                                         content: Column(
+          //                                           children: [
+          //                                             Image.asset(
+          //                                               'assets/images/image1.jpg',
+          //                                               width: 100,
+          //                                               height: 100,
+          //                                             ),
+          //                                             const SizedBox(
+          //                                               height: 30,
+          //                                             ),
+          //                                             Column(
+          //                                               crossAxisAlignment:
+          //                                                   CrossAxisAlignment
+          //                                                       .start,
+          //                                               children: const [
+          //                                                 Text(
+          //                                                   'Title : On My Way',
+          //                                                   style: TextStyle(
+          //                                                       fontFamily:
+          //                                                           'Genera',
+          //                                                       fontSize: 20.0,
+          //                                                       color: Colors
+          //                                                           .black),
+          //                                                 ),
+          //                                                 SizedBox(
+          //                                                   height: 30,
+          //                                                 ),
+          //                                                 Text(
+          //                                                   'Artist : Ed Sheeran',
+          //                                                   style: TextStyle(
+          //                                                       fontFamily:
+          //                                                           'Genera',
+          //                                                       fontSize: 15.0,
+          //                                                       color: Color(
+          //                                                           0xFF3A6878)),
+          //                                                 ),
+          //                                                 SizedBox(
+          //                                                   height: 30,
+          //                                                 ),
+          //                                                 Text(
+          //                                                     'Artist : Ed Sheeran',
+          //                                                     style: TextStyle(
+          //                                                         fontFamily:
+          //                                                             'Genera',
+          //                                                         fontSize:
+          //                                                             15.0,
+          //                                                         color: Color(
+          //                                                             0xFF3A6878))),
+          //                                                 SizedBox(
+          //                                                   height: 30,
+          //                                                 ),
+          //                                                 Text('Year : 2019',
+          //                                                     style: TextStyle(
+          //                                                         fontFamily:
+          //                                                             'Genera',
+          //                                                         fontSize:
+          //                                                             15.0,
+          //                                                         color: Color(
+          //                                                             0xFF3A6878))),
+          //                                               ],
+          //                                             ),
+          //                                             const SizedBox(
+          //                                               height: 30,
+          //                                             ),
+          //                                             ElevatedButton(
+          //                                               onPressed: () {},
+          //                                               child: const Text(
+          //                                                   'Search Lyrics'),
+          //                                             ),
+          //                                           ],
+          //                                         )));
+          //                               },
+          //                               child: const Text(
+          //                                 'Song Info',
+          //                                 textAlign: TextAlign.left,
+          //                                 style: TextStyle(color: Colors.black),
+          //                               ),
+          //                             )),
+          //                             const PopupMenuItem(
+          //                                 child: Text('View Album')),
+          //                             const PopupMenuItem(child: Text('Share')),
+          //                           ]),
+          //                 );
+          //               },
+          //             ),
+          //           );
+          //         });
+          //   },
+          Column(
+            children: [
+              ListTile(
+                  leading: Icon(Icons.favorite),
+                  title: Text('Favorites'),
+                  onTap: () async {
+                    var favBox = await Hive.openBox('favorites');
+
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          print(favoritesList.length);
+                          return Container(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: ListView.builder(
+                              itemCount: favoritesList.length,
+                              itemBuilder: (context, index) {
+                                // print('from clicking favorites');
+                                // print(favBox.getAt(index)['title']);
+                                //print(favBox.getAt(0));
+                                print('end');
+                                return favoritesList.isEmpty
+                                    ? ListTile(
+                                        leading: Icon(Icons.favorite_border),
+                                        title: Text('No Favorites'),
+                                        subtitle:
+                                            Text('Add some songs to favorites'),
+                                      )
+                                    : ListTile(
+                                        leading: Icon(Icons.music_note),
+                                        title:
+                                            Text(favoritesList[index]['title']),
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CurrentMusic(
+                                                        musicList:
+                                                            favoritesList,
+                                                        currentIndex: index,
+                                                      )));
+                                        },
+                                        subtitle: Text(
+                                            favoritesList[index]['artist']),
+                                        trailing: PopupMenuButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                            itemBuilder: (context) => [
+                                                  const PopupMenuItem(
+                                                      child:
+                                                          Text('Add to queue')),
+                                                  const PopupMenuItem(
+                                                      child: Text(
+                                                          'Add to playlist')),
+                                                  PopupMenuItem(
+                                                      child: TextButton(
+                                                    onPressed: () {},
+                                                    child: const Text(
+                                                      'Song Info',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                  )),
+                                                  const PopupMenuItem(
+                                                      child:
+                                                          Text('View Album')),
+                                                  const PopupMenuItem(
+                                                      child: Text('Share')),
+                                                ]),
+                                      );
                               },
                             ),
-                            subtitle: Text(trackArtist[index]),
-                            trailing: PopupMenuButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                itemBuilder: (context) => [
-                                      const PopupMenuItem(
-                                          child: Text('Add to queue')),
-                                      const PopupMenuItem(
-                                          child: Text('Add to playlist')),
-                                      PopupMenuItem(
-                                          child: TextButton(
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      10.0))),
-                                                  content: Column(
-                                                    children: [
-                                                      Image.asset(
-                                                        'assets/images/image1.jpg',
-                                                        width: 100,
-                                                        height: 100,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 30,
-                                                      ),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: const [
-                                                          Text(
-                                                            'Title : On My Way',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Genera',
-                                                                fontSize: 20.0,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 30,
-                                                          ),
-                                                          Text(
-                                                            'Artist : Ed Sheeran',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Genera',
-                                                                fontSize: 15.0,
-                                                                color: Color(
-                                                                    0xFF3A6878)),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 30,
-                                                          ),
-                                                          Text(
-                                                              'Artist : Ed Sheeran',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Genera',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Color(
-                                                                      0xFF3A6878))),
-                                                          SizedBox(
-                                                            height: 30,
-                                                          ),
-                                                          Text('Year : 2019',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Genera',
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  color: Color(
-                                                                      0xFF3A6878))),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 30,
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () {},
-                                                        child: const Text(
-                                                            'Search Lyrics'),
-                                                      ),
-                                                    ],
-                                                  )));
-                                        },
-                                        child: const Text(
-                                          'Song Info',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      )),
-                                      const PopupMenuItem(
-                                          child: Text('View Album')),
-                                      const PopupMenuItem(child: Text('Share')),
-                                    ]),
                           );
-                        },
-                      ),
-                    );
-                  });
-            },
-            child: Column(
-              children: [
-                ListTile(
-                    leading: Icon(Icons.favorite),
-                    title: Text('Favorites'),
+                        });
+                  }),
+              ListView.builder(
+                itemCount: playlistData.length,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  print(playlistData[index]);
+                  //print(index);
+                  return ListTile(
+                    leading: const Icon(Icons.music_note, color: Colors.black),
+                    title: Text(
+                      playlistData[index]['playlist'] ?? '',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontFamily: 'Genera'),
+                    ),
+                    subtitle: Text(
+                      playlistData[index]['tracks'].length.toString() +
+                          ' Songs',
+                      style: const TextStyle(fontFamily: 'Genera'),
+                    ),
                     onTap: () async {
                       var favBox = await Hive.openBox('favorites');
-
+                      var playlistBox = await Hive.openBox('playlistBox');
+                      // print(playlistBox.getAt(0)['tracks'][1]['title']);
+                      // var first = playlistBox.getAt(1)['tracks'][0]['title'];
+                      // print(first);
                       showModalBottomSheet(
                           context: context,
                           builder: (context) {
                             return Container(
                               height: MediaQuery.of(context).size.height * 0.5,
                               child: ListView.builder(
-                                itemCount: favBox.length,
-                                itemBuilder: (context, index) {
-                                  print('from clicking favorites');
-                                  print(favBox.getAt(index)['title']);
+                                itemCount: playlistData[index]['tracks'].length,
+                                itemBuilder: (context, values) {
+                                  // print('from clicking favorites');
+                                  // print(favBox.getAt(index)['title']);
                                   //print(favBox.getAt(0));
-                                  print('end');
+                                  //print('end');
                                   return ListTile(
                                     leading: Icon(Icons.music_note),
-                                    title: TextButton(
-                                      style: TextButton.styleFrom(
-                                          alignment: Alignment.centerLeft),
-                                      child: Text(favBox.getAt(index)['title']),
-                                      onPressed: () {
-                                        Navigator.push(
+                                    title: Text(playlistData[index]['tracks']
+                                          [values]['title']),
+                                    onTap: (){
+                                      Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     CurrentMusic(
-                                                      musicList: music,
+                                                      musicList: playlistData[index]['tracks'],
                                                       currentIndex: index,
                                                     )));
-                                      },
-                                    ),
-                                    subtitle: Text(favBox.getAt(index)['artist']),
+                                    },
+                                    subtitle: Text(playlistData[index]['tracks']
+                                        [values]['artist']),
                                     trailing: PopupMenuButton(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -394,89 +502,7 @@ class _PlaylistState extends State<Playlist> {
                                                       Text('Add to playlist')),
                                               PopupMenuItem(
                                                   child: TextButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          AlertDialog(
-                                                              shape: const RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              content: Column(
-                                                                children: [
-                                                                  Image.asset(
-                                                                    'assets/images/image1.jpg',
-                                                                    width: 100,
-                                                                    height: 100,
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 30,
-                                                                  ),
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: const [
-                                                                      Text(
-                                                                        'Title : On My Way',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Genera',
-                                                                            fontSize:
-                                                                                20.0,
-                                                                            color:
-                                                                                Colors.black),
-                                                                      ),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            30,
-                                                                      ),
-                                                                      Text(
-                                                                        'Artist : Ed Sheeran',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Genera',
-                                                                            fontSize:
-                                                                                15.0,
-                                                                            color:
-                                                                                Color(0xFF3A6878)),
-                                                                      ),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            30,
-                                                                      ),
-                                                                      Text(
-                                                                          'Artist : Ed Sheeran',
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Genera',
-                                                                              fontSize: 15.0,
-                                                                              color: Color(0xFF3A6878))),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            30,
-                                                                      ),
-                                                                      Text(
-                                                                          'Year : 2019',
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Genera',
-                                                                              fontSize: 15.0,
-                                                                              color: Color(0xFF3A6878))),
-                                                                    ],
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 30,
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    onPressed:
-                                                                        () {},
-                                                                    child: const Text(
-                                                                        'Search Lyrics'),
-                                                                  ),
-                                                                ],
-                                                              )));
-                                                },
+                                                onPressed: () {},
                                                 child: const Text(
                                                   'Song Info',
                                                   textAlign: TextAlign.left,
@@ -494,108 +520,87 @@ class _PlaylistState extends State<Playlist> {
                               ),
                             );
                           });
-                    }),
-                ListView.builder(
-                  itemCount: playlistData.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    //print(playlistData[index]['playlist']);
-                    //print(index);
-                    return ListTile(
-                      leading:
-                          const Icon(Icons.music_note, color: Colors.black),
-                      title: Text(
-                        playlistData[index]['playlist'] ?? '',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontFamily: 'Genera'),
-                      ),
-                      subtitle: Text(
-                        playlistData[index]['tracks'].length.toString() +
-                            ' Songs',
-                        style: const TextStyle(fontFamily: 'Genera'),
-                      ),
-                      trailing: PopupMenuButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          itemBuilder: (context) => [
-                                PopupMenuItem(
-                                    child: TextButton(
-                                  onPressed: () => showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                      title: const Text('Confirmation'),
-                                      content: const Text(
-                                          'Are you sure to Delete ?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: const Text('OK'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Cancel'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  child: const Text('Delete Playlist',
-                                      style: TextStyle(color: Colors.red)),
-                                )),
-                                PopupMenuItem(
-                                    child: TextButton(
-                                        child: const Text(
-                                          'Rename',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
+                    },
+                    trailing: PopupMenuButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        itemBuilder: (context) => [
+                              PopupMenuItem(
+                                  child: TextButton(
+                                onPressed: () => showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: const Text('Confirmation'),
+                                    content:
+                                        const Text('Are you sure to Delete ?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Text('OK'),
+                                      ),
+                                      TextButton(
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Form(
-                                                    child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          TextFormField(
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                            labelText:
-                                                                'Current Name',
-                                                          ))
-                                                        ]),
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                child: const Text('Delete Playlist',
+                                    style: TextStyle(color: Colors.red)),
+                              )),
+                              PopupMenuItem(
+                                  child: TextButton(
+                                      child: const Text(
+                                        'Rename',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                content: Form(
+                                                  child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TextFormField(
+                                                            decoration:
+                                                                const InputDecoration(
+                                                          labelText:
+                                                              'Current Name',
+                                                        ))
+                                                      ]),
+                                                ),
+                                                title: const Text('Rename'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {},
+                                                    child: const Text('OK'),
                                                   ),
-                                                  title: const Text('Rename'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {},
-                                                      child: const Text('OK'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child:
-                                                          const Text('Cancel'),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        })),
-                              ]),
-                    );
-                  },
-                ),
-              ],
-            ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      })),
+                            ]),
+                  );
+                },
+              ),
+            ],
           ),
+          //  ),
         ],
       ),
     );
   }
+//}
 }

@@ -51,8 +51,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
       autoStart: true,
     );
     var favoritesBox = Hive.openBox('favorites');
-    print(Hive.box('musicBox')
-                                        .getAt(widget.currentIndex));
+    //print(widget.musicList[widget.currentIndex]);
+    //print(Hive.box('musicBox').getAt(widget.currentIndex));
     // var _player = AssetsAudioPlayer();
     // var _durationState =
     //     Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
@@ -71,6 +71,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
     super.dispose();
   }
 
+  //@override
+  //print(favs);
   IconData btnIcon = Icons.pause;
   IconData favIcon = Icons.favorite_border;
   Color colorFav = Colors.grey;
@@ -151,27 +153,39 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () {
-                          music[widget.currentIndex]['isFavorite'] == false
-                              ? setState(() {
-                                  favIcon = Icons.favorite;
-                                  colorFav = Colors.red;
-                                  music[widget.currentIndex]['isFavorite'] =
-                                      true;
-                                  if (music[widget.currentIndex]
-                                          ['isFavorite'] ==
-                                      true) {
-                                    playlist.add(music[widget.currentIndex]);
-                                    Hive.box('favorites').addAll(playlist);
-                                    
-                                  }
-                                })
-                              : print('False');
-                        },
-                        icon: music[widget.currentIndex]['isFavorite'] == true
-                            ? Icon(favIcon = Icons.favorite,
-                                color: colorFav = Colors.red)
-                            : Icon(favIcon, color: colorFav)),
+                      icon: music[widget.currentIndex]['isFavorite'] == true
+                          ? Icon(favIcon = Icons.favorite,
+                              color: colorFav = Colors.red)
+                          : Icon(favIcon, color: colorFav),
+                      onPressed: () {
+                        music[widget.currentIndex]['isFavorite'] == false
+                            ? setState(() {
+                                favIcon = Icons.favorite;
+                                colorFav = Colors.red;
+                                music[widget.currentIndex]['isFavorite'] = true;
+                                if (music[widget.currentIndex]['isFavorite'] ==
+                                    true) {
+                                  playlist.add(music[widget.currentIndex]);
+                                  //Hive.box('favorites').addAll(playlist);
+                                  //print(playlist);
+                                  Hive.box('musicBox')
+                                      .put(widget.currentIndex, playlist);
+                                }
+                              })
+                            : setState(() {
+                                favIcon = Icons.favorite_border;
+                                colorFav = Colors.grey;
+                                music[widget.currentIndex]['isFavorite'] =
+                                    false;
+                                if (music[widget.currentIndex]['isFavorite'] ==
+                                    false) {
+                                  playlist.remove(music[widget.currentIndex]);
+                                  // Hive.box('musicBox')
+                                  //     .put(widget.currentIndex, playlist);
+                                }
+                              });
+                      },
+                    ),
                     const SizedBox(
                       width: 10,
                     ),

@@ -56,14 +56,16 @@ class _TracksState extends State<Tracks> {
             shrinkWrap: true,
             itemCount: musics.length,
             itemBuilder: (BuildContext context, int index) {
-              print(musics);
+              //print(musics);
               List data = [
                 {
                   'title': musics[index]['title'],
                   'artist': musics[index]['artist'],
                   'uri': musics[index]['uri'],
                   'id': musics[index]['id'],
-                  'asset': 'false'
+                  'album': musics[index]['album'],
+                  'duration': musics[index]['duration'],
+                  'isFavorite': musics[index]['isFavorite'],
                 }
               ];
               return Column(
@@ -124,7 +126,7 @@ class _TracksState extends State<Tracks> {
                                                           await Hive.openBox(
                                                               'playlistBox');
                                                       playlists[index]['tracks']
-                                                          .add(data);
+                                                          .add(data[0]);
                                                       setState(() {
                                                         playlistBox.put(index,
                                                             playlists[index]);
