@@ -65,8 +65,16 @@ class _TracksState extends State<Tracks> {
     TextEditingController _playlist = TextEditingController();
     //List mu = music[0].toList();
     //final _tracks = music;
-    return musics == null
-        ? Center(child: CircularProgressIndicator())
+    return musics == []
+        ? Center(
+            child: Column(
+            children: const [
+              Text('Add some music or check your permission settings.!'),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              ),
+            ],
+          ))
         : ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -184,7 +192,7 @@ class _TracksState extends State<Tracks> {
                                                                     final snackBar =
                                                                         SnackBar(
                                                                       content: Text(
-                                                                          'Created  Playlist $playlistName Successfully !\nPlease add song manually !\nTracks > Options > Add to playlist'),
+                                                                          'Created  Playlist $playlistName Successfully !'),
                                                                     );
                                                                     ScaffoldMessenger.of(
                                                                             context)

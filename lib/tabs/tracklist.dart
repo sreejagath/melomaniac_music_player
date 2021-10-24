@@ -17,7 +17,7 @@ class _TracklistState extends State<Tracklist>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -36,14 +36,20 @@ class _TracklistState extends State<Tracklist>
               controller: _tabController,
               tabs: const [
                 Tab(
-                  child: Text('Tracks', style: TextStyle(color: Colors.black,fontFamily: 'Genera')),
+                  child: Text('Tracks',
+                      style:
+                          TextStyle(color: Colors.black, fontFamily: 'Genera')),
                 ),
                 Tab(
-                  child: Text('Albums', style: TextStyle(color: Colors.black,fontFamily: 'Genera')),
+                  child: Text('Albums',
+                      style:
+                          TextStyle(color: Colors.black, fontFamily: 'Genera')),
                 ),
-                Tab(
-                  child: Text('Artists', style: TextStyle(color: Colors.black,fontFamily: 'Genera')),
-                )
+                // Tab(
+                //   child: Text('Artists',
+                //       style:
+                //           TextStyle(color: Colors.black, fontFamily: 'Genera')),
+                // )
               ]),
         ),
 
@@ -63,11 +69,9 @@ class _TracklistState extends State<Tracklist>
 
               Container(child: const Albums()),
 
-              //ARTISTS
+              // //ARTISTS
 
-              Container(
-                child: const Artists()
-              ),
+              // Container(child: const Artists()),
             ],
           ),
         ),
