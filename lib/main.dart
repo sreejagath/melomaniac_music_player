@@ -24,12 +24,12 @@ List musicData = [];
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  if (!kIsWeb) {
-    bool permissionStatus = await _audioQuery.permissionsStatus();
-    if (!permissionStatus) {
-      await _audioQuery.permissionsRequest();
-    }
-  }
+  // if (!kIsWeb) {
+  //   bool permissionStatus = await _audioQuery.permissionsStatus();
+  //   if (!permissionStatus) {
+  //     await _audioQuery.permissionsRequest();
+  //   }
+  // }
   runApp(GetMaterialApp(
     home: HomePage(),
   ));
@@ -37,25 +37,25 @@ Future main() async {
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
   Hive.registerAdapter(FavoritesModelAdapter());
-  var musicBox = await Hive.openBox('musicBox');
-  List<SongModel> musicList = await _audioQuery.querySongs();
+  // var musicBox = await Hive.openBox('musicBox');
+  // List<SongModel> musicList = await _audioQuery.querySongs();
 
-  musicList.forEach((element) {
-    musicData.add({
-      'title': element.title,
-      'artist': element.artist,
-      'id': element.id,
-      'uri': element.uri,
-      'album': element.album,
-      'duration': element.duration,
-      'isFavorite': false,
-    });
-  });
-  // for (var i = 0; i < musicList.length; i++) {
-  //   musicBox.put(i, musicData);
-  // }
-  //print(musicData);
-  musicBox.add(musicData);
+  // musicList.forEach((element) {
+  //   musicData.add({
+  //     'title': element.title,
+  //     'artist': element.artist,
+  //     'id': element.id,
+  //     'uri': element.uri,
+  //     'album': element.album,
+  //     'duration': element.duration,
+  //     'isFavorite': false,
+  //   });
+  // });
+  // // for (var i = 0; i < musicList.length; i++) {
+  // //   musicBox.put(i, musicData);
+  // // }
+  // //print(musicData);
+  // musicBox.add(musicData);
 }
 
 class HomePage extends StatefulWidget {

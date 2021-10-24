@@ -371,21 +371,21 @@ class _PlaylistState extends State<Playlist> {
                           print(favoritesList.length);
                           return Container(
                             height: MediaQuery.of(context).size.height * 0.5,
-                            child: ListView.builder(
-                              itemCount: favoritesList.length,
-                              itemBuilder: (context, index) {
-                                // print('from clicking favorites');
-                                // print(favBox.getAt(index)['title']);
-                                //print(favBox.getAt(0));
-                                print('end');
-                                return favoritesList.isEmpty
+                            child:  favoritesList.isEmpty
                                     ? ListTile(
                                         leading: Icon(Icons.favorite_border),
                                         title: Text('No Favorites'),
                                         subtitle:
                                             Text('Add some songs to favorites'),
                                       )
-                                    : ListTile(
+                                    : ListView.builder(
+                              itemCount: favoritesList.length,
+                              itemBuilder: (context, index) {
+                                // print('from clicking favorites');
+                                // print(favBox.getAt(index)['title']);
+                                //print(favBox.getAt(0));
+                                print('end');
+                                return ListTile(
                                         leading: Icon(Icons.music_note),
                                         title:
                                             Text(favoritesList[index]['title']),
