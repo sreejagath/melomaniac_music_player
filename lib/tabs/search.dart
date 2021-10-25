@@ -64,8 +64,26 @@ class _SearchTrackState extends State<SearchTrack> {
               print(searchedList);
               return ListTile(
                   title: Text(
-                searchedList[index]['title'],
-              ));
+                    searchedList[index]['title'],
+                  ),
+                  subtitle: Text(
+                    searchedList[index]['artist'],
+                  ),
+                  leading: QueryArtworkWidget(
+                    id: searchedList[index]['id'],
+                    type: ArtworkType.AUDIO,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CurrentMusic(
+                          musicList: searchedList,
+                          currentIndex: index,
+                        ),
+                      ),
+                    );
+                  });
             })
       ])),
     );

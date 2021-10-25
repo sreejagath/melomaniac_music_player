@@ -58,7 +58,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
             .toList(),
         startIndex: widget.currentIndex,
       ),
-      showNotification: notifications??true,
+      showNotification: notifications ?? true,
       autoStart: true,
     );
     var favoritesBox = Hive.openBox('favorites');
@@ -195,10 +195,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
                               });
                       },
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Icon(Icons.playlist_add),
+                    // const SizedBox(
+                    //   width: 10,
+                    // ),
+                    // const Icon(Icons.playlist_add),
                   ],
                 )
               ],
@@ -206,8 +206,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
           ),
           assetsAudioPlayer.builderRealtimePlayingInfos(
               builder: (context, RealtimePlayingInfos? infos) {
-            if (infos == null) {
-              return const SizedBox();
+            if (infos!.currentPosition == infos.duration) {
+              print('music ended');
             }
             //print('infos: $infos');
             return Column(
@@ -334,15 +334,4 @@ class _CurrentMusicState extends State<CurrentMusic> {
       ),
     );
   }
-}
-
-class DurationState {
-  const DurationState({
-    required this.progress,
-    required this.buffered,
-    this.total,
-  });
-  final Duration progress;
-  final Duration buffered;
-  final Duration? total;
 }
