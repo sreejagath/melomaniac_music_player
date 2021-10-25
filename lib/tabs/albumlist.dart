@@ -14,6 +14,7 @@ class _AlbumListState extends State<AlbumList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
           title: const Text(
             'Melomaniac',
             style: TextStyle(

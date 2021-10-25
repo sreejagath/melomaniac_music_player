@@ -5,6 +5,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:hive/hive.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentMusic extends StatefulWidget {
   final List musicList;
@@ -20,17 +21,27 @@ class CurrentMusic extends StatefulWidget {
 }
 
 class _CurrentMusicState extends State<CurrentMusic> {
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool isPlaying = false;
   String currentSong = "";
 
   final assetsAudioPlayer = AssetsAudioPlayer();
   List playlist = [];
+  bool? notifications;
+
+  Future<bool> notification() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('notification') ?? true;
+  }
 
   @override
   void initState() {
     final audios = widget.musicList;
     super.initState();
     isPlaying = true;
+    notification().then((value) {
+      notifications = value;
+    });
     assetsAudioPlayer.open(
       Playlist(
         audios: audios
@@ -47,22 +58,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
             .toList(),
         startIndex: widget.currentIndex,
       ),
-      showNotification: true,
+      showNotification: notifications??true,
       autoStart: true,
     );
     var favoritesBox = Hive.openBox('favorites');
-    //print(widget.musicList[widget.currentIndex]);
-    //print(Hive.box('musicBox').getAt(widget.currentIndex));
-    // var _player = AssetsAudioPlayer();
-    // var _durationState =
-    //     Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
-    //         _player.positionStream,
-    //         _player.playbackEventStream,
-    //         (position, playbackEvent) => DurationState(
-    //               progress: position,
-    //               buffered: playbackEvent.bufferedPosition,
-    //               total: playbackEvent.duration,
-    //             ));
   }
 
   @override

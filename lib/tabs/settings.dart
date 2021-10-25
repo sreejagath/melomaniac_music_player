@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -8,48 +9,69 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool notification = false;
+
   @override
   Widget build(BuildContext context) {
-    //List view of settings
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(
-            height: 20,
-          ),
-          ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            children: [
-              ListTile(
-                title: const Text('Notifications'),
-                leading: const Icon(Icons.notifications),
-                trailing: Switch(
-                  onChanged: (value) => setState(() {
-                    notification = value;
-                  }),
-                  value: notification,
-                ),
-              ),
-              const ListTile(
-                title: Text('Share'),
-                leading: Icon(Icons.share),
-              ),
-              const ListTile(
-                title: Text('Terms & Conditions'),
-                leading: Icon(Icons.book),
-              ),
-              const ListTile(
-                title: Text('Privacy Policies'),
-                leading: Icon(Icons.bookmark),
-              ),
-            ],
-          ),
-          const ListTile(
-            title: Text('About'),
-            leading: Icon(Icons.notes),
+          FutureBuilder<SharedPreferences>(
+            future: prefs,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                notification = snapshot.data?.getBool('notification') ?? false;
+                return ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('Notification'),
+                      leading: const Icon(Icons.notifications),
+                      trailing: Switch(
+                        value: notification,
+                        onChanged: (value) {
+                          setState(() {
+                            notification = value;
+                          });
+                          snapshot.data?.setBool('notification', value);
+                        },
+                      ),
+                    ),
+                    const ListTile(
+                      title: Text('Share'),
+                      leading: Icon(Icons.share),
+                    ),
+                    const ListTile(
+                      title: Text('Terms & Conditions'),
+                      leading: Icon(Icons.book),
+                    ),
+                    const ListTile(
+                      title: Text('Privacy Policies'),
+                      leading: Icon(Icons.bookmark),
+                    ),
+                    ListTile(
+                      title: Text('About'),
+                      leading: Icon(Icons.notes),
+                      onTap: () {
+                        //showAboutDialog(context: context);
+                        showAboutDialog(
+                            context: context,
+                            applicationName: 'Melomaniac',
+                            applicationVersion: '1.0.0',
+                            applicationLegalese: '© 2021 Melomaniac',
+                            );
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
           const SizedBox(
             height: 20,
