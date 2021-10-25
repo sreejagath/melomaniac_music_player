@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:hive/hive.dart';
 
 class SearchTrack extends StatefulWidget {
   const SearchTrack({Key? key}) : super(key: key);
@@ -12,8 +13,24 @@ class SearchTrack extends StatefulWidget {
 class _SearchTrackState extends State<SearchTrack> {
   OnAudioQuery _audioQuery = OnAudioQuery();
   List<dynamic> musicList = [];
+  List<dynamic> searchedList = [];
 
   bool textKeyActive = false;
+  Future searchTracks(String searchKey) async {
+    var musics = await Hive.openBox('musicBox');
+    //print(musics.getAt(0));
+
+    List mdata = musics.getAt(0);
+    searchedList.clear();
+    for (var i = 0; i < mdata.length; i++) {
+      if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+        searchedList.add(mdata[i]);
+      }
+    }
+    await Future.delayed(Duration(milliseconds: 5000));
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +44,7 @@ class _SearchTrackState extends State<SearchTrack> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: searchKey,
-            //onChanged: searchTracks,
+            onChanged: searchTracks,
             decoration: InputDecoration(
               labelText: 'Search...',
               border: OutlineInputBorder(
@@ -39,147 +56,17 @@ class _SearchTrackState extends State<SearchTrack> {
         const SizedBox(
           height: 15,
         ),
-        ElevatedButton(
-            onPressed: () async {
-              List<dynamic> songs = await _audioQuery.queryWithFilters(
-                searchKey.text,
-                WithFiltersType.AUDIOS,
-              );
-              // print(musicList);
-              setState(() {
-                musicList = songs;
-              });
-
-              print(musicList);
-            },
-            child: Text('Search')),
-        Column(
-          children: [
-            searchKey.text.isEmpty
-                ? ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: musicList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          ListTile(
-                            // leading: CircleAvatar(
-                            //   radius: 25,
-                            //   backgroundImage: AssetImage(music[index]['image']),
-                            // ),
-                            title: Text(
-                              musicList[index]['title'],
-                              style: const TextStyle(
-                                fontFamily: 'Genera',
-                                fontSize: 15.0,
-                                color: Colors.black,
-                              ),
-                            ),
-                            subtitle: Text(
-                              musicList[index]['artist'],
-                              style: const TextStyle(
-                                fontFamily: 'Genera',
-                                fontSize: 15.0,
-                                color: Color(0xFF3A6878),
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CurrentMusic(
-                                            musicList: musicList,
-                                            currentIndex: index,
-                                          )));
-                            },
-                          ),
-                          const Divider(
-                            color: Colors.black,
-                            height: 10,
-                          ),
-                        ],
-                      );
-                    },
-                  )
-                : FutureBuilder<List<SongModel>>(
-                    // Default values:
-                    future: _audioQuery.querySongs(
-                      sortType: null,
-                      orderType: OrderType.ASC_OR_SMALLER,
-                      uriType: UriType.EXTERNAL,
-                      ignoreCase: true,
-                    ),
-                    builder: (context, item) {
-                      // Loading content
-                      if (item.data == null)
-                        return const CircularProgressIndicator();
-                      if (item.data!.isEmpty)
-                        return const Text('Nothing found!');
-                      return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: item.data!.length,
-                        itemBuilder: (context, index) {
-                          List data = [
-                            {
-                              'title': item.data![index].title,
-                              'artist': item.data![index].artist,
-                              'uri': item.data![index].uri,
-                              'id': item.data![index].id,
-                              'asset': 'false'
-                            }
-                          ];
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                    title: Text(
-                                      item.data![index].title,
-                                      style: const TextStyle(
-                                        fontFamily: 'Genera',
-                                        fontSize: 15.0,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      item.data![index].artist ?? "No Artist",
-                                      style: const TextStyle(
-                                        fontFamily: 'Genera',
-                                        fontSize: 15.0,
-                                        color: Color(0xFF3A6878),
-                                      ),
-                                    ),
-                                    trailing:
-                                        const Icon(Icons.arrow_forward_rounded),
-                                    leading: QueryArtworkWidget(
-                                      id: item.data![index].id,
-                                      type: ArtworkType.AUDIO,
-                                    ),
-                                    //onTap: openPage(data),
-                                    onTap: () async {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  CurrentMusic(
-                                                      musicList: data,
-                                                      currentIndex: index)));
-                                      print(data);
-                                    }),
-                                const Divider(
-                                  color: Colors.black,
-                                  height: 10,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ],
-        )
+        ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: searchedList.length,
+            itemBuilder: (BuildContext context, int index) {
+              print(searchedList);
+              return ListTile(
+                  title: Text(
+                searchedList[index]['title'],
+              ));
+            })
       ])),
     );
   }

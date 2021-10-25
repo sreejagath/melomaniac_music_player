@@ -96,7 +96,13 @@ class _TracksState extends State<Tracks> {
                 children: [
                   ListTile(
                     title: Text(
-                      musics[index]['title'],
+                      musics[index]['title'].length > 28? 
+                      musics[index]['title'].replaceRange(
+                                28,
+                                musics[index]['title'].length,
+                                '...')
+                            : musics[index]['title'],
+                      
                       style: const TextStyle(
                         fontFamily: 'Genera',
                         fontSize: 15.0,
@@ -104,7 +110,12 @@ class _TracksState extends State<Tracks> {
                       ),
                     ),
                     subtitle: Text(
-                      musics[index]['artist'] ?? "No Artist",
+                      musics[index]['artist'].length > 28? 
+                      musics[index]['artist'].replaceRange(
+                                28,
+                                musics[index]['artist'].length,
+                                '...')
+                            : musics[index]['artist'],
                       style: const TextStyle(
                         fontFamily: 'Genera',
                         fontSize: 15.0,

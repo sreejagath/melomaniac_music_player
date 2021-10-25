@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/tabs/player.dart';
 
 class AlbumList extends StatefulWidget {
   final List albumList;
@@ -38,6 +39,13 @@ class _AlbumListState extends State<AlbumList> {
                       leading: Icon(Icons.album),
                       title: Text(widget.albumList[index]['title']),
                       subtitle: Text(widget.albumList[index]['artist']),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => CurrentMusic(
+                                    musicList: widget.albumList, currentIndex: index)));
+                      },
                     );
                   },
                 )

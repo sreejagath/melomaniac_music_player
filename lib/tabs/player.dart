@@ -128,7 +128,12 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        music[widget.currentIndex]['title'],
+                        music[widget.currentIndex]['title'].length > 18
+                            ? music[widget.currentIndex]['title'].replaceRange(
+                                18,
+                                music[widget.currentIndex]['title'].length,
+                                '...')
+                            : music[widget.currentIndex]['title'],
                         style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Genera',
@@ -138,7 +143,12 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         height: 15,
                       ),
                       Text(
-                        music[widget.currentIndex]['artist'],
+                        music[widget.currentIndex]['artist'].length > 20
+                            ? music[widget.currentIndex]['artist'].replaceRange(
+                                20,
+                                music[widget.currentIndex]['artist'].length,
+                                '...')
+                            : music[widget.currentIndex]['artist'],
                         style: const TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Genera',
@@ -215,7 +225,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 // ),
                 //StreamBuilder<DurationState> ProgressBar(progress: progress, total: total)
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.only(
+                      top: 30.0, bottom: 40.0, left: 30, right: 30),
                   child: ProgressBar(
                     progress: infos.currentPosition,
                     total: infos.duration,
@@ -241,7 +252,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     IconButton(
                       onPressed: () {
                         var snackBar =
-                            SnackBar(content: Text('No Previous Songs'));
+                            const SnackBar(content: Text('No Previous Songs'));
                         setState(() {
                           widget.currentIndex == 0
                               ? ScaffoldMessenger.of(context)
