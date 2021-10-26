@@ -43,24 +43,27 @@ class _CurrentMusicState extends State<CurrentMusic> {
       notifications = value;
     });
     assetsAudioPlayer.open(
-      Playlist(
-        audios: audios
-            .map((audio) => Audio.file(
-                  audio['uri'],
-                  metas: Metas(
-                    title: audio['title'],
-                    artist: audio['artist'],
-                    //album: "CountryAlbum",
-                    // image: MetasImage.asset(
-                    //     widget.musicList[0]['id']), //can be MetasImage.network
-                  ),
-                ))
-            .toList(),
-        startIndex: widget.currentIndex,
-      ),
-      showNotification: notifications ?? true,
-      autoStart: true,
-    );
+        Playlist(
+          audios: audios
+              .map((audio) => Audio.file(
+                    audio['uri'],
+                    metas: Metas(
+                      title: audio['title'],
+                      artist: audio['artist'],
+                      //album: "CountryAlbum",
+                      // image: MetasImage.asset(
+                      //     widget.musicList[0]['id']), //can be MetasImage.network
+                    ),
+                  ))
+              .toList(),
+          startIndex: widget.currentIndex,
+        ),
+        showNotification: notifications ?? true,
+        autoStart: true,
+        loopMode: LoopMode.playlist,
+        playInBackground: PlayInBackground.enabled,
+        
+        );
     var favoritesBox = Hive.openBox('favorites');
   }
 
