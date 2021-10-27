@@ -24,6 +24,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool isPlaying = false;
   String currentSong = "";
+  String currentArtist = "";
 
   final assetsAudioPlayer = AssetsAudioPlayer();
   List playlist = [];
@@ -37,35 +38,81 @@ class _CurrentMusicState extends State<CurrentMusic> {
   @override
   void initState() {
     final audios = widget.musicList;
-    super.initState();
-    isPlaying = true;
+    final index = widget.currentIndex;
+    playlist = audios;
     notification().then((value) {
+      print(value);
       notifications = value;
     });
+    super.initState();
+    isPlaying = true;
+    
     assetsAudioPlayer.open(
-        Playlist(
-          audios: audios
-              .map((audio) => Audio.file(
-                    audio['uri'],
-                    metas: Metas(
-                      title: audio['title'],
-                      artist: audio['artist'],
-                      //album: "CountryAlbum",
-                      // image: MetasImage.asset(
-                      //     widget.musicList[0]['id']), //can be MetasImage.network
-                    ),
-                  ))
-              .toList(),
-          startIndex: widget.currentIndex,
-        ),
-        showNotification: notifications ?? true,
-        autoStart: true,
-        loopMode: LoopMode.playlist,
-        playInBackground: PlayInBackground.enabled,
-        
-        );
+      Playlist(
+        audios: audios
+            .map((audio) => Audio.file(
+                  audio['uri'],
+                  metas: Metas(
+                    title: audio['title'],
+                    artist: audio['artist'],
+                    //album: "CountryAlbum",
+                    // image: MetasImage.asset(
+                    //     widget.musicList[0]['id']), //can be MetasImage.network
+                  ),
+                ))
+            .toList(),
+        startIndex: widget.currentIndex,
+      ),
+      showNotification: notifications ?? false,
+      autoStart: true,
+      loopMode: LoopMode.playlist,
+      playInBackground: PlayInBackground.enabled,
+    );
     var favoritesBox = Hive.openBox('favorites');
+    assetsAudioPlayer.current.listen((event) {
+      String? name = event?.audio.audio.metas.title;
+      String? artist = event?.audio.audio.metas.artist;
+      if (name != null && artist != null) {
+        currentSong = name;
+        currentArtist = artist;
+        setState(() {});
+      }
+      // event?.audio.audio.metas.title.then((title) {
+      //   setState(() {
+      //     currentSong = title;
+      //   });
+      // });
+    });
+
+    //updation();
+    //var current = assetsAudioPlayer.currentPosition;
+    // assetsAudioPlayer.currentPosition.listen((position) {
+    //   if (position.inSeconds == assetsAudioPlayer.current.duration.inSeconds) {
+    //     if (assetsAudioPlayer.currentIndex ==
+    //         assetsAudioPlayer.playlist.audios.length - 1) {
+    //       assetsAudioPlayer.playlist.next();
+    //     } else {
+    //       assetsAudioPlayer.playlist.next();
+    //     }
+    //   }
+    // });
   }
+
+//IMPORTANT
+  // void updation() {
+  //   assetsAudioPlayer.currentPosition.listen((position) {
+  //     assetsAudioPlayer.current.listen((event) {
+  //       print((event?.audio.duration.inMilliseconds).toString());
+  //       print((position.inMilliseconds).toString());
+  //       print('Duration');
+  //       if (event?.audio.duration.inMilliseconds == position.inMilliseconds) {
+  //         setState(() {
+  //           widget.currentIndex = widget.currentIndex + 1;
+  //         });
+  //       }
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -130,12 +177,11 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        music[widget.currentIndex]['title'].length > 18
-                            ? music[widget.currentIndex]['title'].replaceRange(
-                                18,
-                                music[widget.currentIndex]['title'].length,
-                                '...')
-                            : music[widget.currentIndex]['title'],
+                        //currentSong,
+                        currentSong.length > 18
+                            ? currentSong.replaceRange(
+                                18, currentSong.length, '...')
+                            : currentSong,
                         style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Genera',
@@ -145,12 +191,11 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         height: 15,
                       ),
                       Text(
-                        music[widget.currentIndex]['artist'].length > 20
-                            ? music[widget.currentIndex]['artist'].replaceRange(
-                                20,
-                                music[widget.currentIndex]['artist'].length,
-                                '...')
-                            : music[widget.currentIndex]['artist'],
+                        //currentArtist,
+                        currentArtist.length > 20
+                            ? currentArtist.replaceRange(
+                                20, currentArtist.length, '...')
+                            : currentArtist,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Genera',
@@ -210,8 +255,16 @@ class _CurrentMusicState extends State<CurrentMusic> {
           assetsAudioPlayer.builderRealtimePlayingInfos(
               builder: (context, RealtimePlayingInfos? infos) {
             if (infos!.currentPosition == infos.duration) {
-              print('music ended');
+              // setState(() {
+              //   widget.currentIndex = widget.currentIndex + 1;
+
+              // });
+              print(widget.currentIndex);
             }
+            // setState(() {
+            //               widget.currentIndex = widget.currentIndex + 1;
+            //             });
+            // }
             //print('infos: $infos');
             return Column(
               children: [
@@ -316,12 +369,22 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     ),
                     IconButton(
                       onPressed: () {
-                        var snackBar = SnackBar(content: Text('No Next Songs'));
+                        print('Index : ${widget.currentIndex}');
+                        //var snackBar = SnackBar(content: Text('No Next Songs'));
                         setState(() {
                           widget.currentIndex == widget.musicList.length - 1
-                              ? widget.currentIndex = 0
-                              : widget.currentIndex++;
-                          assetsAudioPlayer.next(keepLoopMode: true);
+                              ? setState(() {
+                                  assetsAudioPlayer.stop();
+                                  widget.currentIndex = 0;
+                                  assetsAudioPlayer
+                                      .playlistPlayAtIndex(widget.currentIndex);
+                                })
+                              : setState(() {
+                                  assetsAudioPlayer.stop();
+                                  widget.currentIndex++;
+                                  assetsAudioPlayer
+                                      .playlistPlayAtIndex(widget.currentIndex);
+                                });
                         });
                         print('Current Index\n\n\n');
                         print(widget.currentIndex);

@@ -209,7 +209,6 @@ class _AlbumsState extends State<Albums> {
                           builder: (context) => AlbumList(
                                 albumList: albumList,
                               )));
-                
                 }),
           );
         },

@@ -17,6 +17,7 @@ import 'package:music_player/db_model/data_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
@@ -72,6 +73,7 @@ class _HomePageState extends State<HomePage>
   static int _selectedIndex = 0;
   AudioPlayer audioPlayer = AudioPlayer();
   AudioCache audioCache = AudioCache();
+  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
 
   List music = [
     {
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage>
       ],
       currentIndex: 0,
     ),
-    Playlist(),
+    PlaylistPage(),
     Settings(),
   ];
 
@@ -137,7 +139,7 @@ class _HomePageState extends State<HomePage>
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.list,
+              Icons.music_note,
               color: Colors.black,
             ),
             label: 'Tracks',
@@ -169,16 +171,19 @@ class _HomePageState extends State<HomePage>
         onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          var currentMusic = await Hive.openBox('currentSong');
+          List currentSong = currentMusic.get('currentSong');
+          var index = currentMusic.get('index');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CurrentMusic(
-              musicList: music,
-              currentIndex: 0,
+              musicList: currentSong,
+              currentIndex: index,
             );
           }));
         },
         child: const Icon(
-          Icons.music_note,
+          Icons.play_arrow,
           color: Colors.white,
         ),
         backgroundColor: Colors.black,

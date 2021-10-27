@@ -397,12 +397,16 @@ class _TracksState extends State<Tracks> {
                                 value: 4,
                               ),
                             ]),
-                    onTap: () {
+                    onTap: () async {
+                      var currentSong = await Hive.openBox('currentSong');
+                      currentSong.put('currentSong', musics);
+                      currentSong.put('index', index);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => CurrentMusic(
                                   musicList: musics, currentIndex: index)));
+
                     },
                   )
                 ],

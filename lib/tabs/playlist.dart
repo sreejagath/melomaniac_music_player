@@ -10,14 +10,14 @@ import 'package:music_player/tabs/tracks.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 
-class Playlist extends StatefulWidget {
-  const Playlist({Key? key}) : super(key: key);
+class PlaylistPage extends StatefulWidget {
+  const PlaylistPage({Key? key}) : super(key: key);
 
   @override
-  _PlaylistState createState() => _PlaylistState();
+  _PlaylistPageState createState() => _PlaylistPageState();
 }
 
-class _PlaylistState extends State<Playlist> {
+class _PlaylistPageState extends State<PlaylistPage> {
   List musics = [];
   List playlists = [];
   List playlistData = [];
@@ -52,9 +52,56 @@ class _PlaylistState extends State<Playlist> {
     //}
   }
 
+  List<String> trackTitle = [
+    'On My Way',
+    'Thunder',
+    'Alone',
+    'Despacito',
+    'Shape of You',
+    'Perfect',
+    'Havana',
+    'See You Again',
+    'Despacito',
+    'Shape of You',
+  ];
+
+  List<String> trackArtist = [
+    'Ed Sheeran',
+    'Taylor Swift',
+    'Justin Bieber',
+    'Luis Fonsi',
+    'Shawn Mendes',
+    'Ed Sheeran',
+    'Taylor Swift',
+    'Justin Bieber',
+    'Luis Fonsi',
+    'Shawn Mendes',
+  ];
+
+  List<String> timeList = [
+    '03:30',
+    '04:30',
+    '05:30',
+    '06:30',
+    '07:30',
+    '08:30',
+    '09:30',
+    '10:30',
+    '11:30',
+    '12:30',
+  ];
+
+  List music = [
+    {
+      'title': 'Malare',
+      'artist': 'Rajesh Murugan',
+      'url': 'assets/music/song.mp3'
+    }
+  ];
   @override
   Widget build(BuildContext context) {
     TextEditingController _playlist = TextEditingController();
+    TextEditingController newPlaylistName = TextEditingController();
     int _len = musics.length;
     List<bool> isChecked = List.generate(_len, (index) => false);
     return Container(
@@ -122,6 +169,57 @@ class _PlaylistState extends State<Playlist> {
               ),
             ]),
           ),
+
+          //           child: Row(
+          //             children: [
+          //               TextButton(
+          //                 onPressed: () {
+          //                   showModalBottomSheet(
+          //                       shape: RoundedRectangleBorder(
+          //                           borderRadius: BorderRadius.all(
+          //                               Radius.circular(10.0))),
+          //                       context: context,
+          //                       builder: (context) {
+          //                         return Container(
+          //                           height: MediaQuery.of(context).size.height *
+          //                               0.5,
+          //                           child: Form(
+          //                               child: Column(
+          //                             children: [
+          //                               SizedBox(
+          //                                 height: 20,
+          //                               ),
+          //                               Padding(
+          //                                 padding: const EdgeInsets.only(left: 15,right:15),
+          //                                 child: TextFormField(
+          //                                   //controller: _filter,
+          //                                   decoration: new InputDecoration(
+          //                                       prefixIcon: new Icon(Icons.add),
+          //                                       hintText: 'New Playlist'),
+          //                                 ),
+          //                               ),
+          //                               SizedBox(height: 2,),
+          //                               ElevatedButton(onPressed: (){}, child: Text('Create')),
+          //                             ],
+          //                           )),
+          //                         );
+          //                       });
+          //                 },
+          //                 child: Row(
+          //                   children: const [
+          //                     Icon(Icons.add),
+          //                     SizedBox(
+          //                       width: 10.0,
+          //                     ),
+          //                     Text('New Playlist')
+          //                   ],
+          //                 ),
+          //               ),
+          //             ],
+          //           ))
+          //     ],
+          //   ),
+          // ),
           const SizedBox(
             height: 15,
           ),
@@ -221,7 +319,7 @@ class _PlaylistState extends State<Playlist> {
                     ),
                     subtitle: Text(
                       playlistData[index]['tracks'].length.toString() +
-                      ' Songs',
+                          ' Songs',
                       style: const TextStyle(fontFamily: 'Genera'),
                     ),
                     onTap: () async {
@@ -360,17 +458,37 @@ class _PlaylistState extends State<Playlist> {
                                                           MainAxisSize.min,
                                                       children: [
                                                         TextFormField(
-                                                            decoration:
-                                                                const InputDecoration(
-                                                          labelText:
-                                                              'Current Name',
-                                                        ))
+                                                          controller:
+                                                              newPlaylistName,
+                                                          // initialValue:
+                                                          //     playlistData[
+                                                          //             index]
+                                                          //         ['playlist'],
+                                                        ),
                                                       ]),
                                                 ),
                                                 title: const Text('Rename'),
                                                 actions: [
                                                   TextButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async{
+                                                      var playlistBox =
+                                                          await Hive.openBox(
+                                                              'playlistBox');
+                                                      playlistData[index]
+                                                              ['playlist'] =
+                                                          newPlaylistName.text;
+                                                      setState(() {
+                                                        playlistData[index]
+                                                                ['playlist'] =
+                                                            newPlaylistName
+                                                                .text;
+                                                        playlistBox.putAt(
+                                                            index,
+                                                            playlistData[index]);
+                                                      });
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
                                                     child: const Text('OK'),
                                                   ),
                                                   TextButton(
