@@ -25,6 +25,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
   bool isPlaying = false;
   String currentSong = "";
   String currentArtist = "";
+  String artUri = '';
 
   final assetsAudioPlayer = AssetsAudioPlayer();
   List playlist = [];
@@ -46,7 +47,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
     });
     super.initState();
     isPlaying = true;
-    
+
     assetsAudioPlayer.open(
       Playlist(
         audios: audios
@@ -75,8 +76,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
       if (name != null && artist != null) {
         currentSong = name;
         currentArtist = artist;
+        //print(artUri); //
         setState(() {});
       }
+
       // event?.audio.audio.metas.title.then((title) {
       //   setState(() {
       //     currentSong = title;
@@ -339,13 +342,13 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         onPressed: () {
                           if (isPlaying) {
                             //audioPlayer.pause();
-                            assetsAudioPlayer.pause();
+                            assetsAudioPlayer.playOrPause();
                             setState(() {
                               isPlaying = false;
                               btnIcon = Icons.play_arrow;
                             });
                           } else {
-                            assetsAudioPlayer.play();
+                            assetsAudioPlayer.playOrPause();
                             setState(() {
                               isPlaying = true;
                               btnIcon = Icons.pause;

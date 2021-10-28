@@ -1,9 +1,11 @@
+import 'package:assets_audio_player/assets_audio_player.dart' as audioPlayer;
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:music_player/settings/player_settings.dart';
 
 class Tracks extends StatefulWidget {
   const Tracks({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class Tracks extends StatefulWidget {
   _TracksState createState() => _TracksState();
 }
 
+//AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
+
 class _TracksState extends State<Tracks> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
 
@@ -19,6 +23,7 @@ class _TracksState extends State<Tracks> {
   List playlists = [];
   List musicData = [];
   List playlistData = [];
+  final List pathsForPlaying = [];
 
   @override
   void initState() {
@@ -50,6 +55,7 @@ class _TracksState extends State<Tracks> {
             'isFavorite': false,
           });
         });
+        print(musicData);
         musicBox.add(musicData);
         setState(() {
           musics = musicBox.getAt(0);
@@ -59,7 +65,22 @@ class _TracksState extends State<Tracks> {
         });
       }
     }
+    for (var i = 0; i < musicData.length; i++) {
+      pathsForPlaying.add(musicData[i]['uri']);
+    }
+    //await initializeAudiosForPlaying();
+    await audioPlayerSettings.initializeAudioPlayerWithAudios(audiosForPlaying);
+    print(audiosForPlaying);
   }
+
+  var audiosForPlaying = <audioPlayer.Audio>[];
+  Future<void> initializeAudiosForPlaying() async {
+    await Future.forEach(pathsForPlaying, (path) async {
+      audiosForPlaying.add(await audioPlayer.Audio.file(path.toString()));
+    });
+  }
+
+  final audioPlayerSettings = AudioPlayerSettings();
 
   @override
   Widget build(BuildContext context) {
@@ -148,81 +169,6 @@ class _TracksState extends State<Tracks> {
                                                     width: double.maxFinite,
                                                     child: Column(
                                                       children: [
-                                                        // Row(children: [
-                                                        //   TextButton(
-                                                        //     onPressed:
-                                                        //         () async {
-                                                        //       showDialog(
-                                                        //           context:
-                                                        //               context,
-                                                        //           builder:
-                                                        //               (BuildContext
-                                                        //                   context) {
-                                                        //             return AlertDialog(
-                                                        //               title: Text(
-                                                        //                   'Add to Playlist'),
-                                                        //               content:
-                                                        //                   TextField(
-                                                        //                 controller:
-                                                        //                     _playlist,
-                                                        //                 decoration:
-                                                        //                     InputDecoration(
-                                                        //                   hintText:
-                                                        //                       'Playlist Name',
-                                                        //                 ),
-                                                        //               ),
-                                                        //               actions: [
-                                                        //                 TextButton(
-                                                        //                   child:
-                                                        //                       Text('Add'),
-                                                        //                   onPressed:
-                                                        //                       () async {
-                                                        //                     var playlistBox =
-                                                        //                         await Hive.openBox('playlistBox');
-                                                        //                     setState(() {
-                                                        //                       playlists = [
-                                                        //                         {
-                                                        //                           'playlist': _playlist.text,
-                                                        //                           'tracks': []
-                                                        //                         }
-                                                        //                       ];
-                                                        //                       playlistBox.addAll(playlists);
-
-                                                        //                     });
-                                                        //                     String
-                                                        //                         playlistName =
-                                                        //                         _playlist.text;
-                                                        //                     final snackBar =
-                                                        //                         SnackBar(
-                                                        //                       content: Text('Created  Playlist $playlistName Successfully !'),
-                                                        //                     );
-                                                        //                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                        //                     Navigator.pop(context);
-                                                        //                   },
-                                                        //                 ),
-                                                        //                 TextButton(
-                                                        //                   child:
-                                                        //                       const Text('Cancel'),
-                                                        //                   onPressed:
-                                                        //                       () {
-                                                        //                     Navigator.pop(context);
-                                                        //                   },
-                                                        //                 ),
-                                                        //               ],
-                                                        //             );
-                                                        //           });
-                                                        //     },
-                                                        //     child: Row(
-                                                        //       children: [
-                                                        //         Icon(Icons.add),
-                                                        //         SizedBox(
-                                                        //             width: 5),
-                                                        //         Text(
-                                                        //             'New Playlist')
-                                                        //       ],
-                                                        //     ),
-                                                        //   ),
-                                                        // ]),
                                                         ListView.builder(
                                                             shrinkWrap: true,
                                                             scrollDirection:
@@ -398,6 +344,11 @@ class _TracksState extends State<Tracks> {
                               ),
                             ]),
                     onTap: () async {
+                      // final pathsforPlaying = [];
+                      // for (var i = 0; i < musics.length; i++) {
+                      //   pathsforPlaying.add(musics[i]['uri']);
+                      // }
+                      // var audios = <audioPlayer.Audio>[];
                       var currentSong = await Hive.openBox('currentSong');
                       currentSong.put('currentSong', musics);
                       currentSong.put('index', index);
@@ -406,7 +357,6 @@ class _TracksState extends State<Tracks> {
                           MaterialPageRoute(
                               builder: (BuildContext context) => CurrentMusic(
                                   musicList: musics, currentIndex: index)));
-
                     },
                   )
                 ],

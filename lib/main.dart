@@ -31,7 +31,7 @@ Future main() async {
   //     await _audioQuery.permissionsRequest();
   //   }
   // }
-  runApp(GetMaterialApp(
+  runApp(const MaterialApp(
     home: HomePage(),
   ));
   //requestPermission();
@@ -75,14 +75,6 @@ class _HomePageState extends State<HomePage>
   AudioCache audioCache = AudioCache();
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
 
-  List music = [
-    {
-      'title': 'Malare',
-      'artist': 'Rajesh Murugan',
-      'url': 'assets/music/song.mp3',
-      'id': 'assets/images/malare.jpg'
-    }
-  ];
   @override
   void initState() {
     super.initState();
@@ -98,6 +90,9 @@ class _HomePageState extends State<HomePage>
   static List<Widget> _widgetOptions = <Widget>[
     Tracklist(),
     SearchTrack(),
+    
+    PlaylistPage(),
+    Settings(),
     CurrentMusic(
       musicList: [
         {
@@ -108,8 +103,6 @@ class _HomePageState extends State<HomePage>
       ],
       currentIndex: 0,
     ),
-    PlaylistPage(),
-    Settings(),
   ];
 
   @override
@@ -149,16 +142,6 @@ class _HomePageState extends State<HomePage>
             label: 'Search',
           ),
           BottomNavigationBarItem(
-              icon: Visibility(
-                visible: false,
-                child: Icon(
-                  Icons.music_note_rounded,
-                  color: Colors.black,
-                  size: 0,
-                ),
-              ),
-              label: ''),
-          BottomNavigationBarItem(
             icon: Icon(Icons.favorite, color: Colors.black),
             label: 'Playlists',
           ),
@@ -166,11 +149,21 @@ class _HomePageState extends State<HomePage>
             icon: Icon(Icons.settings, color: Colors.black),
             label: 'Settings',
           ),
+          // BottomNavigationBarItem(
+          //     icon: Visibility(
+          //       visible: false,
+          //       child: Icon(
+          //         Icons.music_note_rounded,
+          //         color: Colors.black,
+          //         size: 0,
+          //       ),
+          //     ),
+          //     label: ''),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           var currentMusic = await Hive.openBox('currentSong');
           List currentSong = currentMusic.get('currentSong');
@@ -182,13 +175,13 @@ class _HomePageState extends State<HomePage>
             );
           }));
         },
-        child: const Icon(
+        label: Text('Last Played'),
+        icon: const Icon(
           Icons.play_arrow,
           color: Colors.white,
         ),
         backgroundColor: Colors.black,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
