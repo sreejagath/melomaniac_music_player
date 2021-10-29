@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/settings/player_settings.dart';
+import 'package:music_player/main.dart';
 
 class Tracks extends StatefulWidget {
   const Tracks({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _TracksState extends State<Tracks> {
   List musicData = [];
   List playlistData = [];
   final List pathsForPlaying = [];
+  final audioPlayerSettings = AudioPlayerSettings();
 
   @override
   void initState() {
@@ -69,8 +71,8 @@ class _TracksState extends State<Tracks> {
       pathsForPlaying.add(musicData[i]['uri']);
     }
     //await initializeAudiosForPlaying();
-    await audioPlayerSettings.initializeAudioPlayerWithAudios(audiosForPlaying);
-    print(audiosForPlaying);
+    //await audioPlayerSettings.initializeAudioPlayerWithAudios(audiosForPlaying);
+    //print(audiosForPlaying);
   }
 
   var audiosForPlaying = <audioPlayer.Audio>[];
@@ -79,8 +81,6 @@ class _TracksState extends State<Tracks> {
       audiosForPlaying.add(await audioPlayer.Audio.file(path.toString()));
     });
   }
-
-  final audioPlayerSettings = AudioPlayerSettings();
 
   @override
   Widget build(BuildContext context) {
@@ -357,6 +357,13 @@ class _TracksState extends State<Tracks> {
                           MaterialPageRoute(
                               builder: (BuildContext context) => CurrentMusic(
                                   musicList: musics, currentIndex: index)));
+
+                      final List<audioPlayer.Audio> _musicList = (musics)
+                          .map((audio) => audioPlayer.Audio.file(audio['uri']))
+                          .toList();
+                      audioPlayerSettings.initializeAudioPlayerWithAudios(
+                          _musicList, index);
+                      //audioPlayerSettings.playSongAtIndex(index);
                     },
                   )
                 ],

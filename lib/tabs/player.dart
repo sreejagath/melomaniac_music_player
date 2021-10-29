@@ -4,6 +4,7 @@ import 'package:music_player/player/position_seek_widget.dart';
 import 'package:music_player/settings/player_settings.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:music_player/main.dart';
 import 'package:hive/hive.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,7 +56,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
       pathsForPlaying.add(widget.musicList[i]['uri']);
     }
     await Future.forEach(pathsForPlaying, (path) async {
-      audiosForPlaying.add(await Audio.file(path.toString()));
+      audiosForPlaying.addAll(widget.musicList[widget.currentIndex]['uri']);
     });
   }
 
@@ -75,51 +76,44 @@ class _CurrentMusicState extends State<CurrentMusic> {
   @override
   void initState() {
     print('id here ${widget.musicList[widget.currentIndex]['id']}');
-    final audios = widget.musicList;
+    final List<Audio> audios =
+        (widget.musicList).map((audio) => Audio.file(audio['uri'])).toList();
     final index = widget.currentIndex;
     //playlist = audios;
     notification().then((value) {
       print(value);
       notifications = value;
     });
+    //audioPlayerSettings.currentStatus.listen(currentPlayerStatus);
     super.initState();
-    setSongId().then((value) {
-      print('id here $value');
-    });
+    print(audios);
+    //initializeAudiosForPlaying();
+    //audioPlayerSettings.initializeAudioPlayerWithAudios(audios);
+    //audioPlayerSettings.playSongAtIndex(widget.currentIndex);
+    //audioPlayerSettings.
+    // assetsAudioPlayer.open(
+    //       Playlist(
+    //         audios: audios
+    //             .map((audio) => Audio.file(
+    //                   audio['uri'],
+    //                   metas: Metas(
+    //                     title: audio['title'],
+    //                     artist: audio['artist'],
+    //                     id: audio['id'].toString(),
+    //                     //image: audio['id'],
+    //                   ),
+    //                 ))
+    //             .toList(),
+    //         startIndex: widget.currentIndex,
+    //       ),
+    //       showNotification: notifications ?? false,
+    //       autoStart: true,
+    //       loopMode: LoopMode.playlist,
+    //       playInBackground: PlayInBackground.enabled,
+    //     );
+
     //isPlaying = true;
     //songPlaying();
-    getSongId().then((value) {
-      print('value : $value');
-      if (value == widget.musicList[widget.currentIndex]['id']) {
-        //audioPlayerSettings.stopSongs();
-        //print('song id: $value');
-        //assetsAudioPlayer.pause();
-        //assetsAudioPlayer.dispose();
-        //assetsAudioPlayer.playlistPlayAtIndex(widget.currentIndex);
-        assetsAudioPlayer.stop();
-        assetsAudioPlayer.open(
-          Playlist(
-            audios: audios
-                .map((audio) => Audio.file(
-                      audio['uri'],
-                      metas: Metas(
-                        title: audio['title'],
-                        artist: audio['artist'],
-                        id: audio['id'].toString(),
-                        //image: audio['id'],
-                      ),
-                    ))
-                .toList(),
-            startIndex: widget.currentIndex,
-          ),
-          showNotification: notifications ?? false,
-          autoStart: true,
-          loopMode: LoopMode.playlist,
-          playInBackground: PlayInBackground.enabled,
-        );
-      }
-    });
-
     // assetsAudioPlayer.isPlaying.listen((isPlaying) {
     //   if (isPlaying) {
     //     setState(() {
@@ -450,7 +444,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                               ? ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar)
                               : widget.currentIndex--;
-                          assetsAudioPlayer.previous(keepLoopMode: false);
+                          audioPlayerSettings.playPrevious();
                         });
                       },
                       icon: const Icon(Icons.arrow_back),
@@ -476,7 +470,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         onPressed: () {
                           if (isPlaying) {
                             //audioPlayer.pause();
-                            assetsAudioPlayer.playOrPause();
+                            audioPlayerSettings.playOrPauseAudio();
                             setState(() {
                               btnIcon = Icons.play_arrow;
                             });
@@ -515,11 +509,12 @@ class _CurrentMusicState extends State<CurrentMusic> {
                                       .playlistPlayAtIndex(widget.currentIndex);
                                 })
                               : setState(() {
-                                  assetsAudioPlayer.stop();
+                                  audioPlayerSettings.stopSongs();
                                   widget.currentIndex++;
                                   // assetsAudioPlayer
                                   //     .playlistPlayAtIndex(widget.currentIndex);
-                                  assetsAudioPlayer.next();
+                                  assetsAudioPlayer
+                                      .playlistPlayAtIndex(widget.currentIndex);
                                 });
                         });
                         print('Current Index\n\n\n');

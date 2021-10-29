@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
+import 'package:music_player/settings/player_settings.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
@@ -90,7 +91,6 @@ class _HomePageState extends State<HomePage>
   static List<Widget> _widgetOptions = <Widget>[
     Tracklist(),
     SearchTrack(),
-    
     PlaylistPage(),
     Settings(),
     CurrentMusic(
@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage>
     ),
   ];
 
+  final audioPlayerSettings = AudioPlayerSettings();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +120,6 @@ class _HomePageState extends State<HomePage>
         ),
         elevation: 0,
         backgroundColor: Colors.white,
-        
       ),
       body: SingleChildScrollView(
         child: Column(
