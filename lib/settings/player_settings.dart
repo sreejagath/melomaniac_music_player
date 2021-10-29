@@ -32,4 +32,7 @@ class AudioPlayerSettings {
   Future<void> playSongAtIndex(int index) async {
     _assetsAudioPlayer.playlistPlayAtIndex(index);
   }
+  Future<void> stopSongs() async {
+    await _assetsAudioPlayer.stop();
+  }
 }

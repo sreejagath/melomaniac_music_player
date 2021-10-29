@@ -168,8 +168,8 @@ class _AlbumsState extends State<Albums> {
                     child: Column(
                       children: [
                         Container(
-                          height: 63,
-                          width: 63,
+                          height: 60,
+                          width: 60,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
                             child: QueryArtworkWidget(

@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage>
         ),
         elevation: 0,
         backgroundColor: Colors.white,
+        
       ),
       body: SingleChildScrollView(
         child: Column(

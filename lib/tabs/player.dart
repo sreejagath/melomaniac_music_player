@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:music_player/player/position_seek_widget.dart';
+import 'package:music_player/settings/player_settings.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:hive/hive.dart';
@@ -25,57 +26,187 @@ class _CurrentMusicState extends State<CurrentMusic> {
   bool isPlaying = false;
   String currentSong = "";
   String currentArtist = "";
-  String artUri = '';
+  String currentArtUri = "";
 
   final assetsAudioPlayer = AssetsAudioPlayer();
   List playlist = [];
   bool? notifications;
+  List pathsForPlaying = [];
 
   Future<bool> notification() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('notification') ?? true;
   }
 
+  setSongId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('id', widget.musicList[widget.currentIndex]['id']);
+    return prefs.getInt('id');
+  }
+
+  Future<int> getSongId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('id')!;
+  }
+
+  var audiosForPlaying = <Audio>[];
+  Future<void> initializeAudiosForPlaying() async {
+    for (var i = 0; i < widget.musicList.length; i++) {
+      pathsForPlaying.add(widget.musicList[i]['uri']);
+    }
+    await Future.forEach(pathsForPlaying, (path) async {
+      audiosForPlaying.add(await Audio.file(path.toString()));
+    });
+  }
+
+  // play() async {
+  //   await initializeAudiosForPlaying();
+  //   print(audiosForPlaying);
+  //   await assetsAudioPlayer.open(
+  //     Playlist(audios:audiosForPlaying,
+  //     startIndex: widget.currentIndex,),
+  //     showNotification: true,
+
+  //     );
+  //   //audioPlayerSettings.initializeAudioPlayerWithAudios(audiosForPlaying);
+  // }
+
+  final audioPlayerSettings = AudioPlayerSettings();
   @override
   void initState() {
+    print('id here ${widget.musicList[widget.currentIndex]['id']}');
     final audios = widget.musicList;
     final index = widget.currentIndex;
-    playlist = audios;
+    //playlist = audios;
     notification().then((value) {
       print(value);
       notifications = value;
     });
     super.initState();
-    isPlaying = true;
+    setSongId().then((value) {
+      print('id here $value');
+    });
+    //isPlaying = true;
+    //songPlaying();
+    getSongId().then((value) {
+      print('value : $value');
+      if (value == widget.musicList[widget.currentIndex]['id']) {
+        //audioPlayerSettings.stopSongs();
+        //print('song id: $value');
+        //assetsAudioPlayer.pause();
+        //assetsAudioPlayer.dispose();
+        //assetsAudioPlayer.playlistPlayAtIndex(widget.currentIndex);
+        assetsAudioPlayer.stop();
+        assetsAudioPlayer.open(
+          Playlist(
+            audios: audios
+                .map((audio) => Audio.file(
+                      audio['uri'],
+                      metas: Metas(
+                        title: audio['title'],
+                        artist: audio['artist'],
+                        id: audio['id'].toString(),
+                        //image: audio['id'],
+                      ),
+                    ))
+                .toList(),
+            startIndex: widget.currentIndex,
+          ),
+          showNotification: notifications ?? false,
+          autoStart: true,
+          loopMode: LoopMode.playlist,
+          playInBackground: PlayInBackground.enabled,
+        );
+      }
+    });
 
-    assetsAudioPlayer.open(
-      Playlist(
-        audios: audios
-            .map((audio) => Audio.file(
-                  audio['uri'],
-                  metas: Metas(
-                    title: audio['title'],
-                    artist: audio['artist'],
-                    //album: "CountryAlbum",
-                    // image: MetasImage.asset(
-                    //     widget.musicList[0]['id']), //can be MetasImage.network
-                  ),
-                ))
-            .toList(),
-        startIndex: widget.currentIndex,
-      ),
-      showNotification: notifications ?? false,
-      autoStart: true,
-      loopMode: LoopMode.playlist,
-      playInBackground: PlayInBackground.enabled,
-    );
-    var favoritesBox = Hive.openBox('favorites');
+    // assetsAudioPlayer.isPlaying.listen((isPlaying) {
+    //   if (isPlaying) {
+    //     setState(() {
+    //       print('isPlaying : $isPlaying');
+    //       this.isPlaying = isPlaying;
+    //     });
+    //   assetsAudioPlayer.current.listen((event) {
+    //     getSongId().then((value) {
+    //       print('value : $value');
+    //       if (value != widget.musicList[widget.currentIndex]['id']) {
+    //         assetsAudioPlayer.stop();
+    //         setState(() {
+    //           assetsAudioPlayer.open(
+    //             Playlist(
+    //               audios: audios
+    //                   .map((audio) => Audio.file(
+    //                         audio['uri'],
+    //                         metas: Metas(
+    //                           title: audio['title'],
+    //                           artist: audio['artist'],
+    //                           id: audio['id'].toString(),
+    //                           //image: audio['id'],
+    //                         ),
+    //                       ))
+    //                   .toList(),
+    //               startIndex: widget.currentIndex,
+    //             ),
+    //             showNotification: notifications ?? false,
+    //             autoStart: true,
+    //             loopMode: LoopMode.playlist,
+    //             playInBackground: PlayInBackground.enabled,
+    //           );
+    //         });
+    //       }
+    //     });
+    //   });
+    // } else {
+    //   print(isPlaying);
+    //   setSongId().then((value) {
+    //     print('id here $value');
+
+    //     assetsAudioPlayer.open(
+    //       Playlist(
+    //         audios: audios
+    //             .map((audio) => Audio.file(
+    //                   audio['uri'],
+    //                   metas: Metas(
+    //                     title: audio['title'],
+    //                     artist: audio['artist'],
+    //                     id: audio['id'].toString(),
+    //                     //image: audio['id'],
+    //                   ),
+    //                 ))
+    //             .toList(),
+    //         startIndex: widget.currentIndex,
+    //       ),
+    //       showNotification: notifications ?? false,
+    //       autoStart: true,
+    //       loopMode: LoopMode.playlist,
+    //       playInBackground: PlayInBackground.enabled,
+    //     );
+
+    // setState(() {
+    //   print('isPlaying : $isPlaying');
+    //   this.isPlaying = isPlaying;
+    // });
+    //   });
+    //   }
+    // });
+
     assetsAudioPlayer.current.listen((event) {
+      //find id of playing
+      //print('Event audio here: ${event?.audio.audio.metas.id}');
+      // if (event?.audio.audio.metas.id !=
+      //     widget.musicList[widget.currentIndex]['id']) {
+      //   print('Event audio here: ${event?.audio.audio.metas.id}');
+      //   setState(() {
+      //     assetsAudioPlayer.pause();
+      //   });
+      // }
       String? name = event?.audio.audio.metas.title;
       String? artist = event?.audio.audio.metas.artist;
+      String? artUri = event?.audio.audio.metas.image.toString();
       if (name != null && artist != null) {
         currentSong = name;
         currentArtist = artist;
+        currentArtUri = artUri!;
         //print(artUri); //
         setState(() {});
       }
@@ -86,6 +217,9 @@ class _CurrentMusicState extends State<CurrentMusic> {
       //   });
       // });
     });
+    //play();
+
+    var favoritesBox = Hive.openBox('favorites');
 
     //updation();
     //var current = assetsAudioPlayer.currentPosition;
@@ -117,11 +251,11 @@ class _CurrentMusicState extends State<CurrentMusic> {
   //   });
   // }
 
-  @override
-  void dispose() {
-    assetsAudioPlayer.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   assetsAudioPlayer.dispose();
+  //   super.dispose();
+  // }
 
   //@override
   //print(favs);
@@ -344,13 +478,11 @@ class _CurrentMusicState extends State<CurrentMusic> {
                             //audioPlayer.pause();
                             assetsAudioPlayer.playOrPause();
                             setState(() {
-                              isPlaying = false;
                               btnIcon = Icons.play_arrow;
                             });
                           } else {
                             assetsAudioPlayer.playOrPause();
                             setState(() {
-                              isPlaying = true;
                               btnIcon = Icons.pause;
                             });
                           }
@@ -385,8 +517,9 @@ class _CurrentMusicState extends State<CurrentMusic> {
                               : setState(() {
                                   assetsAudioPlayer.stop();
                                   widget.currentIndex++;
-                                  assetsAudioPlayer
-                                      .playlistPlayAtIndex(widget.currentIndex);
+                                  // assetsAudioPlayer
+                                  //     .playlistPlayAtIndex(widget.currentIndex);
+                                  assetsAudioPlayer.next();
                                 });
                         });
                         print('Current Index\n\n\n');
