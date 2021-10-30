@@ -25,14 +25,16 @@ class CurrentMusic extends StatefulWidget {
 class _CurrentMusicState extends State<CurrentMusic> {
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   bool isPlaying = false;
-  String currentSong = "";
-  String currentArtist = "";
-  String currentArtUri = "";
+  String trackArtist = "";
+  String trackTitle = "";
+  //var trackId="";
 
   final assetsAudioPlayer = AssetsAudioPlayer();
   List playlist = [];
   bool? notifications;
   List pathsForPlaying = [];
+  Duration? duration;
+  bool? isFavorite;
 
   Future<bool> notification() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -73,22 +75,66 @@ class _CurrentMusicState extends State<CurrentMusic> {
   // }
 
   final audioPlayerSettings = AudioPlayerSettings();
+
   @override
   void initState() {
     print('id here ${widget.musicList[widget.currentIndex]['id']}');
-    final List<Audio> audios =
-        (widget.musicList).map((audio) => Audio.file(audio['uri'])).toList();
+    final List<Audio> audios = (widget.musicList)
+        .map((audio) => Audio.file(audio['uri'],
+            metas: Metas(
+              title: audio['title'],
+              artist: audio['artist'],
+              //id: audio['id'.toString()],
+            )))
+        .toList();
     final index = widget.currentIndex;
     //playlist = audios;
-    notification().then((value) {
-      print(value);
-      notifications = value;
+
+    // audioPlayerSettings.currentStatus.listen((event) {
+    //   print(event?.audio.duration);
+    //   duration = event?.audio.duration;
+    // });
+    //audios.isNotEmpty?
+    audioPlayerSettings
+        .initializeAudioPlayerWithAudios(
+      audios,
+      widget.currentIndex,
+    )
+        .then((value) {
+      audioPlayerSettings.currentValues.listen((current) {
+        if (mounted) {
+          if (current == null) {
+            return;
+          } else {
+            setState(() {
+              print(current);
+              trackTitle = current.audio.audio.metas.title ?? 'No Title';
+              trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
+              //trackId = current.audio.audio.metas.id?.toString() ?? 'No Id';
+            });
+          }
+        }
+      });
     });
-    //audioPlayerSettings.currentStatus.listen(currentPlayerStatus);
+
     super.initState();
     print(audios);
+    // audioPlayerSettings.currentValues.listen((current) {
+    //   if (mounted) {
+    //     if (current == null) {
+    //       return;
+    //     } else {
+    //       setState(() {
+    //         print(current);
+    //         trackTitle = current.audio.audio.metas.title ?? 'No Title';
+    //         trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
+    //       });
+    //     }
+    //   }
+    // });
+
     //initializeAudiosForPlaying();
-    //audioPlayerSettings.initializeAudioPlayerWithAudios(audios);
+
     //audioPlayerSettings.playSongAtIndex(widget.currentIndex);
     //audioPlayerSettings.
     // assetsAudioPlayer.open(
@@ -112,7 +158,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
     //       playInBackground: PlayInBackground.enabled,
     //     );
 
-    //isPlaying = true;
+    isPlaying = true;
     //songPlaying();
     // assetsAudioPlayer.isPlaying.listen((isPlaying) {
     //   if (isPlaying) {
@@ -184,35 +230,37 @@ class _CurrentMusicState extends State<CurrentMusic> {
     //   }
     // });
 
-    assetsAudioPlayer.current.listen((event) {
-      //find id of playing
-      //print('Event audio here: ${event?.audio.audio.metas.id}');
-      // if (event?.audio.audio.metas.id !=
-      //     widget.musicList[widget.currentIndex]['id']) {
-      //   print('Event audio here: ${event?.audio.audio.metas.id}');
-      //   setState(() {
-      //     assetsAudioPlayer.pause();
-      //   });
-      // }
-      String? name = event?.audio.audio.metas.title;
-      String? artist = event?.audio.audio.metas.artist;
-      String? artUri = event?.audio.audio.metas.image.toString();
-      if (name != null && artist != null) {
-        currentSong = name;
-        currentArtist = artist;
-        currentArtUri = artUri!;
-        //print(artUri); //
-        setState(() {});
-      }
+    // assetsAudioPlayer.current.listen((event) {
+    //   //find id of playing
+    //   //print('Event audio here: ${event?.audio.audio.metas.id}');
+    //   // if (event?.audio.audio.metas.id !=
+    //   //     widget.musicList[widget.currentIndex]['id']) {
+    //   //   print('Event audio here: ${event?.audio.audio.metas.id}');
+    //   //   setState(() {
+    //   //     assetsAudioPlayer.pause();
+    //   //   });
+    //   // }
+    //   String? name = event?.audio.audio.metas.title;
+    //   String? artist = event?.audio.audio.metas.artist;
+    //   String? artUri = event?.audio.audio.metas.image.toString();
+    //   if (name != null && artist != null) {
+    //     currentSong = name;
+    //     currentArtist = artist;
+    //     currentArtUri = artUri!;
+    //     //print(artUri); //
+    //     setState(() {});
+    //   }
 
-      // event?.audio.audio.metas.title.then((title) {
-      //   setState(() {
-      //     currentSong = title;
-      //   });
-      // });
-    });
+    //   // event?.audio.audio.metas.title.then((title) {
+    //   //   setState(() {
+    //   //     currentSong = title;
+    //   //   });
+    //   // });
+    // });
     //play();
-
+    // audioPlayerSettings.currentpos.listen((event) {
+    //   print(event);
+    // });
     var favoritesBox = Hive.openBox('favorites');
 
     //updation();
@@ -309,10 +357,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     children: [
                       Text(
                         //currentSong,
-                        currentSong.length > 18
-                            ? currentSong.replaceRange(
-                                18, currentSong.length, '...')
-                            : currentSong,
+                        trackTitle.length > 18
+                            ? trackTitle.replaceRange(
+                                18, trackTitle.length, '...')
+                            : trackTitle,
                         style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'Genera',
@@ -323,10 +371,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
                       ),
                       Text(
                         //currentArtist,
-                        currentArtist.length > 20
-                            ? currentArtist.replaceRange(
-                                20, currentArtist.length, '...')
-                            : currentArtist,
+                        trackArtist.length > 20
+                            ? trackArtist.replaceRange(
+                                20, trackArtist.length, '...')
+                            : trackArtist,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Genera',
@@ -355,7 +403,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                                     true) {
                                   playlist.add(music[widget.currentIndex]);
                                   //Hive.box('favorites').addAll(playlist);
-                                  //print(playlist);
+                                  print(playlist);
                                   Hive.box('musicBox')
                                       .put(widget.currentIndex, playlist);
                                 }
@@ -383,13 +431,17 @@ class _CurrentMusicState extends State<CurrentMusic> {
               ],
             ),
           ),
+          //assetsAudioPlayer.builderRealtimePlayingInfos(builder: builder)
+
           assetsAudioPlayer.builderRealtimePlayingInfos(
               builder: (context, RealtimePlayingInfos? infos) {
+            print('Infos here: ${infos.toString()}');
             if (infos!.currentPosition == infos.duration) {
               // setState(() {
               //   widget.currentIndex = widget.currentIndex + 1;
 
               // });
+              print('infos here: $infos');
               print(widget.currentIndex);
             }
             // setState(() {
@@ -432,101 +484,118 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 const SizedBox(
                   height: 25,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        var snackBar =
-                            const SnackBar(content: Text('No Previous Songs'));
-                        setState(() {
-                          widget.currentIndex == 0
-                              ? ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar)
-                              : widget.currentIndex--;
-                          audioPlayerSettings.playPrevious();
-                        });
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        assetsAudioPlayer.seekBy(const Duration(seconds: -10));
-                      },
-                      icon: const Icon(Icons.skip_previous),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.black,
-                      child: IconButton(
-                        iconSize: 35,
-                        icon: Icon(btnIcon, color: Colors.white),
-                        onPressed: () {
-                          if (isPlaying) {
-                            //audioPlayer.pause();
-                            audioPlayerSettings.playOrPauseAudio();
-                            setState(() {
-                              btnIcon = Icons.play_arrow;
-                            });
-                          } else {
-                            assetsAudioPlayer.playOrPause();
-                            setState(() {
-                              btnIcon = Icons.pause;
-                            });
-                          }
-                          print(isPlaying);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        assetsAudioPlayer.seekBy(const Duration(seconds: 10));
-                      },
-                      icon: const Icon(Icons.skip_next),
-                    ),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        print('Index : ${widget.currentIndex}');
-                        //var snackBar = SnackBar(content: Text('No Next Songs'));
-                        setState(() {
-                          widget.currentIndex == widget.musicList.length - 1
-                              ? setState(() {
-                                  assetsAudioPlayer.stop();
-                                  widget.currentIndex = 0;
-                                  assetsAudioPlayer
-                                      .playlistPlayAtIndex(widget.currentIndex);
-                                })
-                              : setState(() {
-                                  audioPlayerSettings.stopSongs();
-                                  widget.currentIndex++;
-                                  // assetsAudioPlayer
-                                  //     .playlistPlayAtIndex(widget.currentIndex);
-                                  assetsAudioPlayer
-                                      .playlistPlayAtIndex(widget.currentIndex);
-                                });
-                        });
-                        print('Current Index\n\n\n');
-                        print(widget.currentIndex);
-                      },
-                      icon: const Icon(Icons.arrow_forward),
-                    ),
-                  ],
-                )
               ],
             );
           }),
+          // Padding(
+          //         padding: const EdgeInsets.only(
+          //             top: 30.0, bottom: 40.0, left: 30, right: 30),
+          //         child: ProgressBar(
+          //           progress: currentPosition,
+          //           total: duration,
+          //           onSeek: (to) {
+          //             assetsAudioPlayer.seek(to);
+
+          //           },
+          //           progressBarColor: Colors.black,
+          //           baseBarColor: Colors.grey[500],
+          //           thumbColor: Colors.black,
+          //         ),
+          //       )
+          audioPlayerSettings.infos(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                onPressed: () {
+                  var snackBar =
+                      const SnackBar(content: Text('No Previous Songs'));
+                  setState(() {
+                    widget.currentIndex == 0
+                        ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
+                        : widget.currentIndex--;
+                    audioPlayerSettings.playPrevious();
+                  });
+                },
+                icon: const Icon(Icons.skip_previous),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              IconButton(
+                onPressed: () {
+                  audioPlayerSettings.seekByBackward();
+                },
+                icon: const Icon(Icons.fast_rewind),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.black,
+                child: IconButton(
+                  iconSize: 35,
+                  icon: Icon(btnIcon, color: Colors.white),
+                  onPressed: () {
+                    if (isPlaying) {
+                      //audioPlayer.pause();
+                      audioPlayerSettings.playOrPauseAudio();
+                      setState(() {
+                        isPlaying = false;
+                        btnIcon = Icons.play_arrow;
+                      });
+                    } else {
+                      audioPlayerSettings.playOrPauseAudio();
+                      setState(() {
+                        isPlaying = true;
+                        btnIcon = Icons.pause;
+                      });
+                    }
+                    print(isPlaying);
+                  },
+                ),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              IconButton(
+                onPressed: () {
+                  audioPlayerSettings.seekByForward();
+                },
+                icon: const Icon(Icons.fast_forward),
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              IconButton(
+                  onPressed: () {
+                    audioPlayerSettings.playNext();
+                    // print('Index : ${widget.currentIndex}');
+                    // //var snackBar = SnackBar(content: Text('No Next Songs'));
+                    // setState(() {
+                    //   widget.currentIndex == widget.musicList.length - 1
+                    //       ? setState(() {
+                    //           assetsAudioPlayer.stop();
+                    //           widget.currentIndex = 0;
+                    //           assetsAudioPlayer
+                    //               .playlistPlayAtIndex(widget.currentIndex);
+                    //         })
+                    //       : setState(() {
+                    //           audioPlayerSettings.stopSongs();
+                    //           widget.currentIndex++;
+                    //           // assetsAudioPlayer
+                    //           //     .playlistPlayAtIndex(widget.currentIndex);
+                    //           assetsAudioPlayer
+                    //               .playlistPlayAtIndex(widget.currentIndex);
+                    //         });
+                    // });
+                    // print('Current Index\n\n\n');
+                    // print(widget.currentIndex);
+                  },
+                  icon: const Icon(Icons.skip_next)),
+            ],
+          )
         ],
       ),
     );

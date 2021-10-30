@@ -169,12 +169,16 @@ class _HomePageState extends State<HomePage>
           var currentMusic = await Hive.openBox('currentSong');
           List currentSong = currentMusic.get('currentSong');
           var index = currentMusic.get('index');
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return CurrentMusic(
-              musicList: currentSong,
-              currentIndex: index,
-            );
-          }));
+          currentSong==[]
+              ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('No songs played yet.'),
+                ))
+              : Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return CurrentMusic(
+                    musicList: currentSong,
+                    currentIndex: index,
+                  );
+                }));
         },
         label: Text('Last Played'),
         icon: const Icon(

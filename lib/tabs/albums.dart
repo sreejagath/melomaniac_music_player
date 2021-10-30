@@ -135,84 +135,97 @@ class _AlbumsState extends State<Albums> {
 
   getSongs() async {
     var musicBox = await Hive.openBox('musicBox');
-    setState(() {
-      musics = musicBox.getAt(0);
-    });
+    if (musicBox.isNotEmpty) {
+      setState(() {
+        musics = musicBox.getAt(0);
+      });
+    }
+    else{
+      setState(() {
+        musics = [];
+      });
+    }
     print(musics);
   }
 
   @override
   Widget build(BuildContext context) {
     //String name = musics[0]['album'];
-    return Container(
-        child: SingleChildScrollView(
-            child: Column(children: [
-      const SizedBox(height: 15),
-      GridView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        physics: const ScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemCount: musics.length,
-        itemBuilder: (context, index) {
-          return GridTile(
-            child: InkResponse(
-                child: Container(
-                    child: Column(children: [
-                  Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: const BoxDecoration(),
-                    child: Column(
-                      children: [
+    return musics.isEmpty
+        ? Container(
+            child: Center(
+              child: Text('No Albums'),
+            ),
+          )
+        : Container(
+            child: SingleChildScrollView(
+                child: Column(children: [
+            const SizedBox(height: 15),
+            GridView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: musics.length,
+              itemBuilder: (context, index) {
+                return GridTile(
+                  child: InkResponse(
+                      child: Container(
+                          child: Column(children: [
                         Container(
-                          height: 60,
-                          width: 60,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: QueryArtworkWidget(
-                              id: musics[index]['id'],
-                              type: ArtworkType.AUDIO,
-                            ),
+                          width: 100.0,
+                          height: 100.0,
+                          decoration: const BoxDecoration(),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: QueryArtworkWidget(
+                                    id: musics[index]['id'],
+                                    type: ArtworkType.AUDIO,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              Text(
+                                musics[index]['album'].length > 10
+                                    ? musics[index]['album'].replaceRange(10,
+                                        musics[index]['album'].length, '...')
+                                    : musics[index]['album'],
+                                // style: const TextStyle(
+                                //   fontFamily: 'Khyay',
+                                //   fontSize: 15.0,
+                                //   color: Color(0xFF3A6878),
+                                // ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          musics[index]['album'].length > 10
-                              ? musics[index]['album'].replaceRange(
-                                  10, musics[index]['album'].length, '...')
-                              : musics[index]['album'],
-                          // style: const TextStyle(
-                          //   fontFamily: 'Khyay',
-                          //   fontSize: 15.0,
-                          //   color: Color(0xFF3A6878),
-                          // ),
-                        ),
-                      ],
-                    ),
-                  )
-                ])),
-                onTap: () {
-                  List albumList = [];
-                  for (var i = 0; i < musics.length; i++) {
-                    if (musics[i]['album'] == musics[index]['album']) {
-                      albumList.add(musics[i]);
-                    }
-                  }
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AlbumList(
-                                albumList: albumList,
-                              )));
-                }),
-          );
-        },
-      )
-    ])));
+                        )
+                      ])),
+                      onTap: () {
+                        List albumList = [];
+                        for (var i = 0; i < musics.length; i++) {
+                          if (musics[i]['album'] == musics[index]['album']) {
+                            albumList.add(musics[i]);
+                          }
+                        }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AlbumList(
+                                      albumList: albumList,
+                                    )));
+                      }),
+                );
+              },
+            )
+          ])));
   }
 }

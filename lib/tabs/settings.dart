@@ -39,17 +39,32 @@ class _SettingsState extends State<Settings> {
                         },
                       ),
                     ),
-                    const ListTile(
+                    ListTile(
                       title: Text('Share'),
                       leading: Icon(Icons.share),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'This feature is not availiable now.Will be implemented in next update !')));
+                      },
                     ),
-                    const ListTile(
+                    ListTile(
                       title: Text('Terms & Conditions'),
                       leading: Icon(Icons.book),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'This feature is not availiable now.Will be implemented in next update !')));
+                      },
                     ),
-                    const ListTile(
+                    ListTile(
                       title: Text('Privacy Policies'),
                       leading: Icon(Icons.bookmark),
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'This feature is not availiable now.Will be implemented in next update !')));
+                      },
                     ),
                     ListTile(
                       title: Text('About'),
@@ -57,11 +72,11 @@ class _SettingsState extends State<Settings> {
                       onTap: () {
                         //showAboutDialog(context: context);
                         showAboutDialog(
-                            context: context,
-                            applicationName: 'Melomaniac',
-                            applicationVersion: '1.0.0',
-                            applicationLegalese: '© 2021 Melomaniac',
-                            );
+                          context: context,
+                          applicationName: 'Melomaniac',
+                          applicationVersion: '1.0.0',
+                          applicationLegalese: '© 2021 Melomaniac',
+                        );
                       },
                     ),
                   ],
@@ -80,7 +95,7 @@ class _SettingsState extends State<Settings> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: const [
               Text(
-                'Version 1.3',
+                'Version 1.0.0',
                 style: TextStyle(fontSize: 12),
               )
             ],

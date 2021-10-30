@@ -38,7 +38,12 @@ class _TracksState extends State<Tracks> {
       bool permissionStatus = await _audioQuery.permissionsStatus();
       if (!permissionStatus) {
         await _audioQuery.permissionsRequest();
-        // requestPermission();
+        requestPermission();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+                "You don't enabled permission, Please enable permission for this application")));
+
+        musics = [];
       }
       if (permissionStatus) {
         var musicBox = await Hive.openBox('musicBox');
@@ -323,7 +328,14 @@ class _TracksState extends State<Tracks> {
                                                           height: 30,
                                                         ),
                                                         ElevatedButton(
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    const SnackBar(
+                                                                        content:
+                                                                            Text('This feature is not availiable now.Will be implemented in next update !')));
+                                                          },
                                                           child: const Text(
                                                               'Search Lyrics'),
                                                         ),
@@ -339,7 +351,13 @@ class _TracksState extends State<Tracks> {
                               ),
                               PopupMenuItem(
                                 child: TextButton(
-                                    child: Text('Share'), onPressed: () {}),
+                                    child: Text('Share'),
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  'This feature is not availiable now.Will be implemented in next update !')));
+                                    }),
                                 value: 4,
                               ),
                             ]),
@@ -358,11 +376,13 @@ class _TracksState extends State<Tracks> {
                               builder: (BuildContext context) => CurrentMusic(
                                   musicList: musics, currentIndex: index)));
 
-                      final List<audioPlayer.Audio> _musicList = (musics)
-                          .map((audio) => audioPlayer.Audio.file(audio['uri']))
-                          .toList();
-                      audioPlayerSettings.initializeAudioPlayerWithAudios(
-                          _musicList, index);
+                      // final List<audioPlayer.Audio> _musicList = (musics)
+                      //     .map((audio) => audioPlayer.Audio.file(audio['uri'],
+                      //         metas: audioPlayer.Metas(
+                      //             title: audio['title'], artist: audio['artist'])))
+                      //     .toList();
+                      // audioPlayerSettings.initializeAudioPlayerWithAudios(
+                      //     _musicList, index);
                       //audioPlayerSettings.playSongAtIndex(index);
                     },
                   )

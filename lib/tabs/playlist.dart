@@ -432,6 +432,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
+                                          Navigator.pop(context);
                                         },
                                         child: const Text('Cancel'),
                                       ),
@@ -460,6 +461,11 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                         TextFormField(
                                                           controller:
                                                               newPlaylistName,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelText:
+                                                                'New Playlist Name',
+                                                          ),
                                                           // initialValue:
                                                           //     playlistData[
                                                           //             index]
@@ -470,7 +476,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                 title: const Text('Rename'),
                                                 actions: [
                                                   TextButton(
-                                                    onPressed: () async{
+                                                    onPressed: () async {
                                                       var playlistBox =
                                                           await Hive.openBox(
                                                               'playlistBox');
@@ -484,7 +490,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                                 .text;
                                                         playlistBox.putAt(
                                                             index,
-                                                            playlistData[index]);
+                                                            playlistData[
+                                                                index]);
                                                       });
                                                       Navigator.pop(context);
                                                       Navigator.pop(context);
@@ -493,6 +500,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
+                                                      Navigator.pop(context);
                                                       Navigator.pop(context);
                                                     },
                                                     child: const Text('Cancel'),
