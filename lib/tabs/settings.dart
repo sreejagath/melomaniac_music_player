@@ -10,7 +10,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-  bool notification = false;
+  bool notification = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
             future: prefs,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                notification = snapshot.data?.getBool('notification') ?? false;
+                notification = snapshot.data?.getBool('notification') ?? true;
                 return ListView(
                   shrinkWrap: true,
                   children: <Widget>[

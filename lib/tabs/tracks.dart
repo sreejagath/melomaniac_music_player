@@ -63,9 +63,12 @@ class _TracksState extends State<Tracks> {
           });
         });
         print(musicData);
-        musicBox.add(musicData);
+        //musicBox.add(musicData);
+       // List data = musicBox.get(5);
+        musicBox.put('tracks', musicData);
+        //print(data);
         setState(() {
-          musics = musicBox.getAt(0);
+          musics = musicBox.get('tracks');
           for (var i = 0; i < playlistBox.length; i++) {
             playlists.add(playlistBox.getAt(i));
           }

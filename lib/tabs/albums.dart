@@ -137,7 +137,7 @@ class _AlbumsState extends State<Albums> {
     var musicBox = await Hive.openBox('musicBox');
     if (musicBox.isNotEmpty) {
       setState(() {
-        musics = musicBox.getAt(0);
+        musics = musicBox.get('tracks');
       });
     }
     else{

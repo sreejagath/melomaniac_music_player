@@ -27,13 +27,13 @@ class _CurrentMusicState extends State<CurrentMusic> {
   bool isPlaying = false;
   String trackArtist = "";
   String trackTitle = "";
-  var trackId;
+  int trackId = 0;
   int track = 0;
   List playlist = [];
   bool? notifications;
   List pathsForPlaying = [];
   Duration? duration;
-  bool? isFavorite;
+  bool isFavorite = false;
   final assetsAudioPlayer = AssetsAudioPlayer();
 
   Future<bool> notification() async {
@@ -84,8 +84,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 title: audio['title'],
                 artist: audio['artist'],
                 id: audio['id'].toString(),
-                
-            )))
+                extra: {'isFavorite': audio['isFavorite']})))
         .toList();
     audioPlayerSettings
         .initializeAudioPlayerWithAudios(
@@ -101,8 +100,9 @@ class _CurrentMusicState extends State<CurrentMusic> {
               print(current);
               trackTitle = current.audio.audio.metas.title ?? 'No Title';
               trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
-              trackId = current.audio.audio.metas.id!;
-              track = int.parse(trackId);
+              trackId = int.parse(current.audio.audio.metas.id!);
+              isFavorite = current.audio.audio.metas.extra!['isFavorite'];
+              print(isFavorite);
             });
           }
         }
@@ -158,9 +158,9 @@ class _CurrentMusicState extends State<CurrentMusic> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: QueryArtworkWidget(
-                id: track == 0
+                id: trackId == 0
                     ? widget.musicList[widget.currentIndex]['id']
-                    : track,
+                    : trackId,
                 type: ArtworkType.AUDIO,
               ),
             ),
@@ -212,12 +212,18 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 Row(
                   children: [
                     IconButton(
-                      icon: music[widget.currentIndex]['isFavorite'] == true
-                          ? Icon(favIcon = Icons.favorite,
-                              color: colorFav = Colors.red)
-                          : Icon(favIcon, color: colorFav),
+                      icon: isFavorite
+                          ? const Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            )
+                          : const Icon(Icons.favorite_border_outlined),
+                      // icon: music[widget.currentIndex]['isFavorite'] == true
+                      //     ? Icon(favIcon = Icons.favorite,
+                      //         color: colorFav = Colors.red)
+                      //     : Icon(favIcon, color: colorFav),
                       onPressed: () {
-                        music[widget.currentIndex]['isFavorite'] == false
+                        !isFavorite
                             ? setState(() {
                                 favIcon = Icons.favorite;
                                 colorFav = Colors.red;
@@ -227,6 +233,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                                   playlist.add(music[widget.currentIndex]);
                                   //Hive.box('favorites').addAll(playlist);
                                   print(playlist);
+                                  isFavorite = true;
                                   // Hive.box('musicBox')
                                   //     .put(0, playlist);
                                 }
@@ -234,6 +241,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                             : setState(() {
                                 favIcon = Icons.favorite_border;
                                 colorFav = Colors.grey;
+                                isFavorite = false;
                                 music[widget.currentIndex]['isFavorite'] =
                                     false;
                                 if (music[widget.currentIndex]['isFavorite'] ==
@@ -256,60 +264,60 @@ class _CurrentMusicState extends State<CurrentMusic> {
           ),
           //assetsAudioPlayer.builderRealtimePlayingInfos(builder: builder)
 
-          assetsAudioPlayer.builderRealtimePlayingInfos(
-              builder: (context, RealtimePlayingInfos? infos) {
-            print('Infos here: ${infos.toString()}');
-            if (infos!.currentPosition == infos.duration) {
-              // setState(() {
-              //   widget.currentIndex = widget.currentIndex + 1;
+          // assetsAudioPlayer.builderRealtimePlayingInfos(
+          //     builder: (context, RealtimePlayingInfos? infos) {
+          //   print('Infos here: ${infos.toString()}');
+          //   if (infos!.currentPosition == infos.duration) {
+          //     // setState(() {
+          //     //   widget.currentIndex = widget.currentIndex + 1;
 
-              // });
-              print('infos here: $infos');
-              print(widget.currentIndex);
-            }
-            // setState(() {
-            //               widget.currentIndex = widget.currentIndex + 1;
-            //             });
-            // }
-            //print('infos: $infos');
-            return Column(
-              children: [
-                // Padding(
-                //   padding: const EdgeInsets.all(15.0),
-                //   child: PositionSeekWidget(
-                //     currentPosition: infos.currentPosition,
-                //     duration: infos.duration,
-                //     seekTo: (to) {
-                //       assetsAudioPlayer.seek(to);
-                //     },
-                //   ),
-                // ),
-                //StreamBuilder<DurationState> ProgressBar(progress: progress, total: total)
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 30.0, bottom: 40.0, left: 30, right: 30),
-                  child: ProgressBar(
-                    progress: infos.currentPosition,
-                    total: infos.duration,
-                    onSeek: (to) {
-                      assetsAudioPlayer.seek(to);
-                      if (to == infos.duration) {
-                        setState(() {
-                          widget.currentIndex = widget.currentIndex + 1;
-                        });
-                      }
-                    },
-                    progressBarColor: Colors.black,
-                    baseBarColor: Colors.grey[500],
-                    thumbColor: Colors.black,
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-              ],
-            );
-          }),
+          //     // });
+          //     print('infos here: $infos');
+          //     print(widget.currentIndex);
+          //   }
+          //   // setState(() {
+          //   //               widget.currentIndex = widget.currentIndex + 1;
+          //   //             });
+          //   // }
+          //   //print('infos: $infos');
+          //   return Column(
+          //     children: [
+          //       // Padding(
+          //       //   padding: const EdgeInsets.all(15.0),
+          //       //   child: PositionSeekWidget(
+          //       //     currentPosition: infos.currentPosition,
+          //       //     duration: infos.duration,
+          //       //     seekTo: (to) {
+          //       //       assetsAudioPlayer.seek(to);
+          //       //     },
+          //       //   ),
+          //       // ),
+          //       //StreamBuilder<DurationState> ProgressBar(progress: progress, total: total)
+          //       Padding(
+          //         padding: const EdgeInsets.only(
+          //             top: 30.0, bottom: 40.0, left: 30, right: 30),
+          //         child: ProgressBar(
+          //           progress: infos.currentPosition,
+          //           total: infos.duration,
+          //           onSeek: (to) {
+          //             assetsAudioPlayer.seek(to);
+          //             if (to == infos.duration) {
+          //               setState(() {
+          //                 widget.currentIndex = widget.currentIndex + 1;
+          //               });
+          //             }
+          //           },
+          //           progressBarColor: Colors.black,
+          //           baseBarColor: Colors.grey[500],
+          //           thumbColor: Colors.black,
+          //         ),
+          //       ),
+          //       const SizedBox(
+          //         height: 25,
+          //       ),
+          //     ],
+          //   );
+          // }),
           // Padding(
           //         padding: const EdgeInsets.only(
           //             top: 30.0, bottom: 40.0, left: 30, right: 30),
@@ -363,21 +371,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () {
                     audioPlayerSettings.playOrPauseAudio();
-                    // if (isPlaying) {
-                    //   //audioPlayer.pause();
-                    //   audioPlayerSettings.playOrPauseAudio();
-                    //   setState(() {
-                    //     //isPlaying = false;
-                    //     btnIcon = Icons.play_arrow;
-                    //   });
-                    // } else {
-                    //   audioPlayerSettings.playOrPauseAudio();
-                    //   setState(() {
-                    //     //isPlaying = true;
-                    //     btnIcon = Icons.pause;
-                    //   });
-                    // }
-                    // print(isPlaying);
                   },
                 ),
               ),
@@ -396,27 +389,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
               IconButton(
                   onPressed: () {
                     audioPlayerSettings.playNext();
-                    // print('Index : ${widget.currentIndex}');
-                    // //var snackBar = SnackBar(content: Text('No Next Songs'));
-                    // setState(() {
-                    //   widget.currentIndex == widget.musicList.length - 1
-                    //       ? setState(() {
-                    //           assetsAudioPlayer.stop();
-                    //           widget.currentIndex = 0;
-                    //           assetsAudioPlayer
-                    //               .playlistPlayAtIndex(widget.currentIndex);
-                    //         })
-                    //       : setState(() {
-                    //           audioPlayerSettings.stopSongs();
-                    //           widget.currentIndex++;
-                    //           // assetsAudioPlayer
-                    //           //     .playlistPlayAtIndex(widget.currentIndex);
-                    //           assetsAudioPlayer
-                    //               .playlistPlayAtIndex(widget.currentIndex);
-                    //         });
-                    // });
-                    // print('Current Index\n\n\n');
-                    // print(widget.currentIndex);
                   },
                   icon: const Icon(Icons.skip_next)),
             ],

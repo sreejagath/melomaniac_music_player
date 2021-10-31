@@ -28,7 +28,26 @@ class AudioPlayerSettings {
     currentValues = _assetsAudioPlayer.current;
   }
 
-  
+  Future<void> audioPlayerSings(List audiosList) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    notifications = await prefs.getBool('notification');
+    final List<Audio> audioData = (audiosList)
+        .map((audio) => Audio.file(audio['uri'],
+            metas: Metas(
+                title: audio['title'],
+                artist: audio['artist'],
+                id: audio['id'].toString(),
+                extra: {'isFavorite': audio['isFavorite']})))
+        .toList();
+    _assetsAudioPlayer.open(Playlist(
+      audios: audioData),
+      loopMode: LoopMode.playlist,
+      autoStart: true,
+      );
+      _assetsAudioPlayer.showNotification = notifications ?? false;
+    isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
+    currentValues = _assetsAudioPlayer.current;
+  }
 
   Future<void> playOrPauseAudio() async {
     await _assetsAudioPlayer.playOrPause();
@@ -59,11 +78,11 @@ class AudioPlayerSettings {
   }
 
   Future<void> seekByForward() async {
-    await _assetsAudioPlayer.seekBy(Duration(seconds: 10));
+    await _assetsAudioPlayer.seekBy(const Duration(seconds: 10));
   }
 
   Future<void> seekByBackward() async {
-    await _assetsAudioPlayer.seekBy(Duration(seconds: -10));
+    await _assetsAudioPlayer.seekBy(const Duration(seconds: -10));
   }
 
   Widget infos() {
@@ -95,5 +114,4 @@ class AudioPlayerSettings {
       }),
     );
   }
-  
 }

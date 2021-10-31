@@ -33,7 +33,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     var playlistBox = await Hive.openBox('playlistBox');
     var favoritesBox = await Hive.openBox('favorites');
     setState(() {
-      musics = musicBox.get(0);
+      musics = musicBox.get('tracks');
       for (var i = 0; i < playlistBox.length; i++) {
         playlistData.add(playlistBox.getAt(i));
       }

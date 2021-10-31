@@ -20,7 +20,7 @@ class _SearchTrackState extends State<SearchTrack> {
     var musics = await Hive.openBox('musicBox');
     //print(musics.getAt(0));
 
-    List mdata = musics.getAt(0);
+    List mdata = musics.get('tracks');
     searchedList.clear();
     for (var i = 0; i < mdata.length; i++) {
       if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
@@ -28,7 +28,6 @@ class _SearchTrackState extends State<SearchTrack> {
       }
     }
     await Future.delayed(Duration(milliseconds: 5000));
-
     setState(() {});
   }
 
