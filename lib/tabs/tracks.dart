@@ -50,7 +50,7 @@ class _TracksState extends State<Tracks> {
         var playlistBox = await Hive.openBox('playlistBox');
 
         List<SongModel> musicList = await _audioQuery.querySongs();
-
+        print(musicList[0]);
         musicList.forEach((element) {
           musicData.add({
             'title': element.title,
