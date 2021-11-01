@@ -79,7 +79,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
   //   return isFav;
   // }
   favoriteList() {
-    var favoriteList = Hive.box('favorites').get(widget.musicList[widget.currentIndex]['id']);
+    var favoriteList =
+        Hive.box('favorites').get(widget.musicList[widget.currentIndex]['id']);
     if (favoriteList != null) {
       isFavorite = true;
     }
@@ -162,8 +163,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
             height: 50,
           ),
           SizedBox(
-            height: 150,
-            width: 150,
+            height: 250,
+            width: 250,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: QueryArtworkWidget(

@@ -32,7 +32,11 @@ Future main() async {
   //     await _audioQuery.permissionsRequest();
   //   }
   // }
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(
+      fontFamily: 'Genera',
+      
+    ),
     home: HomePage(),
   ));
   //requestPermission();
