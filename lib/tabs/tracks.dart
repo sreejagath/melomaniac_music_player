@@ -58,6 +58,7 @@ class _TracksState extends State<Tracks> {
             'uri': element.uri,
             'album': element.album,
             'duration': element.duration,
+            'isFavorite': favorites.containsKey(element.id)
           });
         });
         print(musicData);
