@@ -44,60 +44,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
           print(favoritesList);
         }
       }
-      //print(musics[0]);
     });
-    //print(playlistData);
-    //for (var i = 0; i < musics.length; i++) {
-    //print(musics);
-    //}
   }
 
-  List<String> trackTitle = [
-    'On My Way',
-    'Thunder',
-    'Alone',
-    'Despacito',
-    'Shape of You',
-    'Perfect',
-    'Havana',
-    'See You Again',
-    'Despacito',
-    'Shape of You',
-  ];
-
-  List<String> trackArtist = [
-    'Ed Sheeran',
-    'Taylor Swift',
-    'Justin Bieber',
-    'Luis Fonsi',
-    'Shawn Mendes',
-    'Ed Sheeran',
-    'Taylor Swift',
-    'Justin Bieber',
-    'Luis Fonsi',
-    'Shawn Mendes',
-  ];
-
-  List<String> timeList = [
-    '03:30',
-    '04:30',
-    '05:30',
-    '06:30',
-    '07:30',
-    '08:30',
-    '09:30',
-    '10:30',
-    '11:30',
-    '12:30',
-  ];
-
-  List music = [
-    {
-      'title': 'Malare',
-      'artist': 'Rajesh Murugan',
-      'url': 'assets/music/song.mp3'
-    }
-  ];
   @override
   Widget build(BuildContext context) {
     TextEditingController _playlist = TextEditingController();
@@ -374,26 +323,59 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                       BorderRadius.circular(
                                                           10.0)),
                                               itemBuilder: (context) => [
-                                                    const PopupMenuItem(
-                                                        child: Text(
-                                                            'Remove from Playlist')),
                                                     PopupMenuItem(
                                                         child: TextButton(
-                                                      onPressed: () {},
-                                                      child: const Text(
-                                                        'Song Info',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                      ),
+                                                      onPressed: () {
+                                                        showDialog<String>(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                            title: const Text(
+                                                                'Confirmation'),
+                                                            content: const Text(
+                                                                'Are you sure to Remove ?'),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  List temp = playlistData[
+                                                                          index]
+                                                                      [
+                                                                      'tracks'];
+                                                                  temp.removeAt(
+                                                                      values);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  setState(() {
+                                                                    playlistData[
+                                                                            index]
+                                                                        [
+                                                                        'tracks'] = temp;
+                                                                  });
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'OK'),
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: const Text(
+                                                                    'Cancel'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Text(
+                                                          'Remove from playlist'),
                                                     )),
-                                                    const PopupMenuItem(
-                                                        child:
-                                                            Text('View Album')),
-                                                    const PopupMenuItem(
-                                                        child: Text('Share')),
+                                                    
                                                   ]),
                                         );
                                       },

@@ -8,6 +8,7 @@ class AudioPlayerSettings {
   late Stream<bool> isAudioPlayerPlaying;
   late Stream<Playing?> currentValues;
   late bool? notifications;
+  late bool isFavoriteValue;
   static final AudioPlayerSettings _singleton = AudioPlayerSettings._internal();
 
   factory AudioPlayerSettings() {
@@ -15,7 +16,8 @@ class AudioPlayerSettings {
   }
   AudioPlayerSettings._internal();
   Future<void> initializeAudioPlayerWithAudios(
-      List<Audio> audios, index) async {
+      List<Audio> audios, index,) async {
+    print(audios);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     notifications = await prefs.getBool('notification');
     _assetsAudioPlayer.open(
@@ -23,9 +25,10 @@ class AudioPlayerSettings {
       loopMode: LoopMode.playlist,
       autoStart: true,
     );
-    _assetsAudioPlayer.showNotification = notifications ?? false;
+    _assetsAudioPlayer.showNotification = notifications ?? true;
     isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
     currentValues = _assetsAudioPlayer.current;
+    //isFavoriteValue = isFavorite;
   }
 
   Future<void> audioPlayerSings(List audiosList) async {
@@ -39,12 +42,12 @@ class AudioPlayerSettings {
                 id: audio['id'].toString(),
                 extra: {'isFavorite': audio['isFavorite']})))
         .toList();
-    _assetsAudioPlayer.open(Playlist(
-      audios: audioData),
+    _assetsAudioPlayer.open(
+      Playlist(audios: audioData),
       loopMode: LoopMode.playlist,
       autoStart: true,
-      );
-      _assetsAudioPlayer.showNotification = notifications ?? false;
+    );
+    _assetsAudioPlayer.showNotification = notifications ?? false;
     isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
     currentValues = _assetsAudioPlayer.current;
   }
@@ -99,7 +102,7 @@ class AudioPlayerSettings {
                   top: 30.0, bottom: 40.0, left: 30, right: 30),
               child: ProgressBar(
                 //bufferedBarColor: Colors.grey,
-                baseBarColor: Colors.grey,
+                baseBarColor: Colors.grey[500],
                 progressBarColor: Colors.black,
                 thumbColor: Colors.blueGrey,
                 progress: infos.currentPosition,

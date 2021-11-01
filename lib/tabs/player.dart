@@ -29,7 +29,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
   String trackTitle = "";
   int trackId = 0;
   int track = 0;
-  List playlist = [];
+  List favorite = [];
+  List? favorites = [];
   bool? notifications;
   List pathsForPlaying = [];
   Duration? duration;
@@ -62,35 +63,52 @@ class _CurrentMusicState extends State<CurrentMusic> {
     });
   }
 
-  // play() async {
-  //   await initializeAudiosForPlaying();
-  //   print(audiosForPlaying);
-  //   await assetsAudioPlayer.open(
-  //     Playlist(audios:audiosForPlaying,
-  //     startIndex: widget.currentIndex,),
-  //     showNotification: true,
-
-  //     );
-  //   //audioPlayerSettings.initializeAudioPlayerWithAudios(audiosForPlaying);
-  // }
-
   final audioPlayerSettings = AudioPlayerSettings();
+
+  // Future<bool> favoriteList() async {
+  //   bool isFav = false;
+  //   var favoriteList = await Hive.openBox('favorites');
+  //   favorite = favoriteList.get('favorites');
+  //   print(favorite);
+  //   for (var i = 0; i < favorite.length; i++) {
+  //     if (favorite[i]['id'] == widget.musicList[widget.currentIndex]['id']) {
+  //       isFav = true;
+  //       print('isFavorite');
+  //     }
+  //   }
+  //   return isFav;
+  // }
+  favoritesList(){
+    favorites = Hive.box('favorites').get('favorites');
+    if (favorites != null) {
+      for (var i = 0; i < favorites!.length; i++) {
+        if (favorites![i]['id'] == widget.musicList[widget.currentIndex]['id']) {
+          isFavorite = true;
+          print(favorites);
+        }
+      }
+    }
+  }
 
   @override
   void initState() {
+    
+    favoritesList();
     final List<Audio> audios = (widget.musicList)
         .map((audio) => Audio.file(audio['uri'],
             metas: Metas(
-                title: audio['title'],
-                artist: audio['artist'],
-                id: audio['id'].toString(),
-                extra: {'isFavorite': audio['isFavorite']})))
+              title: audio['title'],
+              artist: audio['artist'],
+              id: audio['id'].toString(),
+              //extra: {'isFavorite': isFavorite}
+            )))
         .toList();
     audioPlayerSettings
         .initializeAudioPlayerWithAudios(
       audios,
       widget.currentIndex,
-    ).then((value) {
+    )
+        .then((value) {
       audioPlayerSettings.currentValues.listen((current) {
         if (mounted) {
           if (current == null) {
@@ -101,7 +119,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
               trackTitle = current.audio.audio.metas.title ?? 'No Title';
               trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
               trackId = int.parse(current.audio.audio.metas.id!);
-              isFavorite = current.audio.audio.metas.extra!['isFavorite'];
+              //isFavorite = current.audio.audio.metas.extra!['isFavorite'];
               print(isFavorite);
             });
           }
@@ -118,8 +136,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
 
     final index = widget.currentIndex;
     super.initState();
-
-    var favoritesBox = Hive.openBox('favorites');
   }
 
   IconData btnIcon = Icons.pause;
@@ -227,29 +243,21 @@ class _CurrentMusicState extends State<CurrentMusic> {
                             ? setState(() {
                                 favIcon = Icons.favorite;
                                 colorFav = Colors.red;
-                                music[widget.currentIndex]['isFavorite'] = true;
-                                if (music[widget.currentIndex]['isFavorite'] ==
-                                    true) {
-                                  playlist.add(music[widget.currentIndex]);
-                                  //Hive.box('favorites').addAll(playlist);
-                                  print(playlist);
-                                  isFavorite = true;
-                                  // Hive.box('musicBox')
-                                  //     .put(0, playlist);
-                                }
+                                isFavorite = true;
+                                favorite.add(music[widget.currentIndex]);
+                                print(favorite);
+                                Hive.box('favorites')
+                                    .put('favorites', favorite[0]);
                               })
                             : setState(() {
                                 favIcon = Icons.favorite_border;
                                 colorFav = Colors.grey;
                                 isFavorite = false;
-                                music[widget.currentIndex]['isFavorite'] =
-                                    false;
-                                if (music[widget.currentIndex]['isFavorite'] ==
-                                    false) {
-                                  playlist.remove(music[widget.currentIndex]);
-                                  // Hive.box('musicBox')
-                                  //     .put(widget.currentIndex, playlist);
-                                }
+                                favorite.remove(music[widget.currentIndex]);
+                                print(favorite);
+                                Hive.box('favorites')
+                                    .put('favorites', favorite);
+                                print(Hive.box('favorites').get('favorites'));
                               });
                       },
                     ),

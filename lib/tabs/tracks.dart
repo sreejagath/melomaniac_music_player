@@ -42,12 +42,11 @@ class _TracksState extends State<Tracks> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text(
                 "You don't enabled permission, Please enable permission for this application")));
-
-        musics = [];
       }
       if (permissionStatus) {
         var musicBox = await Hive.openBox('musicBox');
         var playlistBox = await Hive.openBox('playlistBox');
+        var favorites = await Hive.openBox('favorites');
 
         List<SongModel> musicList = await _audioQuery.querySongs();
         print(musicList[0]);
@@ -59,12 +58,11 @@ class _TracksState extends State<Tracks> {
             'uri': element.uri,
             'album': element.album,
             'duration': element.duration,
-            'isFavorite': false,
           });
         });
         print(musicData);
         //musicBox.add(musicData);
-       // List data = musicBox.get(5);
+        // List data = musicBox.get(5);
         musicBox.put('tracks', musicData);
         //print(data);
         setState(() {
