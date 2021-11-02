@@ -375,7 +375,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                       child: Text(
                                                           'Remove from playlist'),
                                                     )),
-                                                    
                                                   ]),
                                         );
                                       },

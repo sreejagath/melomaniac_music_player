@@ -172,6 +172,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     ? widget.musicList[widget.currentIndex]['id']
                     : trackId,
                 type: ArtworkType.AUDIO,
+                nullArtworkWidget: Icon(
+                  Icons.music_note,
+                  size: 80,
+                ),
               ),
             ),
           ),
@@ -241,9 +245,12 @@ class _CurrentMusicState extends State<CurrentMusic> {
                                 colorFav = Colors.red;
                                 isFavorite = true;
                                 favorite.add(music[widget.currentIndex]);
-
-                                //print(favorite);
-                                Hive.box('favorites').put(trackId, favorite[0]);
+                                widget.musicList[widget.currentIndex]
+                                    ['isFavorite'] = true;
+                                Hive.box('musicBox').put('tracks', widget.musicList);
+                                        //print(favorite);
+                                        Hive.box('favorites')
+                                    .put(trackId, favorite[0]);
                                 print(Hive.box('favorites').get(trackId));
                               })
                             : setState(() {
@@ -253,7 +260,10 @@ class _CurrentMusicState extends State<CurrentMusic> {
                                 favorite.remove(music[widget.currentIndex]);
                                 print(favorite);
                                 Hive.box('favorites').delete(trackId);
-
+                                widget.musicList[widget.currentIndex]
+                                    ['isFavorite'] = false;
+                                Hive.box('musicBox').put('tracks', widget.musicList);
+                                
                                 //print(Hive.box('favorites').get('favorites'));
                                 print(Hive.box('favorites').get('trackId'));
                               });
@@ -373,6 +383,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 backgroundColor: Colors.black,
                 child: IconButton(
                   iconSize: 35,
+
                   //icon: Icon(btnIcon, color: Colors.white),
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () {

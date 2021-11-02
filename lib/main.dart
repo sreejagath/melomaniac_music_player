@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
@@ -22,6 +21,8 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
+List musics = [];
+List playlists = [];
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,6 @@ Future main() async {
   runApp(MaterialApp(
     theme: ThemeData(
       fontFamily: 'Genera',
-      
     ),
     home: HomePage(),
   ));
@@ -43,6 +43,7 @@ Future main() async {
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
   Hive.registerAdapter(FavoritesModelAdapter());
+  
   // var musicBox = await Hive.openBox('musicBox');
   // List<SongModel> musicList = await _audioQuery.querySongs();
 
@@ -64,6 +65,7 @@ Future main() async {
   // musicBox.add(musicData);
 }
 
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -76,8 +78,6 @@ class _HomePageState extends State<HomePage>
   // ignore: unused_field
   late TabController _tabController;
   static int _selectedIndex = 0;
-  AudioPlayer audioPlayer = AudioPlayer();
-  AudioCache audioCache = AudioCache();
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
 
   @override
@@ -171,9 +171,9 @@ class _HomePageState extends State<HomePage>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           var currentMusic = await Hive.openBox('currentSong');
-          List currentSong = currentMusic.get('currentSong');
+          List? currentSong = currentMusic.get('currentSong');
           var index = currentMusic.get('index');
-          currentSong==[]
+          currentSong == null
               ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('No songs played yet.'),
                 ))

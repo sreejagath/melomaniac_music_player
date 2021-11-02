@@ -139,8 +139,7 @@ class _AlbumsState extends State<Albums> {
       setState(() {
         musics = musicBox.get('tracks');
       });
-    }
-    else{
+    } else {
       setState(() {
         musics = [];
       });
