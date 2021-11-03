@@ -134,20 +134,10 @@ class _TracksState extends State<Tracks> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _playlist = TextEditingController();
-    //List mu = music[0].toList();
-    //final _tracks = music;
     return musics.isEmpty
-        ? Center(
-            child: Column(
-            children: const [
-              SizedBox(height: 20),
-              Text('No tracks found !'),
-              // CircularProgressIndicator(
-              //   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              // ),
-              SizedBox(height: 20),
-            ],
+    ?Container(
+            child: const Center(
+            child: Text('No Tracks'),
           ))
         : ListView.builder(
             scrollDirection: Axis.vertical,
@@ -459,11 +449,6 @@ class _TracksState extends State<Tracks> {
                               ),
                             ]),
                     onTap: () async {
-                      // final pathsforPlaying = [];
-                      // for (var i = 0; i < musics.length; i++) {
-                      //   pathsforPlaying.add(musics[i]['uri']);
-                      // }
-                      // var audios = <audioPlayer.Audio>[];
                       var currentSong = await Hive.openBox('currentSong');
                       currentSong.put('currentSong', musics);
                       currentSong.put('index', index);
@@ -473,16 +458,12 @@ class _TracksState extends State<Tracks> {
                               builder: (BuildContext context) => CurrentMusic(
                                   musicList: musics, currentIndex: index)));
 
-                      // final List<audioPlayer.Audio> _musicList = (musics)
-                      //     .map((audio) => audioPlayer.Audio.file(audio['uri'],
-                      //         metas: audioPlayer.Metas(
-                      //             title: audio['title'], artist: audio['artist'])))
-                      //     .toList();
-                      // audioPlayerSettings.initializeAudioPlayerWithAudios(
-                      //     _musicList, index);
-                      //audioPlayerSettings.playSongAtIndex(index);
                     },
-                  )
+                  ),
+                  const Divider(
+                        color: Colors.black,
+                      ),
+
                 ],
               );
             });
