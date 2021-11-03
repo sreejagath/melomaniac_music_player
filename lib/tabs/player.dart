@@ -71,19 +71,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
 
   final audioPlayerSettings = AudioPlayerSettings();
 
-  // Future<bool> favoriteList() async {
-  //   bool isFav = false;
-  //   var favoriteList = await Hive.openBox('favorites');
-  //   favorite = favoriteList.get('favorites');
-  //   print(favorite);
-  //   for (var i = 0; i < favorite.length; i++) {
-  //     if (favorite[i]['id'] == widget.musicList[widget.currentIndex]['id']) {
-  //       isFav = true;
-  //       print('isFavorite');
-  //     }
-  //   }
-  //   return isFav;
-  // }
   favoriteList() {
     var favoriteList =
         Hive.box('favorites').get(widget.musicList[widget.currentIndex]['id']);
@@ -141,8 +128,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
   IconData btnIcon = Icons.pause;
   IconData favIcon = Icons.favorite_border;
   Color colorFav = Colors.grey;
-
-  //late String tracks = this.tracks;
   @override
   Widget build(BuildContext context) {
     List music = widget.musicList;
@@ -150,41 +135,19 @@ class _CurrentMusicState extends State<CurrentMusic> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.black,
         ),
         title: const Text(
-          'Melomaniac',
+          'Playing Now',
           style: TextStyle(
-              fontSize: 30,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: 'Genera'),
+              color: Colors.black,),
         ),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
-        // actions: [
-        //   PopupMenuButton(itemBuilder: (context) {
-        //     return [
-        //       PopupMenuItem(
-        //         child: Text('Add to favorites'),
-        //         value: 1,
-        //       ),
-        //     ];
-        //   }, onSelected: (value) {
-        //     if (value == 1) {
-        //       setSongId();
-        //       var favoriteList = Hive.box('favorites');
-        //       favoriteList.put(widget.musicList[widget.currentIndex]['id'],
-        //           widget.musicList[widget.currentIndex]);
-        //       widget.musicList[widget.currentIndex]['isFavorite'] = true;
-        //       Hive.box('musicBox').put('tracks', widget.musicList);
-
-        //       setState(() {
-        //         isFavorite = true;
-        //       });
-        //     }
-        //   })
-        // ],
+        
       ),
       body: Column(
         children: [
@@ -214,7 +177,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   flex: 3,
@@ -222,7 +184,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        //currentSong,
                         trackTitle.length > 22
                             ? trackTitle.replaceRange(
                                 22, trackTitle.length, '...')
@@ -236,7 +197,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                         height: 15,
                       ),
                       Text(
-                        //currentArtist,
                         trackArtist.length > 20
                             ? trackArtist.replaceRange(
                                 20, trackArtist.length, '...')
@@ -308,77 +268,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
               ],
             ),
           ),
-          //assetsAudioPlayer.builderRealtimePlayingInfos(builder: builder)
-
-          // assetsAudioPlayer.builderRealtimePlayingInfos(
-          //     builder: (context, RealtimePlayingInfos? infos) {
-          //   print('Infos here: ${infos.toString()}');
-          //   if (infos!.currentPosition == infos.duration) {
-          //     // setState(() {
-          //     //   widget.currentIndex = widget.currentIndex + 1;
-
-          //     // });
-          //     print('infos here: $infos');
-          //     print(widget.currentIndex);
-          //   }
-          //   // setState(() {
-          //   //               widget.currentIndex = widget.currentIndex + 1;
-          //   //             });
-          //   // }
-          //   //print('infos: $infos');
-          //   return Column(
-          //     children: [
-          //       // Padding(
-          //       //   padding: const EdgeInsets.all(15.0),
-          //       //   child: PositionSeekWidget(
-          //       //     currentPosition: infos.currentPosition,
-          //       //     duration: infos.duration,
-          //       //     seekTo: (to) {
-          //       //       assetsAudioPlayer.seek(to);
-          //       //     },
-          //       //   ),
-          //       // ),
-          //       //StreamBuilder<DurationState> ProgressBar(progress: progress, total: total)
-          //       Padding(
-          //         padding: const EdgeInsets.only(
-          //             top: 30.0, bottom: 40.0, left: 30, right: 30),
-          //         child: ProgressBar(
-          //           progress: infos.currentPosition,
-          //           total: infos.duration,
-          //           onSeek: (to) {
-          //             assetsAudioPlayer.seek(to);
-          //             if (to == infos.duration) {
-          //               setState(() {
-          //                 widget.currentIndex = widget.currentIndex + 1;
-          //               });
-          //             }
-          //           },
-          //           progressBarColor: Colors.black,
-          //           baseBarColor: Colors.grey[500],
-          //           thumbColor: Colors.black,
-          //         ),
-          //       ),
-          //       const SizedBox(
-          //         height: 25,
-          //       ),
-          //     ],
-          //   );
-          // }),
-          // Padding(
-          //         padding: const EdgeInsets.only(
-          //             top: 30.0, bottom: 40.0, left: 30, right: 30),
-          //         child: ProgressBar(
-          //           progress: currentPosition,
-          //           total: duration,
-          //           onSeek: (to) {
-          //             assetsAudioPlayer.seek(to);
-
-          //           },
-          //           progressBarColor: Colors.black,
-          //           baseBarColor: Colors.grey[500],
-          //           thumbColor: Colors.black,
-          //         ),
-          //       )
           audioPlayerSettings.infos(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -413,8 +302,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 backgroundColor: Colors.black,
                 child: IconButton(
                   iconSize: 35,
-
-                  //icon: Icon(btnIcon, color: Colors.white),
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () {
                     audioPlayerSettings.playOrPauseAudio();

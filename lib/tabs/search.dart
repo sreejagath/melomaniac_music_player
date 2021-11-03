@@ -18,8 +18,6 @@ class _SearchTrackState extends State<SearchTrack> {
   bool textKeyActive = false;
   Future searchTracks(String searchKey) async {
     var musics = await Hive.openBox('musicBox');
-    //print(musics.getAt(0));
-
     List mdata = musics.get('tracks');
     searchedList.clear();
     for (var i = 0; i < mdata.length; i++) {
@@ -43,7 +41,6 @@ class _SearchTrackState extends State<SearchTrack> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             controller: searchKey,
-            onChanged: searchTracks,
             decoration: InputDecoration(
               labelText: 'Search...',
               border: OutlineInputBorder(
@@ -51,6 +48,24 @@ class _SearchTrackState extends State<SearchTrack> {
               ),
             ),
           ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            List searchedMusic = await searchMusic(searchKey.text);
+            setState(() {
+              searchedList = searchedMusic;
+            });
+          },
+          child: Text('Search'),
+          style: ElevatedButton.styleFrom(
+              primary: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              minimumSize: Size(300,30)),
         ),
         const SizedBox(
           height: 15,
@@ -61,30 +76,51 @@ class _SearchTrackState extends State<SearchTrack> {
             itemCount: searchedList.length,
             itemBuilder: (BuildContext context, int index) {
               print(searchedList);
-              return ListTile(
-                  title: Text(
-                    searchedList[index]['title'],
-                  ),
-                  subtitle: Text(
-                    searchedList[index]['artist'],
-                  ),
-                  leading: QueryArtworkWidget(
-                    id: searchedList[index]['id'],
-                    type: ArtworkType.AUDIO,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CurrentMusic(
-                          musicList: searchedList,
-                          currentIndex: index,
-                        ),
+              return searchedList.isEmpty
+                  ? 
+                  Container(
+                    child: Center(
+                      child: Text('No Results Found'),
+                    ),
+                  )
+                  : ListTile(
+                      title: Text(
+                        searchedList[index]['title'],
                       ),
-                    );
-                  });
+                      subtitle: Text(
+                        searchedList[index]['artist'],
+                      ),
+                      leading: QueryArtworkWidget(
+                        id: searchedList[index]['id'],
+                        type: ArtworkType.AUDIO,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CurrentMusic(
+                              musicList: searchedList,
+                              currentIndex: index,
+                            ),
+                          ),
+                        );
+                      });
             })
       ])),
     );
   }
+}
+
+Future<List> searchMusic(String searchKey) async {
+  List musicList = [];
+  var musics = await Hive.openBox('musicBox');
+  List mdata = musics.get('tracks');
+  musicList.clear();
+  for (var i = 0; i < mdata.length; i++) {
+    if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+      musicList.add(mdata[i]);
+    }
+  }
+  print(musicList);
+  return musicList;
 }

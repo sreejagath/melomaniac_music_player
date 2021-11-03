@@ -70,12 +70,16 @@ class _SettingsState extends State<Settings> {
                       title: Text('About'),
                       leading: Icon(Icons.notes),
                       onTap: () {
-                        //showAboutDialog(context: context);
                         showAboutDialog(
                           context: context,
                           applicationName: 'Melomaniac',
                           applicationVersion: '1.0.0',
                           applicationLegalese: '© 2021 Melomaniac',
+                          applicationIcon: Image.asset(
+                            'assets/images/logo.png',
+                            height: 50,
+                          ),
+                          
                         );
                       },
                     ),

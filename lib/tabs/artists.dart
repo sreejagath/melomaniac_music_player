@@ -66,7 +66,6 @@ _buildTrack(int index) {
           width: 100.0,
           height: 100.0,
           decoration: const BoxDecoration(
-            //shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.fill,
               image: AssetImage('assets/images/image1.jpg'),

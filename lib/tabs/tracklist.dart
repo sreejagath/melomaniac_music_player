@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/albums.dart';
-import 'package:music_player/tabs/artists.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:music_player/tabs/tracks.dart';
 
@@ -45,33 +44,18 @@ class _TracklistState extends State<Tracklist>
                       style:
                           TextStyle(color: Colors.black, fontFamily: 'Genera')),
                 ),
-                // Tab(
-                //   child: Text('Artists',
-                //       style:
-                //           TextStyle(color: Colors.black, fontFamily: 'Genera')),
-                // )
               ]),
         ),
-
-        //TRACKS
 
         Container(
           height: MediaQuery.of(context).size.height - 200,
           child: TabBarView(
             controller: _tabController,
             children: [
-              // ignore: avoid_unnecessary_containers
               Container(
                 child: const Tracks(),
               ),
-
-              //ALBUMS
-
               Container(child: const Albums()),
-
-              // //ARTISTS
-
-              // Container(child: const Artists()),
             ],
           ),
         ),

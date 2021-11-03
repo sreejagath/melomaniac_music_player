@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -39,7 +37,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
       }
       for (var i = 0; i < musics.length; i++) {
         if (musics[i]['isFavorite'] == true) {
-          //print(musics[i]['title']);
           favoritesList.add(musics[i]);
           print(favoritesList);
         }
@@ -85,8 +82,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                   playlistBox.add(playlists[0]);
                                   playlistData.add(playlistBox
                                       .getAt(playlistBox.length - 1));
-
-                                  //reassemble();
                                 });
                                 String playlistName = _playlist.text;
                                 final snackBar = SnackBar(
@@ -118,57 +113,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
               ),
             ]),
           ),
-
-          //           child: Row(
-          //             children: [
-          //               TextButton(
-          //                 onPressed: () {
-          //                   showModalBottomSheet(
-          //                       shape: RoundedRectangleBorder(
-          //                           borderRadius: BorderRadius.all(
-          //                               Radius.circular(10.0))),
-          //                       context: context,
-          //                       builder: (context) {
-          //                         return Container(
-          //                           height: MediaQuery.of(context).size.height *
-          //                               0.5,
-          //                           child: Form(
-          //                               child: Column(
-          //                             children: [
-          //                               SizedBox(
-          //                                 height: 20,
-          //                               ),
-          //                               Padding(
-          //                                 padding: const EdgeInsets.only(left: 15,right:15),
-          //                                 child: TextFormField(
-          //                                   //controller: _filter,
-          //                                   decoration: new InputDecoration(
-          //                                       prefixIcon: new Icon(Icons.add),
-          //                                       hintText: 'New Playlist'),
-          //                                 ),
-          //                               ),
-          //                               SizedBox(height: 2,),
-          //                               ElevatedButton(onPressed: (){}, child: Text('Create')),
-          //                             ],
-          //                           )),
-          //                         );
-          //                       });
-          //                 },
-          //                 child: Row(
-          //                   children: const [
-          //                     Icon(Icons.add),
-          //                     SizedBox(
-          //                       width: 10.0,
-          //                     ),
-          //                     Text('New Playlist')
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ))
-          //     ],
-          //   ),
-          // ),
           const SizedBox(
             height: 15,
           ),
@@ -196,9 +140,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                 : ListView.builder(
                                     itemCount: favoritesList.length,
                                     itemBuilder: (context, index) {
-                                      // print('from clicking favorites');
-                                      // print(favBox.getAt(index)['title']);
-                                      //print(favBox.getAt(0));
                                       print('end');
                                       return ListTile(
                                         leading: Icon(Icons.music_note),
@@ -261,7 +202,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                   return ListTile(
                     leading: const Icon(Icons.music_note, color: Colors.black),
                     title: Text(
-                      //'Hello',
                       playlistData[index]['playlist'] ?? '',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, fontFamily: 'Genera'),
@@ -274,9 +214,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     onTap: () async {
                       var favBox = await Hive.openBox('favorites');
                       var playlistBox = await Hive.openBox('playlistBox');
-                      // print(playlistBox.getAt(0)['tracks'][1]['title']);
-                      // var first = playlistBox.getAt(1)['tracks'][0]['title'];
-                      // print(first);
                       showModalBottomSheet(
                           context: context,
                           builder: (context) {
@@ -293,11 +230,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                       itemCount:
                                           playlistData[index]['tracks'].length,
                                       itemBuilder: (context, values) {
-                                        // print('from clicking favorites');
-                                        // print(favBox.getAt(index)['title']);
                                         print(playlistData[index]['tracks']
                                             [values]['title']);
-                                        //print('end');
                                         return ListTile(
                                           leading: Icon(Icons.music_note),
                                           title: Text(playlistData[index]
@@ -355,7 +289,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                                   });
                                                                   Navigator.pop(
                                                                       context);
-                                                                  Navigator.pop(  context);
+                                                                  Navigator.pop(
+                                                                      context);
                                                                 },
                                                                 child:
                                                                     const Text(
@@ -450,10 +385,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                             labelText:
                                                                 'New Playlist Name',
                                                           ),
-                                                          // initialValue:
-                                                          //     playlistData[
-                                                          //             index]
-                                                          //         ['playlist'],
                                                         ),
                                                       ]),
                                                 ),
@@ -499,10 +430,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
               ),
             ],
           ),
-          //  ),
         ],
       ),
     );
   }
-//}
 }

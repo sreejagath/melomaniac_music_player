@@ -28,6 +28,8 @@ class AudioPlayerSettings {
     _assetsAudioPlayer.showNotification = notifications ?? true;
     isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
     currentValues = _assetsAudioPlayer.current;
+    //playnext to a variable
+    
     //isFavoriteValue = isFavorite;
   }
 
