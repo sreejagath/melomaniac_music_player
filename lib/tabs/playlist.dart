@@ -353,6 +353,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                                         [
                                                                         'tracks'] = temp;
                                                                   });
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(  context);
                                                                 },
                                                                 child:
                                                                     const Text(

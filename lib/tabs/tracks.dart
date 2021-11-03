@@ -45,59 +45,59 @@ class _TracksState extends State<Tracks> {
     //   });
     // });
     setState(() {
-    requestPermission();
+      requestPermission();
     });
     super.initState();
     //requestPermission();
   }
 
-requestPermission() async {
-  if (!kIsWeb) {
-    bool permissionStatus = await _audioQuery.permissionsStatus();
-    if (!permissionStatus) {
-      await _audioQuery.permissionsRequest();
-      var musicBox = await Hive.openBox('musicBox');
-      var playlistBox = await Hive.openBox('playlistBox');
-      var favorites = await Hive.openBox('favorites');
-      musicBox.put('tracks', []);
-      //requestPermission();
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //     content: Text(
-      //         "You don't enabled permission, Please enable permission for this application")));
-    }
-    if (permissionStatus) {
-      var musicBox = await Hive.openBox('musicBox');
-      var playlistBox = await Hive.openBox('playlistBox');
-      var favorites = await Hive.openBox('favorites');
+  requestPermission() async {
+    if (!kIsWeb) {
+      bool permissionStatus = await _audioQuery.permissionsStatus();
+      if (!permissionStatus) {
+        await _audioQuery.permissionsRequest();
+        var musicBox = await Hive.openBox('musicBox');
+        var playlistBox = await Hive.openBox('playlistBox');
+        var favorites = await Hive.openBox('favorites');
+        //musicBox.put('tracks', []);
+        //requestPermission();
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //     content: Text(
+        //         "You don't enabled permission, Please enable permission for this application")));
+      }
+      if (permissionStatus) {
+        var musicBox = await Hive.openBox('musicBox');
+        var playlistBox = await Hive.openBox('playlistBox');
+        var favorites = await Hive.openBox('favorites');
 
-      List<SongModel> musicList = await _audioQuery.querySongs();
-      //print(musicList[0]);
-      musicList.forEach((element) {
-        musicData.add({
-          'title': element.title,
-          'artist': element.artist,
-          'id': element.id,
-          'uri': element.uri,
-          'album': element.album,
-          'duration': element.duration,
-          'isFavorite': favorites.containsKey(element.id)
+        List<SongModel> musicList = await _audioQuery.querySongs();
+        //print(musicList[0]);
+        musicList.forEach((element) {
+          musicData.add({
+            'title': element.title,
+            'artist': element.artist,
+            'id': element.id,
+            'uri': element.uri,
+            'album': element.album,
+            'duration': element.duration,
+            'isFavorite': favorites.containsKey(element.id)
+          });
         });
-      });
-      //print(musicData);
-      musicBox.put('tracks', musicData);
-      setState(() {
+        //print(musicData);
+        musicBox.put('tracks', musicData);
+        setState(() {
           musics = musicBox.get('tracks');
           for (var i = 0; i < playlistBox.length; i++) {
             playlists.add(playlistBox.getAt(i));
           }
         });
-      //setState(() {
-      //musics = musicBox.get('tracks');
+        //setState(() {
+        //musics = musicBox.get('tracks');
 
-      // });
+        // });
+      }
     }
   }
-}
 
   Future<List> openTrack() async {
     final box = await Hive.openBox('musicBox');
@@ -116,7 +116,6 @@ requestPermission() async {
         musics = [];
       });
     }
-    print(musics);
   }
 
   Future<List> openTracks() async {
@@ -143,11 +142,11 @@ requestPermission() async {
             child: Column(
             children: const [
               SizedBox(height: 20),
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
+              Text('No tracks found !'),
+              // CircularProgressIndicator(
+              //   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              // ),
               SizedBox(height: 20),
-              
             ],
           ))
         : ListView.builder(
@@ -204,29 +203,30 @@ requestPermission() async {
                             borderRadius: BorderRadius.circular(10.0)),
                         itemBuilder: (BuildContext context) => [
                               PopupMenuItem(
-                                  child: TextButton(
-                                child: Text('Add to Favorites'),
-                                onPressed: () {
-                                  setState(() {
-                                    musics[index]['isFavorite'] = true;
-                                    Hive.box('musicBox').put(
-                                      'tracks',
-                                      musics,
-                                    );
-                                    Hive.box('favorites').put(
-                                        musics[index]['id'], musics[index]);
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Added to Favorites',
+                                child: TextButton(
+                                  child: Text('Add to Favorites'),
+                                  onPressed: () {
+                                    setState(() {
+                                      musics[index]['isFavorite'] = true;
+                                      Hive.box('musicBox').put(
+                                        'tracks',
+                                        musics,
+                                      );
+                                      Hive.box('favorites').put(
+                                          musics[index]['id'], musics[index]);
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Added to Favorites',
+                                        ),
+                                        duration: Duration(seconds: 1),
                                       ),
-                                      duration: Duration(seconds: 1),
-                                    ),
-                                  );
-                                  Navigator.pop(context);
-                                },
-                              )),
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
                               PopupMenuItem(
                                   child: TextButton(
                                 child: Text('Add to playlist'),
@@ -272,36 +272,54 @@ requestPermission() async {
                                                                     var playlistBox =
                                                                         await Hive.openBox(
                                                                             'playlistBox');
-                                                                    playlists[index]
-                                                                            [
-                                                                            'tracks']
-                                                                        .add(data[
-                                                                            0]);
-                                                                    setState(
-                                                                        () {
-                                                                      playlistBox.putAt(
-                                                                          index,
-                                                                          playlists[
-                                                                              index]);
-                                                                    });
-                                                                    String
-                                                                        trackName =
-                                                                        data[0][
-                                                                            'title'];
-                                                                    String
-                                                                        playlistName =
-                                                                        playlists[index]
-                                                                            [
-                                                                            'playlist'];
-                                                                    final snackBar =
-                                                                        SnackBar(
-                                                                      content: Text(
-                                                                          '$trackName added to $playlistName successfully !'),
-                                                                    );
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(
-                                                                            snackBar);
+                                                                    print(data);
+                                                                    if (playlistBox.getAt(index)[
+                                                                            'tracks'] ==
+                                                                        data) {
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                        const SnackBar(
+                                                                          content:
+                                                                              Text(
+                                                                            'Song already in playlist',
+                                                                          ),
+                                                                          duration:
+                                                                              Duration(seconds: 1),
+                                                                        ),
+                                                                      );
+                                                                    } else {
+                                                                      playlists[index]
+                                                                              [
+                                                                              'tracks']
+                                                                          .add(data[
+                                                                              0]);
+                                                                      setState(
+                                                                          () {
+                                                                        playlistBox.putAt(
+                                                                            index,
+                                                                            playlists[index]);
+                                                                      });
+                                                                      String
+                                                                          trackName =
+                                                                          data[0]
+                                                                              [
+                                                                              'title'];
+                                                                      String
+                                                                          playlistName =
+                                                                          playlists[index]
+                                                                              [
+                                                                              'playlist'];
+                                                                      final snackBar =
+                                                                          SnackBar(
+                                                                        content:
+                                                                            Text('$trackName added to $playlistName successfully !'),
+                                                                      );
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              snackBar);
+                                                                    }
                                                                     // print(playlistBox
                                                                     //     .get(index));
                                                                     Navigator.pop(

@@ -16,7 +16,7 @@ class AudioPlayerSettings {
   }
   AudioPlayerSettings._internal();
   Future<void> initializeAudioPlayerWithAudios(
-      List<Audio> audios, index,) async {
+      List<Audio> audios, index) async {
     print(audios);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     notifications = await prefs.getBool('notification');

@@ -42,6 +42,12 @@ class _CurrentMusicState extends State<CurrentMusic> {
     return prefs.getBool('notification') ?? true;
   }
 
+  Future<bool> isfavorite() async {
+    final SharedPreferences fav = await SharedPreferences.getInstance();
+    fav.setBool('isFav', isFavorite);
+    return fav.getBool('isFav') ?? false;
+  }
+
   setSongId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('id', widget.musicList[widget.currentIndex]['id']);
@@ -156,6 +162,29 @@ class _CurrentMusicState extends State<CurrentMusic> {
         ),
         elevation: 0,
         backgroundColor: Colors.white,
+        // actions: [
+        //   PopupMenuButton(itemBuilder: (context) {
+        //     return [
+        //       PopupMenuItem(
+        //         child: Text('Add to favorites'),
+        //         value: 1,
+        //       ),
+        //     ];
+        //   }, onSelected: (value) {
+        //     if (value == 1) {
+        //       setSongId();
+        //       var favoriteList = Hive.box('favorites');
+        //       favoriteList.put(widget.musicList[widget.currentIndex]['id'],
+        //           widget.musicList[widget.currentIndex]);
+        //       widget.musicList[widget.currentIndex]['isFavorite'] = true;
+        //       Hive.box('musicBox').put('tracks', widget.musicList);
+
+        //       setState(() {
+        //         isFavorite = true;
+        //       });
+        //     }
+        //   })
+        // ],
       ),
       body: Column(
         children: [
@@ -185,18 +214,18 @@ class _CurrentMusicState extends State<CurrentMusic> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   flex: 3,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         //currentSong,
-                        trackTitle.length > 18
+                        trackTitle.length > 22
                             ? trackTitle.replaceRange(
-                                18, trackTitle.length, '...')
+                                22, trackTitle.length, '...')
                             : trackTitle,
                         style: const TextStyle(
                             color: Colors.black,
@@ -223,58 +252,59 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 const SizedBox(
                   width: 55,
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: isFavorite
-                          ? const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            )
-                          : const Icon(Icons.favorite_border_outlined),
-                      // icon: music[widget.currentIndex]['isFavorite'] == true
-                      //     ? Icon(favIcon = Icons.favorite,
-                      //         color: colorFav = Colors.red)
-                      //     : Icon(favIcon, color: colorFav),
-                      onPressed: () {
-                        !isFavorite
-                            ? setState(() {
-                                isFavorite = true;
+                // Row(
+                //   children: [
+                //     IconButton(
+                //       icon: isFavorite
+                //           ? const Icon(
+                //               Icons.favorite,
+                //               color: Colors.red,
+                //             )
+                //           : const Icon(Icons.favorite_border_outlined),
+                //       // icon: music[widget.currentIndex]['isFavorite'] == true
+                //       //     ? Icon(favIcon = Icons.favorite,
+                //       //         color: colorFav = Colors.red)
+                //       //     : Icon(favIcon, color: colorFav),
+                //       onPressed: () {
+                //         !isFavorite
+                //             ? setState(() {
+                //                 isFavorite = true;
 
-                                favIcon = Icons.favorite;
-                                colorFav = Colors.red;
-                                isFavorite = true;
-                                favorite.add(music[widget.currentIndex]);
-                                widget.musicList[widget.currentIndex]
-                                    ['isFavorite'] = true;
-                                Hive.box('musicBox').put('tracks', widget.musicList);
-                                        //print(favorite);
-                                        Hive.box('favorites')
-                                    .put(trackId, favorite[0]);
-                                print(Hive.box('favorites').get(trackId));
-                              })
-                            : setState(() {
-                                favIcon = Icons.favorite_border;
-                                colorFav = Colors.grey;
-                                isFavorite = false;
-                                favorite.remove(music[widget.currentIndex]);
-                                print(favorite);
-                                Hive.box('favorites').delete(trackId);
-                                widget.musicList[widget.currentIndex]
-                                    ['isFavorite'] = false;
-                                Hive.box('musicBox').put('tracks', widget.musicList);
-                                
-                                //print(Hive.box('favorites').get('favorites'));
-                                print(Hive.box('favorites').get('trackId'));
-                              });
-                      },
-                    ),
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
-                    // const Icon(Icons.playlist_add),
-                  ],
-                )
+                //                 favIcon = Icons.favorite;
+                //                 colorFav = Colors.red;
+                //                 isFavorite = true;
+                //                 favorite.add(music[widget.currentIndex]);
+                //                 widget.musicList[widget.currentIndex]
+                //                     ['isFavorite'] = true;
+                //                 Hive.box('musicBox')
+                //                     .put('tracks', widget.musicList);
+                //                 //print(favorite);
+                //                 Hive.box('favorites').put(trackId, favorite[0]);
+                //                 print(Hive.box('favorites').get(trackId));
+                //               })
+                //             : setState(() {
+                //                 favIcon = Icons.favorite_border;
+                //                 colorFav = Colors.grey;
+                //                 isFavorite = false;
+                //                 favorite.remove(music[widget.currentIndex]);
+                //                 print(favorite);
+                //                 Hive.box('favorites').delete(trackId);
+                //                 widget.musicList[widget.currentIndex]
+                //                     ['isFavorite'] = false;
+                //                 Hive.box('musicBox')
+                //                     .put('tracks', widget.musicList);
+
+                //                 //print(Hive.box('favorites').get('favorites'));
+                //                 print(Hive.box('favorites').get('trackId'));
+                //               });
+                //       },
+                //     ),
+                //     // const SizedBox(
+                //     //   width: 10,
+                //     // ),
+                //     // const Icon(Icons.playlist_add),
+                //   ],
+                // )
               ],
             ),
           ),
