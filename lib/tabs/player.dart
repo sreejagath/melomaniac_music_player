@@ -140,14 +140,14 @@ class _CurrentMusicState extends State<CurrentMusic> {
         title: const Text(
           'Playing Now',
           style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
-        
       ),
       body: Column(
         children: [

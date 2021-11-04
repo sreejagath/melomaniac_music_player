@@ -28,30 +28,11 @@ class AudioPlayerSettings {
     _assetsAudioPlayer.showNotification = notifications ?? true;
     isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
     currentValues = _assetsAudioPlayer.current;
-    //playnext to a variable
     
-    //isFavoriteValue = isFavorite;
   }
 
-  Future<void> audioPlayerSings(List audiosList) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    notifications = await prefs.getBool('notification');
-    final List<Audio> audioData = (audiosList)
-        .map((audio) => Audio.file(audio['uri'],
-            metas: Metas(
-                title: audio['title'],
-                artist: audio['artist'],
-                id: audio['id'].toString(),
-                extra: {'isFavorite': audio['isFavorite']})))
-        .toList();
-    _assetsAudioPlayer.open(
-      Playlist(audios: audioData),
-      loopMode: LoopMode.playlist,
-      autoStart: true,
-    );
-    _assetsAudioPlayer.showNotification = notifications ?? false;
-    isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
-    currentValues = _assetsAudioPlayer.current;
+  Future<void> playAtIndex(int index) async {
+    await _assetsAudioPlayer.playlistPlayAtIndex(index);
   }
 
   Future<void> playOrPauseAudio() async {
