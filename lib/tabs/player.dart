@@ -69,8 +69,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
     });
   }
 
-  final audioPlayerSettings = AudioPlayerSettings();
-
   favoriteList() {
     var favoriteList =
         Hive.box('favorites').get(widget.musicList[widget.currentIndex]['id']);
@@ -91,23 +89,21 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 extra: {'isFavorite': audio['isFavorite']})))
         .toList();
     audioPlayerSettings
-        .initializeAudioPlayerWithAudios(
+        .initializePlayer(
       audios,
       widget.currentIndex,
-    )
-        .then((value) {
+    ).then((value) {
       audioPlayerSettings.currentValues.listen((current) {
         if (mounted) {
           if (current == null) {
             return;
           } else {
             setState(() {
-              print(current);
               trackTitle = current.audio.audio.metas.title ?? 'No Title';
               trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
               trackId = int.parse(current.audio.audio.metas.id!);
               isFavorite = current.audio.audio.metas.extra!['isFavorite'];
-              print(isFavorite);
+              
             });
           }
         }
@@ -212,59 +208,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                 const SizedBox(
                   width: 55,
                 ),
-                // Row(
-                //   children: [
-                //     IconButton(
-                //       icon: isFavorite
-                //           ? const Icon(
-                //               Icons.favorite,
-                //               color: Colors.red,
-                //             )
-                //           : const Icon(Icons.favorite_border_outlined),
-                //       // icon: music[widget.currentIndex]['isFavorite'] == true
-                //       //     ? Icon(favIcon = Icons.favorite,
-                //       //         color: colorFav = Colors.red)
-                //       //     : Icon(favIcon, color: colorFav),
-                //       onPressed: () {
-                //         !isFavorite
-                //             ? setState(() {
-                //                 isFavorite = true;
-
-                //                 favIcon = Icons.favorite;
-                //                 colorFav = Colors.red;
-                //                 isFavorite = true;
-                //                 favorite.add(music[widget.currentIndex]);
-                //                 widget.musicList[widget.currentIndex]
-                //                     ['isFavorite'] = true;
-                //                 Hive.box('musicBox')
-                //                     .put('tracks', widget.musicList);
-                //                 //print(favorite);
-                //                 Hive.box('favorites').put(trackId, favorite[0]);
-                //                 print(Hive.box('favorites').get(trackId));
-                //               })
-                //             : setState(() {
-                //                 favIcon = Icons.favorite_border;
-                //                 colorFav = Colors.grey;
-                //                 isFavorite = false;
-                //                 favorite.remove(music[widget.currentIndex]);
-                //                 print(favorite);
-                //                 Hive.box('favorites').delete(trackId);
-                //                 widget.musicList[widget.currentIndex]
-                //                     ['isFavorite'] = false;
-                //                 Hive.box('musicBox')
-                //                     .put('tracks', widget.musicList);
-
-                //                 //print(Hive.box('favorites').get('favorites'));
-                //                 print(Hive.box('favorites').get('trackId'));
-                //               });
-                //       },
-                //     ),
-                //     // const SizedBox(
-                //     //   width: 10,
-                //     // ),
-                //     // const Icon(Icons.playlist_add),
-                //   ],
-                // )
               ],
             ),
           ),

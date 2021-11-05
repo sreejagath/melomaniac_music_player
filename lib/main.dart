@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:music_player/db_model/favorites_model.dart';
@@ -13,10 +12,6 @@ import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
-
-import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:path_provider/path_provider.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
@@ -41,6 +36,7 @@ Future main() async {
 }
 
 
+  final audioPlayerSettings = AudioPlayerSettings();
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -50,7 +46,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  // ignore: unused_field
   late TabController _tabController;
   static int _selectedIndex = 0;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
@@ -67,21 +62,11 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  static List<Widget> _widgetOptions = <Widget>[
-    Tracklist(),
-    SearchTrack(),
-    PlaylistPage(),
-    Settings(),
-    CurrentMusic(
-      musicList: [
-        {
-          'title': 'Malare',
-          'artist': 'Rajesh Murugan',
-          'url': 'assets/music/song.mp3'
-        }
-      ],
-      currentIndex: 0,
-    ),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Tracklist(),
+    const SearchTrack(),
+    const PlaylistPage(),
+    const Settings(),
   ];
 
   final audioPlayerSettings = AudioPlayerSettings();
@@ -129,23 +114,13 @@ class _HomePageState extends State<HomePage>
             icon: Icon(Icons.settings, color: Colors.black),
             label: 'Settings',
           ),
-          // BottomNavigationBarItem(
-          //     icon: Visibility(
-          //       visible: false,
-          //       child: Icon(
-          //         Icons.music_note_rounded,
-          //         color: Colors.black,
-          //         size: 0,
-          //       ),
-          //     ),
-          //     label: ''),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          var currentMusic = await Hive.openBox('currentSong');
+          var currentMusic = await Hive.openBox('LastPlayed');
           List? currentSong = currentMusic.get('currentSong');
           var index = currentMusic.get('index');
           currentSong == null

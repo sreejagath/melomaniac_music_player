@@ -1,3 +1,4 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -13,7 +14,6 @@ class Tracks extends StatefulWidget {
   _TracksState createState() => _TracksState();
 }
 
-
 class _TracksState extends State<Tracks> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
 
@@ -26,7 +26,6 @@ class _TracksState extends State<Tracks> {
 
   @override
   void initState() {
-    setState(() {});
     setState(() {
       requestPermission();
     });
@@ -42,11 +41,13 @@ class _TracksState extends State<Tracks> {
         var musicBox = await Hive.openBox('musicBox');
         var playlistBox = await Hive.openBox('playlistBox');
         var favorites = await Hive.openBox('favorites');
+        var currentSong = await Hive.openBox('currentSong');
       }
       if (permissionStatus) {
         var musicBox = await Hive.openBox('musicBox');
         var playlistBox = await Hive.openBox('playlistBox');
         var favorites = await Hive.openBox('favorites');
+        //var currentSong = await Hive.openBox('currentSong');
 
         List<SongModel> musicList = await _audioQuery.querySongs();
         musicList.forEach((element) {
@@ -74,10 +75,19 @@ class _TracksState extends State<Tracks> {
   @override
   Widget build(BuildContext context) {
     return musics.isEmpty
-        ? Container(
-            child: const Center(
-            child: Text('No Tracks'),
-          ))
+        ? Column(
+            children: [
+              Container(
+                  child: const Center(
+                child: Text('No Tracks'),
+              )),
+              DelayedDisplay(
+                child: Text(
+                    'If you enabled permissions,please restart the app...'),
+                delay: Duration(seconds: 4),
+              )
+            ],
+          )
         : ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
@@ -205,8 +215,7 @@ class _TracksState extends State<Tracks> {
                                                                           () async {
                                                                         var playlistBox =
                                                                             await Hive.openBox('playlistBox');
-                                                                        print(
-                                                                            data);
+                                                                        
                                                                         if (playlistBox.getAt(index)['tracks'] ==
                                                                             data) {
                                                                           ScaffoldMessenger.of(context)
@@ -256,7 +265,7 @@ class _TracksState extends State<Tracks> {
                               )),
                               PopupMenuItem(
                                 child: TextButton(
-                                  child: Text('Song Info'),
+                                  child: const Text('Song Info'),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
@@ -363,18 +372,21 @@ class _TracksState extends State<Tracks> {
                               ),
                               PopupMenuItem(
                                 child: TextButton(
-                                    child: Text('Share'),
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'This feature is not availiable now.Will be implemented in next update !')));
-                                    }),
+                                    child: Text('Share'), onPressed: () {}),
                                 value: 4,
                               ),
-                            ]),
+                            ],
+                        onSelected: (value) {
+                          if (value == 4) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(
+                                  'This feature is not availiable now.Will be implemented in next update !'),
+                            ));
+                          }
+                        }),
                     onTap: () async {
-                      var currentSong = await Hive.openBox('currentSong');
+                      var currentSong = await Hive.openBox('LastPlayed');
                       currentSong.put('currentSong', musics);
                       currentSong.put('index', index);
                       Navigator.push(

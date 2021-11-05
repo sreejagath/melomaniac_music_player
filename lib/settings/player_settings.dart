@@ -15,28 +15,22 @@ class AudioPlayerSettings {
     return _singleton;
   }
   AudioPlayerSettings._internal();
-  Future<void> initializeAudioPlayerWithAudios(
-      List<Audio> audios, index) async {
-    print(audios);
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    notifications = await prefs.getBool('notification');
-    _assetsAudioPlayer.open(
-      Playlist(audios: audios, startIndex: index),
-      loopMode: LoopMode.playlist,
-      autoStart: true,
-    );
-    _assetsAudioPlayer.showNotification = notifications ?? true;
-    isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
-    currentValues = _assetsAudioPlayer.current;
-    
-  }
-
+  
   Future<void> playAtIndex(int index) async {
     await _assetsAudioPlayer.playlistPlayAtIndex(index);
   }
 
   Future<void> playOrPauseAudio() async {
     await _assetsAudioPlayer.playOrPause();
+  }
+
+  Future<void> initializePlayer(List<Audio> audio, index) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    notifications = await prefs.getBool('notification');
+    _assetsAudioPlayer.open(Playlist(audios: audio, startIndex: index),
+        autoStart: true, showNotification: notifications??true);
+    isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
+    currentValues = _assetsAudioPlayer.current;
   }
 
   Future<void> pauseAudio() async {

@@ -75,7 +75,6 @@ class _SearchTrackState extends State<SearchTrack> {
             shrinkWrap: true,
             itemCount: searchedList.length,
             itemBuilder: (BuildContext context, int index) {
-              print(searchedList);
               return searchedList.isEmpty
                   ? 
                   Container(
@@ -121,6 +120,5 @@ Future<List> searchMusic(String searchKey) async {
       musicList.add(mdata[i]);
     }
   }
-  print(musicList);
   return musicList;
 }

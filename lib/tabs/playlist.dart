@@ -38,7 +38,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       for (var i = 0; i < musics.length; i++) {
         if (musics[i]['isFavorite'] == true) {
           favoritesList.add(musics[i]);
-          print(favoritesList);
+          
         }
       }
     });
@@ -127,7 +127,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
-                          print(favoritesList.length);
                           return Container(
                             height: MediaQuery.of(context).size.height * 0.5,
                             child: favoritesList.isEmpty
@@ -140,7 +139,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                 : ListView.builder(
                                     itemCount: favoritesList.length,
                                     itemBuilder: (context, index) {
-                                      print('end');
+                                      
                                       return ListTile(
                                         leading: Icon(Icons.music_note),
                                         title:
@@ -198,7 +197,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
-                  print(playlistData[index]['playlist']);
                   return ListTile(
                     leading: const Icon(Icons.music_note, color: Colors.black),
                     title: Text(
@@ -230,8 +228,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                       itemCount:
                                           playlistData[index]['tracks'].length,
                                       itemBuilder: (context, values) {
-                                        print(playlistData[index]['tracks']
-                                            [values]['title']);
                                         return ListTile(
                                           leading: Icon(Icons.music_note),
                                           title: Text(playlistData[index]

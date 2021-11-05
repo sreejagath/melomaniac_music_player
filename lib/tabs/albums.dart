@@ -35,7 +35,6 @@ class _AlbumsState extends State<Albums> {
         musics = [];
       });
     }
-    print(musics);
   }
 
   getAlbums() async {
@@ -43,14 +42,13 @@ class _AlbumsState extends State<Albums> {
     album.forEach((element) {
       albumDatas.add({'album': element.album});
     });
-    print(albumDatas);
   }
 
   @override
   Widget build(BuildContext context) {
     return musics.isEmpty
         ? Container(
-            child: Center(
+            child: const Center(
             child: Text('No Albums'),
           ))
         : Container(
@@ -61,7 +59,7 @@ class _AlbumsState extends State<Albums> {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.album),
+                        leading: const Icon(Icons.album),
                         title: Text(albumDatas[index]['album']),
                         onTap: () async {
                           List albumList = [];
