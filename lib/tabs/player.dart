@@ -92,7 +92,8 @@ class _CurrentMusicState extends State<CurrentMusic> {
         .initializePlayer(
       audios,
       widget.currentIndex,
-    ).then((value) {
+    )
+        .then((value) {
       audioPlayerSettings.currentValues.listen((current) {
         if (mounted) {
           if (current == null) {
@@ -103,7 +104,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
               trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
               trackId = int.parse(current.audio.audio.metas.id!);
               isFavorite = current.audio.audio.metas.extra!['isFavorite'];
-              
             });
           }
         }
@@ -150,67 +150,11 @@ class _CurrentMusicState extends State<CurrentMusic> {
           const SizedBox(
             height: 50,
           ),
-          SizedBox(
-            height: 250,
-            width: 250,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: QueryArtworkWidget(
-                id: trackId == 0
-                    ? widget.musicList[widget.currentIndex]['id']
-                    : trackId,
-                type: ArtworkType.AUDIO,
-                nullArtworkWidget: Icon(
-                  Icons.music_note,
-                  size: 80,
-                ),
-              ),
-            ),
-          ),
+          ArtImage(trackId),
           const SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        trackTitle.length > 22
-                            ? trackTitle.replaceRange(
-                                22, trackTitle.length, '...')
-                            : trackTitle,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Genera',
-                            fontSize: 20),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        trackArtist.length > 20
-                            ? trackArtist.replaceRange(
-                                20, trackArtist.length, '...')
-                            : trackArtist,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Genera',
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 55,
-                ),
-              ],
-            ),
-          ),
+          trackDetails(trackTitle, trackArtist),
           audioPlayerSettings.infos(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -270,6 +214,66 @@ class _CurrentMusicState extends State<CurrentMusic> {
                   icon: const Icon(Icons.skip_next)),
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  Widget ArtImage(trackId) {
+    return SizedBox(
+      height: 250,
+      width: 250,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: QueryArtworkWidget(
+          id: trackId == 0
+              ? widget.musicList[widget.currentIndex]['id']
+              : trackId,
+          type: ArtworkType.AUDIO,
+          nullArtworkWidget: Icon(
+            Icons.music_note,
+            size: 80,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget trackDetails(trackTitle, trackArtist) {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  trackTitle.length > 22
+                      ? trackTitle.replaceRange(22, trackTitle.length, '...')
+                      : trackTitle,
+                  style: const TextStyle(
+                      color: Colors.black, fontFamily: 'Genera', fontSize: 20),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  trackArtist.length > 20
+                      ? trackArtist.replaceRange(20, trackArtist.length, '...')
+                      : trackArtist,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontFamily: 'Genera',
+                  ),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 55,
+          ),
         ],
       ),
     );

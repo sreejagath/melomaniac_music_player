@@ -38,7 +38,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
       for (var i = 0; i < musics.length; i++) {
         if (musics[i]['isFavorite'] == true) {
           favoritesList.add(musics[i]);
-          
         }
       }
     });
@@ -139,7 +138,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                 : ListView.builder(
                                     itemCount: favoritesList.length,
                                     itemBuilder: (context, index) {
-                                      
                                       return ListTile(
                                         leading: Icon(Icons.music_note),
                                         title:
@@ -163,27 +161,36 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                     BorderRadius.circular(
                                                         10.0)),
                                             itemBuilder: (context) => [
-                                                  const PopupMenuItem(
-                                                      child:
-                                                          Text('Add to queue')),
-                                                  const PopupMenuItem(
-                                                      child: Text(
-                                                          'Add to playlist')),
                                                   PopupMenuItem(
                                                       child: TextButton(
-                                                    onPressed: () {},
-                                                    child: const Text(
-                                                      'Song Info',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  )),
-                                                  const PopupMenuItem(
-                                                      child:
-                                                          Text('View Album')),
-                                                  const PopupMenuItem(
-                                                      child: Text('Share')),
+                                                          onPressed: (){
+                                                            // Hive.box('favorites').deleteAt(index);
+                                                            // favoritesList.removeAt(index);
+                                                            // Hive.box('musicBox').
+                                                            setState(() {
+                                                              favoritesList = favoritesList;
+                                                            });
+                                                          },
+                                                          child: Text(
+                                                              'Remove from Playlist'))),
+                                                  // const PopupMenuItem(
+                                                  //     child: Text(
+                                                  //         'Add to playlist')),
+                                                  // PopupMenuItem(
+                                                  //     child: TextButton(
+                                                  //   onPressed: () {},
+                                                  //   child: const Text(
+                                                  //     'Song Info',
+                                                  //     textAlign: TextAlign.left,
+                                                  //     style: TextStyle(
+                                                  //         color: Colors.black),
+                                                  //   ),
+                                                  // )),
+                                                  // const PopupMenuItem(
+                                                  //     child:
+                                                  //         Text('View Album')),
+                                                  // const PopupMenuItem(
+                                                  //     child: Text('Share')),
                                                 ]),
                                       );
                                     },
