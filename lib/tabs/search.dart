@@ -65,45 +65,49 @@ class _SearchTrackState extends State<SearchTrack> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              minimumSize: Size(300,30)),
+              minimumSize: Size(300, 30)),
         ),
         const SizedBox(
           height: 15,
         ),
         ListView.builder(
             scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: searchedList.length,
             itemBuilder: (BuildContext context, int index) {
               return searchedList.isEmpty
-                  ? 
-                  Container(
-                    child: Center(
-                      child: Text('No Results Found'),
-                    ),
-                  )
-                  : ListTile(
-                      title: Text(
-                        searchedList[index]['title'],
+                  ? Container(
+                      child: Center(
+                        child: Text('No Results Found'),
                       ),
-                      subtitle: Text(
-                        searchedList[index]['artist'],
-                      ),
-                      leading: QueryArtworkWidget(
-                        id: searchedList[index]['id'],
-                        type: ArtworkType.AUDIO,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CurrentMusic(
-                              musicList: searchedList,
-                              currentIndex: index,
-                            ),
+                    )
+                  : Column(
+                    children: [
+                      ListTile(
+                          title: Text(
+                            searchedList[index]['title'],
                           ),
-                        );
-                      });
+                          subtitle: Text(
+                            searchedList[index]['artist'],
+                          ),
+                          leading: QueryArtworkWidget(
+                            id: searchedList[index]['id'],
+                            type: ArtworkType.AUDIO,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CurrentMusic(
+                                  musicList: searchedList,
+                                  currentIndex: index,
+                                ),
+                              ),
+                            );
+                          }),
+                    ],
+                  );
             })
       ])),
     );

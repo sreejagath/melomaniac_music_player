@@ -76,12 +76,13 @@ class _TracksState extends State<Tracks> {
   Widget build(BuildContext context) {
     return musics.isEmpty
         ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                   child: const Center(
                 child: Text('No Tracks'),
               )),
-              DelayedDisplay(
+              const DelayedDisplay(
                 child: Text(
                     'If you enabled permissions,please restart the app...'),
                 delay: Duration(seconds: 4),

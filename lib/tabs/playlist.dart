@@ -47,8 +47,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
   Widget build(BuildContext context) {
     TextEditingController _playlist = TextEditingController();
     TextEditingController newPlaylistName = TextEditingController();
-    int _len = musics.length;
-    List<bool> isChecked = List.generate(_len, (index) => false);
     return Container(
       child: Column(
         children: [
@@ -89,13 +87,13 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                 );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
-                                Navigator.pop(context);
+                                Get.back();
                               },
                             ),
                             TextButton(
                               child: const Text('Cancel'),
                               onPressed: () {
-                                Navigator.pop(context);
+                                Get.back();
                               },
                             ),
                           ],
@@ -165,12 +163,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                   PopupMenuItem(
                                                       child: TextButton(
                                                           onPressed: () {
-                                                            print(
-                                                                "Fav from button  ${favoritesList[index]['id']}");
-                                                            //delete from favorites using id and removeisfavorite from music
-
-                                                            // favoritesList.removeAt(index);
-                                                            // Hive.box('musicBox').
                                                             setState(() {
                                                               Hive.box(
                                                                       'favorites')
@@ -201,30 +193,15 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                                 'tracks',
                                                                 musics,
                                                               );
-                                                              favoritesList.removeAt(
-                                                                  index);
+                                                              favoritesList
+                                                                  .removeAt(
+                                                                      index);
                                                             });
+                                                            Get.back();
+                                                            Get.back();
                                                           },
-                                                          child: Text(
+                                                          child: const Text(
                                                               'Remove from Playlist'))),
-                                                  // const PopupMenuItem(
-                                                  //     child: Text(
-                                                  //         'Add to playlist')),
-                                                  // PopupMenuItem(
-                                                  //     child: TextButton(
-                                                  //   onPressed: () {},
-                                                  //   child: const Text(
-                                                  //     'Song Info',
-                                                  //     textAlign: TextAlign.left,
-                                                  //     style: TextStyle(
-                                                  //         color: Colors.black),
-                                                  //   ),
-                                                  // )),
-                                                  // const PopupMenuItem(
-                                                  //     child:
-                                                  //         Text('View Album')),
-                                                  // const PopupMenuItem(
-                                                  //     child: Text('Share')),
                                                 ]),
                                       );
                                     },
@@ -259,7 +236,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                             return Container(
                               height: MediaQuery.of(context).size.height * 0.5,
                               child: playlistData[index]['tracks'].isEmpty
-                                  ? ListTile(
+                                  ? const ListTile(
                                       leading: Icon(Icons.music_note),
                                       title: Text('No Songs'),
                                       subtitle: Text(
@@ -377,8 +354,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                               await Hive.openBox('playlistBox');
                                           playlistBox.deleteAt(index);
 
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
+                                          Get.back();
+                                          Get.back();
                                           setState(() {
                                             playlistData.removeAt(index);
                                           });
@@ -387,8 +364,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
+                                          Get.back();
+                                          Get.back();
                                         },
                                         child: const Text('Cancel'),
                                       ),
@@ -445,15 +422,15 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                             playlistData[
                                                                 index]);
                                                       });
-                                                      Navigator.pop(context);
-                                                      Navigator.pop(context);
+                                                      Get.back();
+                                                      Get.back();
                                                     },
                                                     child: const Text('OK'),
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.pop(context);
-                                                      Navigator.pop(context);
+                                                      Get.back();
+                                                      Get.back();
                                                     },
                                                     child: const Text('Cancel'),
                                                   ),
