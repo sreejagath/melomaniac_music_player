@@ -138,6 +138,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                 : ListView.builder(
                                     itemCount: favoritesList.length,
                                     itemBuilder: (context, index) {
+                                      print(favoritesList[index]['id']);
                                       return ListTile(
                                         leading: Icon(Icons.music_note),
                                         title:
@@ -163,12 +164,45 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                             itemBuilder: (context) => [
                                                   PopupMenuItem(
                                                       child: TextButton(
-                                                          onPressed: (){
-                                                            // Hive.box('favorites').deleteAt(index);
+                                                          onPressed: () {
+                                                            print(
+                                                                "Fav from button  ${favoritesList[index]['id']}");
+                                                            //delete from favorites using id and removeisfavorite from music
+
                                                             // favoritesList.removeAt(index);
                                                             // Hive.box('musicBox').
                                                             setState(() {
-                                                              favoritesList = favoritesList;
+                                                              Hive.box(
+                                                                      'favorites')
+                                                                  .delete(favoritesList[
+                                                                          index]
+                                                                      ['id']);
+                                                              for (var i = 0;
+                                                                  i <
+                                                                      musics
+                                                                          .length;
+                                                                  i++) {
+                                                                if (musics[i][
+                                                                        'id'] ==
+                                                                    favoritesList[
+                                                                            index]
+                                                                        [
+                                                                        'id']) {
+                                                                  print(musics[
+                                                                      i]);
+                                                                  musics[i][
+                                                                          'isFavorite'] =
+                                                                      false;
+                                                                }
+                                                              }
+                                                              Hive.box(
+                                                                      'musicBox')
+                                                                  .put(
+                                                                'tracks',
+                                                                musics,
+                                                              );
+                                                              favoritesList.removeAt(
+                                                                  index);
                                                             });
                                                           },
                                                           child: Text(

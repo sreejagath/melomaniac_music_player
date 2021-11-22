@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
 import 'package:music_player/settings/player_settings.dart';
+import 'package:music_player/tabs/getstarted.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
@@ -13,6 +13,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:get/get.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
@@ -23,7 +24,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  runApp(MaterialApp(
+  runApp(GetMaterialApp(
     theme: ThemeData(
       fontFamily: 'Genera',
     ),
@@ -35,8 +36,8 @@ Future main() async {
   Hive.registerAdapter(FavoritesModelAdapter());
 }
 
+final audioPlayerSettings = AudioPlayerSettings();
 
-  final audioPlayerSettings = AudioPlayerSettings();
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
