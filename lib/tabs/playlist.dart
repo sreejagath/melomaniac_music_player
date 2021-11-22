@@ -47,6 +47,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
   Widget build(BuildContext context) {
     TextEditingController _playlist = TextEditingController();
     TextEditingController newPlaylistName = TextEditingController();
+    int _len = musics.length;
+    List<bool> isChecked = List.generate(_len, (index) => false);
     return Container(
       child: Column(
         children: [
