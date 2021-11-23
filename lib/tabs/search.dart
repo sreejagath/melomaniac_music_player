@@ -78,7 +78,7 @@ class _SearchTrackState extends State<SearchTrack> {
       Container(
         child: ListView.builder(
             scrollDirection: Axis.vertical,
-            //physics: NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: searchedList.length,
             itemBuilder: (BuildContext context, int index) {

@@ -103,7 +103,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                       });
                 },
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.add),
                     SizedBox(width: 5),
                     Text('New Playlist')
@@ -118,7 +118,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
           Column(
             children: [
               ListTile(
-                  leading: Icon(Icons.favorite),
+                  leading: const Icon(Icons.favorite),
                   title: Text('Favorites'),
                   onTap: () async {
                     var favBox = await Hive.openBox('favorites');
@@ -129,7 +129,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                           return Container(
                             height: MediaQuery.of(context).size.height * 0.5,
                             child: favoritesList.isEmpty
-                                ? ListTile(
+                                ? const ListTile(
                                     leading: Icon(Icons.favorite_border),
                                     title: Text('No Favorites'),
                                     subtitle:

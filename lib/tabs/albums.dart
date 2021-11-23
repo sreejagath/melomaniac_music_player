@@ -76,7 +76,6 @@ class _AlbumsState extends State<Albums> {
                             ),
                           ),
                         );
-
                         },
                       ),
                       const Divider(
