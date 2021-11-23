@@ -16,22 +16,18 @@ class _SearchTrackState extends State<SearchTrack> {
   List<dynamic> searchedList = [];
 
   bool textKeyActive = false;
-  Future searchTracks(String searchKey) async {
-    var musics = await Hive.openBox('musicBox');
-    List mdata = musics.get('tracks');
-    searchedList.clear();
-    for (var i = 0; i < mdata.length; i++) {
-      //starts with
-      if (mdata[i]['title'].toLowerCase().startsWith(searchKey.toLowerCase())) {
-        searchedList.add(mdata[i]);
-      }
-      // if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
-      //   searchedList.add(mdata[i]);
-      // }
-    }
-    await Future.delayed(Duration(milliseconds: 5000));
-    setState(() {});
-  }
+  // Future searchTracks(String searchKey) async {
+  //   var musics = await Hive.openBox('musicBox');
+  //   List mdata = musics.get('tracks');
+  //   searchedList.clear();
+  //   for (var i = 0; i < mdata.length; i++) {
+  //     if (mdata[i]['title'].toLowerCase().startsWith(searchKey.toLowerCase())) {
+  //       searchedList.add(mdata[i]);
+  //     }
+  //   }
+  //   await Future.delayed(Duration(milliseconds: 5000));
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +123,7 @@ Future<List> searchMusic(String searchKey) async {
   List mdata = musics.get('tracks');
   musicList.clear();
   for (var i = 0; i < mdata.length; i++) {
-    if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+    if (mdata[i]['title'].toLowerCase().startsWith(searchKey.toLowerCase())) {
       musicList.add(mdata[i]);
     }
   }
