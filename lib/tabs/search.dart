@@ -33,89 +33,90 @@ class _SearchTrackState extends State<SearchTrack> {
   Widget build(BuildContext context) {
     TextEditingController searchKey = TextEditingController();
 
-    return SingleChildScrollView(
-      child: Form(
-          child: Column(children: [
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: searchKey,
-            decoration: InputDecoration(
-              labelText: 'Search...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+    return Form(
+        child: Column(
+
+          children: [
+      const SizedBox(height: 20),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          controller: searchKey,
+          decoration: InputDecoration(
+            labelText: 'Search...',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        const SizedBox(
-          height: 5,
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            List searchedMusic = await searchMusic(searchKey.text);
-            setState(() {
-              searchedList = searchedMusic;
-            });
-          },
-          child: Text('Search'),
-          style: ElevatedButton.styleFrom(
-              primary: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              minimumSize: Size(300, 30)),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: ScrollPhysics(),
-          child: Column(
-            children: [
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: searchedList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return searchedList.isEmpty
-                        // ignore: avoid_unnecessary_containers
-                        ? Container(
-                            child: const Center(
-                              child: Text('No Results Found'),
-                            ),
-                          )
-                        : ListTile(
-                            title: Text(
-                              searchedList[index]['title'],
-                            ),
-                            subtitle: Text(
-                              searchedList[index]['artist'],
-                            ),
-                            leading: QueryArtworkWidget(
-                              id: searchedList[index]['id'],
-                              type: ArtworkType.AUDIO,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CurrentMusic(
-                                    musicList: searchedList,
-                                    currentIndex: index,
-                                  ),
+      ),
+      const SizedBox(
+        height: 5,
+      ),
+      ElevatedButton(
+        onPressed: () async {
+          List searchedMusic = await searchMusic(searchKey.text);
+          setState(() {
+            searchedList = searchedMusic;
+          });
+        },
+        child: Text('Search'),
+        style: ElevatedButton.styleFrom(
+            primary: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            minimumSize: Size(300, 30)),
+      ),
+      const SizedBox(
+        height: 15,
+      ),
+
+      SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: ScrollPhysics(),
+        child: Column(
+          children: [
+            ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: searchedList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return searchedList.isEmpty
+                      // ignore: avoid_unnecessary_containers
+                      ? Container(
+                          child: const Center(
+                            child: Text('No Results Found'),
+                          ),
+                        )
+                      : ListTile(
+                          title: Text(
+                            searchedList[index]['title'],
+                          ),
+                          subtitle: Text(
+                            searchedList[index]['artist'],
+                          ),
+                          leading: QueryArtworkWidget(
+                            id: searchedList[index]['id'],
+                            type: ArtworkType.AUDIO,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CurrentMusic(
+                                  musicList: searchedList,
+                                  currentIndex: index,
                                 ),
-                              );
-                            });
-                  }),
-            ],
-          ),
-        )
-      ])),
-    );
+                              ),
+                            );
+                          });
+                }),
+          ],
+        ),
+      )
+    ]));
   }
 }
 

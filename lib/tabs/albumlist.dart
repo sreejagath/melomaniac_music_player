@@ -20,8 +20,7 @@ class _AlbumListState extends State<AlbumList> {
             style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontFamily: 'Genera'),
+                color: Colors.black,),
           ),
           elevation: 0,
           backgroundColor: Colors.white,

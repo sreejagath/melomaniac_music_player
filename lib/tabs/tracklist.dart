@@ -37,16 +37,15 @@ class _TracklistState extends State<Tracklist>
                 Tab(
                   child: Text('Tracks',
                       style:
-                          TextStyle(color: Colors.black, fontFamily: 'Genera')),
+                          TextStyle(color: Colors.black)),
                 ),
                 Tab(
                   child: Text('Albums',
                       style:
-                          TextStyle(color: Colors.black, fontFamily: 'Genera')),
+                          TextStyle(color: Colors.black)),
                 ),
               ]),
         ),
-
         Container(
           height: MediaQuery.of(context).size.height - 200,
           child: TabBarView(

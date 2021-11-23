@@ -222,12 +222,11 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     title: Text(
                       playlistData[index]['playlist'] ?? '',
                       style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontFamily: 'Genera'),
+                          fontWeight: FontWeight.w500,),
                     ),
                     subtitle: Text(
                       playlistData[index]['tracks'].length.toString() +
                           ' Songs',
-                      style: const TextStyle(fontFamily: 'Genera'),
                     ),
                     onTap: () async {
                       var favBox = await Hive.openBox('favorites');

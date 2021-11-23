@@ -27,8 +27,8 @@ class _ArtistsState extends State<Artists> {
           Container(
               child: GridView(
                   shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const ScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 1.0,
                       crossAxisSpacing: 10.0,

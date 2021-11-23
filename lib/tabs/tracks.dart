@@ -76,8 +76,8 @@ class _TracksState extends State<Tracks> {
   Widget build(BuildContext context) {
     return musics.isEmpty
         ? Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                   child: const Center(
@@ -115,7 +115,7 @@ class _TracksState extends State<Tracks> {
                               28, musics[index]['title'].length, '...')
                           : musics[index]['title'],
                       style: const TextStyle(
-                        fontFamily: 'Genera',
+                        //fontFamily: 'Genera',
                         fontSize: 15.0,
                         color: Colors.black,
                       ),
@@ -126,7 +126,7 @@ class _TracksState extends State<Tracks> {
                               28, musics[index]['artist'].length, '...')
                           : musics[index]['artist'],
                       style: const TextStyle(
-                        fontFamily: 'Genera',
+                        //fontFamily: 'Genera',
                         fontSize: 15.0,
                         color: Color(0xFF3A6878),
                       ),
@@ -217,7 +217,7 @@ class _TracksState extends State<Tracks> {
                                                                           () async {
                                                                         var playlistBox =
                                                                             await Hive.openBox('playlistBox');
-                                                                        
+
                                                                         if (playlistBox.getAt(index)['tracks'] ==
                                                                             data) {
                                                                           ScaffoldMessenger.of(context)
@@ -313,8 +313,7 @@ class _TracksState extends State<Tracks> {
                                                             Text(
                                                               'Title : ${musics[index]['title']}',
                                                               style: const TextStyle(
-                                                                  fontFamily:
-                                                                      'Genera',
+                                                                  
                                                                   fontSize:
                                                                       20.0,
                                                                   color: Colors
@@ -326,8 +325,7 @@ class _TracksState extends State<Tracks> {
                                                             Text(
                                                               'Artist : ${musics[index]['artist']}',
                                                               style: const TextStyle(
-                                                                  fontFamily:
-                                                                      'Genera',
+                                                                  
                                                                   fontSize:
                                                                       15.0,
                                                                   color: Color(
@@ -339,8 +337,7 @@ class _TracksState extends State<Tracks> {
                                                             Text(
                                                                 'Album : ${musics[index]['album']}',
                                                                 style: const TextStyle(
-                                                                    fontFamily:
-                                                                        'Genera',
+                                                                    
                                                                     fontSize:
                                                                         15.0,
                                                                     color: Color(

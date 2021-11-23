@@ -254,7 +254,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
                       ? trackTitle.replaceRange(22, trackTitle.length, '...')
                       : trackTitle,
                   style: const TextStyle(
-                      color: Colors.black, fontFamily: 'Genera', fontSize: 20),
+                      color: Colors.black, fontSize: 20),
                 ),
                 const SizedBox(
                   height: 15,
@@ -265,7 +265,6 @@ class _CurrentMusicState extends State<CurrentMusic> {
                       : trackArtist,
                   style: const TextStyle(
                     color: Colors.grey,
-                    fontFamily: 'Genera',
                   ),
                 )
               ],

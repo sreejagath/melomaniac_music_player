@@ -14,6 +14,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
@@ -26,7 +27,8 @@ Future main() async {
 
   runApp(GetMaterialApp(
     theme: ThemeData(
-      fontFamily: 'Genera',
+        //fontFamily: 'Genera',
+        fontFamily: GoogleFonts.montserrat().fontFamily,
     ),
     home: HomePage(),
   ));
@@ -80,8 +82,7 @@ class _HomePageState extends State<HomePage>
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: 'Genera'),
+              color: Colors.black,),
         ),
         elevation: 0,
         backgroundColor: Colors.white,
