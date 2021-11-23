@@ -76,7 +76,7 @@ class _TracksState extends State<Tracks> {
   Widget build(BuildContext context) {
     return musics.isEmpty
         ? Column(
-                              mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(

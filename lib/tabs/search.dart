@@ -70,43 +70,50 @@ class _SearchTrackState extends State<SearchTrack> {
         const SizedBox(
           height: 15,
         ),
-        ListView.builder(
-            scrollDirection: Axis.vertical,
-            physics: AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: searchedList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return searchedList.isEmpty
-                  ? Container(
-                      child: Center(
-                        child: Text('No Results Found'),
-                      ),
-                    )
-                  : Container(
-                    child: ListTile(
-                        title: Text(
-                          searchedList[index]['title'],
-                        ),
-                        subtitle: Text(
-                          searchedList[index]['artist'],
-                        ),
-                        leading: QueryArtworkWidget(
-                          id: searchedList[index]['id'],
-                          type: ArtworkType.AUDIO,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CurrentMusic(
-                                musicList: searchedList,
-                                currentIndex: index,
-                              ),
+        SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: searchedList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return searchedList.isEmpty
+                        // ignore: avoid_unnecessary_containers
+                        ? Container(
+                            child: const Center(
+                              child: Text('No Results Found'),
                             ),
-                          );
-                        }),
-                  );
-            })
+                          )
+                        : ListTile(
+                            title: Text(
+                              searchedList[index]['title'],
+                            ),
+                            subtitle: Text(
+                              searchedList[index]['artist'],
+                            ),
+                            leading: QueryArtworkWidget(
+                              id: searchedList[index]['id'],
+                              type: ArtworkType.AUDIO,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CurrentMusic(
+                                    musicList: searchedList,
+                                    currentIndex: index,
+                                  ),
+                                ),
+                              );
+                            });
+                  }),
+            ],
+          ),
+        )
       ])),
     );
   }
