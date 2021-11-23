@@ -21,9 +21,13 @@ class _SearchTrackState extends State<SearchTrack> {
     List mdata = musics.get('tracks');
     searchedList.clear();
     for (var i = 0; i < mdata.length; i++) {
-      if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+      //starts with
+      if (mdata[i]['title'].toLowerCase().startsWith(searchKey.toLowerCase())) {
         searchedList.add(mdata[i]);
       }
+      // if (mdata[i]['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+      //   searchedList.add(mdata[i]);
+      // }
     }
     await Future.delayed(Duration(milliseconds: 5000));
     setState(() {});
@@ -34,87 +38,84 @@ class _SearchTrackState extends State<SearchTrack> {
     TextEditingController searchKey = TextEditingController();
 
     return Form(
-        child: Column(
-
-          children: [
+        child: Column(children: [
       const SizedBox(height: 20),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          controller: searchKey,
-          decoration: InputDecoration(
-            labelText: 'Search...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+      Container(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: searchKey,
+                decoration: InputDecoration(
+                  labelText: 'Search...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
             ),
-          ),
+            const SizedBox(
+              height: 5,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                List searchedMusic = await searchMusic(searchKey.text);
+                setState(() {
+                  searchedList = searchedMusic;
+                });
+              },
+              child: Text('Search'),
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  minimumSize: Size(300, 30)),
+            ),
+          ],
         ),
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      ElevatedButton(
-        onPressed: () async {
-          List searchedMusic = await searchMusic(searchKey.text);
-          setState(() {
-            searchedList = searchedMusic;
-          });
-        },
-        child: Text('Search'),
-        style: ElevatedButton.styleFrom(
-            primary: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            minimumSize: Size(300, 30)),
       ),
       const SizedBox(
         height: 15,
       ),
-
-      SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: ScrollPhysics(),
-        child: Column(
-          children: [
-            ListView.builder(
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: searchedList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return searchedList.isEmpty
-                      // ignore: avoid_unnecessary_containers
-                      ? Container(
-                          child: const Center(
-                            child: Text('No Results Found'),
+      Container(
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            //physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: searchedList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return searchedList.isEmpty
+                  // ignore: avoid_unnecessary_containers
+                  ? Container(
+                      child: const Center(
+                        child: Text('No Results Found'),
+                      ),
+                    )
+                  : ListTile(
+                      title: Text(
+                        searchedList[index]['title'],
+                      ),
+                      subtitle: Text(
+                        searchedList[index]['artist'],
+                      ),
+                      leading: QueryArtworkWidget(
+                        id: searchedList[index]['id'],
+                        type: ArtworkType.AUDIO,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CurrentMusic(
+                              musicList: searchedList,
+                              currentIndex: index,
+                            ),
                           ),
-                        )
-                      : ListTile(
-                          title: Text(
-                            searchedList[index]['title'],
-                          ),
-                          subtitle: Text(
-                            searchedList[index]['artist'],
-                          ),
-                          leading: QueryArtworkWidget(
-                            id: searchedList[index]['id'],
-                            type: ArtworkType.AUDIO,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CurrentMusic(
-                                  musicList: searchedList,
-                                  currentIndex: index,
-                                ),
-                              ),
-                            );
-                          });
-                }),
-          ],
-        ),
+                        );
+                      });
+            }),
       )
     ]));
   }

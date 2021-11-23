@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:music_player/getx/controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
@@ -14,6 +16,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final notifications = Get.find<NotificationController>();
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +82,6 @@ class _SettingsState extends State<Settings> {
                             'assets/images/logo.png',
                             height: 50,
                           ),
-                          
                         );
                       },
                     ),
