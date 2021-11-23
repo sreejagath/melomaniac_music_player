@@ -1,7 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
 
 class AudioPlayerSettings {
@@ -26,12 +25,14 @@ class AudioPlayerSettings {
   }
 
   Future<void> initializePlayer(List<Audio> audio, index) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final notify = GetStorage();
     var toggleNotify = notify.read('notify');
-    notifications = await prefs.getBool('notification');
-    _assetsAudioPlayer.open(Playlist(audios: audio, startIndex: index),
-        autoStart: true, showNotification: toggleNotify ?? true);
+    _assetsAudioPlayer.open(
+      Playlist(
+        audios: audio, startIndex: index),
+        autoStart: true, 
+        showNotification: toggleNotify ?? true
+      );
     isAudioPlayerPlaying = _assetsAudioPlayer.isPlaying;
     currentValues = _assetsAudioPlayer.current;
   }

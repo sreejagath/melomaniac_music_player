@@ -14,13 +14,14 @@ class _AlbumListState extends State<AlbumList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: const IconThemeData(color: Colors.black),
           title: const Text(
             'Melomaniac',
             style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,),
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
           elevation: 0,
           backgroundColor: Colors.white,
@@ -44,7 +45,8 @@ class _AlbumListState extends State<AlbumList> {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) => CurrentMusic(
-                                    musicList: widget.albumList, currentIndex: index)));
+                                    musicList: widget.albumList,
+                                    currentIndex: index)));
                       },
                     );
                   },
