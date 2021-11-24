@@ -4,21 +4,13 @@ import 'package:music_player/tabs/player.dart';
 import 'package:get/get.dart';
 
 class AlbumList extends StatelessWidget {
-//   final List albumList;
-  const AlbumList({Key? key}) : super(key: key);
+const AlbumList({Key? key}) : super(key: key);
 
-//   @override
-//   _AlbumListState createState() => _AlbumListState();
-// }
-
-// class _AlbumListState extends State<AlbumList> {
   @override
   Widget build(BuildContext context) {
     final albumMusics = Get.find<AlbumController>();
     albumMusics.listAlbumSongs(Get.arguments);
-    //print(Get.arguments);
     final albumList = albumMusics.listAlbumSongs;
-    print(albumList);
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),

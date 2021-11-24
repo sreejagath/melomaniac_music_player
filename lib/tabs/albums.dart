@@ -10,42 +10,6 @@ import 'package:get/get.dart';
 class Albums extends StatelessWidget {
   const Albums({Key? key}) : super(key: key);
 
-//   @override
-//   _AlbumsState createState() => _AlbumsState();
-// }
-
-// class _AlbumsState extends State<Albums> {
-//   final OnAudioQuery _audioQuery = OnAudioQuery();
-
-//   List musics = [];
-//   List albumDatas = [];
-//   @override
-//   void initState() {
-//     super.initState();
-//     getSongs();
-//     getAlbums();
-//   }
-
-//   getSongs() async {
-//     var musicBox = await Hive.openBox('musicBox');
-//     if (musicBox.isNotEmpty) {
-//       setState(() {
-//         musics = musicBox.get('tracks');
-//       });
-//     } else {
-//       setState(() {
-//         musics = [];
-//       });
-//     }
-//   }
-
-//   getAlbums() async {
-//     List<AlbumModel> album = await _audioQuery.queryAlbums();
-//     album.forEach((element) {
-//       albumDatas.add({'album': element.album});
-//     });
-//   }
-
   @override
   Widget build(BuildContext context) {
     final albumListingWithGetx = Get.put(AlbumController());
@@ -71,27 +35,13 @@ class Albums extends StatelessWidget {
                           List mdata = musics[0];
 
                           for (var i = 0; i < mdata.length; i++) {
-                            //print(musics[i]['album']);
-                            // print(mdata);
-                            // print(mdata[i]['album']);
-                            // print(
-                            //     albumListingWithGetx.albumList[index]['album']);
                             if (mdata[i]['album'] ==
                                 albumListingWithGetx.albumList[index]
                                     ['album']) {
                               albumList.add(mdata[i]);
                             }
                           }
-                          print(albumList);
-                          Get.to(AlbumList(), arguments: albumList);
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => AlbumList(
-                          //       //albumList: albumList,
-                          //     ),
-                          //   ),
-                          // );
+                          Get.to(const AlbumList(), arguments: albumList);
                         },
                       ),
                       const Divider(
