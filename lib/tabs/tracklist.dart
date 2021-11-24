@@ -21,12 +21,6 @@ class MyTabController extends GetxController with SingleGetTickerProviderMixin {
     super.onInit();
     controller = TabController(vsync: this, length: myTabs.length);
   }
-
-  @override
-  void onClose() {
-    controller!.dispose();
-    super.onClose();
-  }
 }
 
 class Tracklist extends StatelessWidget {
@@ -37,37 +31,44 @@ class Tracklist extends StatelessWidget {
     final MyTabController _tabx = Get.put(MyTabController());
     // ↑ init tab controller
 
-    return Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          indicator: DotIndicator(
-            color: Colors.black,
-            distanceFromCenter: 16,
-            radius: 3,
-            paintingStyle: PaintingStyle.fill,
-          ),
-          controller: _tabx.controller,
-          tabs: _tabx.myTabs,
-        ),
-      ),
-      body: TabBarView(
+    return SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                child: TabBar(
+                  indicator: DotIndicator(
+                    color: Colors.black,
+                    distanceFromCenter: 16,
+                    radius: 3,
+                    paintingStyle: PaintingStyle.fill,
+                  ),
+                  controller: _tabx.controller,
+                  tabs: _tabx.myTabs,
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height - 200,
+                child: TabBarView(
         controller: _tabx.controller,
         children: _tabx.myTabs.map((Tab tab) {
           //final String label = tab.text!.toLowerCase();
           return Container(
             height: MediaQuery.of(context).size.height - 200,
             child: TabBarView(
-              controller: _tabx.controller,
-              children: [
-                Container(
-                  child: const Tracks(),
-                ),
-                Container(child: const Albums()),
-              ],
+                controller: _tabx.controller,
+                children: [
+                  Container(
+                    child: const Tracks(),
+                  ),
+                  Container(child: const Albums()),
+                ],
             ),
           );
         }).toList(),
       ),
+              ),
+            ],
+          )
     );
   }
 }
