@@ -222,7 +222,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     title: Text(
                       playlistData[index]['playlist'] ?? '',
                       style: const TextStyle(
-                          fontWeight: FontWeight.w500,),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     subtitle: Text(
                       playlistData[index]['tracks'].length.toString() +
@@ -302,10 +303,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                                         [
                                                                         'tracks'] = temp;
                                                                   });
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  Navigator.pop(
-                                                                      context);
+                                                                  Get.back();
+                                                                  Get.back();
                                                                 },
                                                                 child:
                                                                     const Text(
@@ -325,7 +324,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                           ),
                                                         );
                                                       },
-                                                      child: Text(
+                                                      child: const Text(
                                                           'Remove from playlist'),
                                                     )),
                                                   ]),
@@ -396,7 +395,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                                           controller:
                                                               newPlaylistName,
                                                           decoration:
-                                                              InputDecoration(
+                                                              const InputDecoration(
                                                             labelText:
                                                                 'New Playlist Name',
                                                           ),

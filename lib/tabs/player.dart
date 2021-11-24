@@ -230,7 +230,7 @@ class _CurrentMusicState extends State<CurrentMusic> {
               ? widget.musicList[widget.currentIndex]['id']
               : trackId,
           type: ArtworkType.AUDIO,
-          nullArtworkWidget: Icon(
+          nullArtworkWidget: const Icon(
             Icons.music_note,
             size: 80,
           ),
