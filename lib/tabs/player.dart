@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:music_player/player/position_seek_widget.dart';
-import 'package:music_player/settings/player_settings.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:music_player/main.dart';
 import 'package:hive/hive.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentMusic extends StatefulWidget {

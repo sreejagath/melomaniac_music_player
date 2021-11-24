@@ -61,16 +61,16 @@ class _PlaylistPageState extends State<PlaylistPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Add to Playlist'),
+                          title: const Text('Add to Playlist'),
                           content: TextField(
                             controller: _playlist,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Playlist Name',
                             ),
                           ),
                           actions: [
                             TextButton(
-                              child: Text('Add'),
+                              child: const Text('Add'),
                               onPressed: () async {
                                 var playlistBox =
                                     await Hive.openBox('playlistBox');

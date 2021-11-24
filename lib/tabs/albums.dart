@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/getx/model/albumlisting.dart';
+import 'package:music_player/getx/Controller/albumlisting.dart';
 import 'package:music_player/main.dart';
 import 'package:hive/hive.dart';
 import 'package:music_player/tabs/albumlist.dart';

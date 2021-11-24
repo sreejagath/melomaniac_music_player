@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/getx/model/searchedlistcontroller.dart';
+import 'package:music_player/getx/Controller/searchedlistcontroller.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
