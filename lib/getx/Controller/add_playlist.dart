@@ -64,4 +64,10 @@ class PlaylistController extends GetxController {
     );
     favoritesList.removeAt(index);
   }
+
+removePlaylist(int index) async {
+    var playlistBox = await Hive.openBox('playlistBox');
+    playlistBox.deleteAt(index);
+    playlistData.removeAt(index);
+  }
 }

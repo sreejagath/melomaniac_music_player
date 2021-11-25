@@ -47,7 +47,7 @@ class PlaylistData extends StatelessWidget {
                                   onPressed: () {
                                     _playlistName.clear();
                                   },
-                                  icon: Icon(Icons.clear))),
+                                  icon: const Icon(Icons.clear))),
                         ),
                         actions: [
                           ElevatedButton(
@@ -168,7 +168,7 @@ class PlaylistData extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0)),
                     onSelected: (value) {
                       if (value == 'delete') {
-                        //playlistWithGetx.removePlaylist(index);
+                        playlistWithGetx.removePlaylist(index);
                         Get.back();
                         Get.snackbar(
                           'Item Removed',
@@ -201,9 +201,51 @@ class PlaylistData extends StatelessWidget {
                                 .playlistData[index]['tracks'].length,
                             itemBuilder: (context, values) {
                               return ListTile(
-                                title: Text(playlistWithGetx.playlistData[index]
-                                    ['tracks'][values]['title']),
-                              );
+                                  title: Text(
+                                      playlistWithGetx.playlistData[index]
+                                          ['tracks'][values]['title']),
+                                  subtitle: Text(
+                                      playlistWithGetx.playlistData[index]
+                                          ['tracks'][values]['artist']),
+                                  leading: const Icon(Icons.music_note),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CurrentMusic(
+                                                  musicList: playlistWithGetx
+                                                          .playlistData[index]
+                                                      ['tracks'],
+                                                  currentIndex: values,
+                                                )));
+                                  },
+                                  trailing: PopupMenuButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      onSelected: (value) {
+                                        if (value == 'delete') {
+                                          // playlistWithGetx.removeTrack(
+                                          //     playlistWithGetx
+                                          //             .playlistData[index]
+                                          //         ['tracks'],
+                                          //     values);
+                                          Get.back();
+                                          Get.snackbar(
+                                            'Item Removed',
+                                            'Song was removed from playlist.',
+                                            snackPosition: SnackPosition.BOTTOM,
+                                          );
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                            const PopupMenuItem(
+                                                value: 'delete',
+                                                child: Text(
+                                                    'Remove from playlist',
+                                                    style: TextStyle(
+                                                        color: Colors.red)))
+                                          ]));
                             },
                           ),
                         );
