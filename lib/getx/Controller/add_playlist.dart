@@ -7,15 +7,23 @@ class PlaylistController extends GetxController {
   var favoritesList = List.empty(growable: true).obs;
 
   @override
-  // void onInit() {
-  //   super.onInit();
-  //   favoritesData();
-  // }
-
   PlaylistController() {
     favoritesList.clear();
     favoritesData();
+    getPlaylist();
   }
+
+  getPlaylist() async {
+    playlistData.clear();
+    var playlistBox = await Hive.openBox('playlistBox');
+    //playlistData.add(playlistBox.getAt(playlistBox.length - 1));
+    for (var i = 0; i < playlistBox.length; i++) {
+      playlistData.add(playlistBox.getAt(i));
+    }
+    print(playlistData);
+    update();
+  }
+
   addNewPlaylist(String playlistName) async {
     var playlistBox = await Hive.openBox('playlistBox');
     playlists = [
@@ -37,6 +45,23 @@ class PlaylistController extends GetxController {
         favoritesList.add(musics[i]);
       }
     }
-    print(favoritesList);
+  }
+
+  removeFavorite(int index) async {
+    List? musics;
+    var musicBox = await Hive.openBox('musicBox');
+    musics = musicBox.get('tracks');
+    Hive.box('favorites').delete(favoritesList[index]['id']);
+    for (var i = 0; i < musics!.length; i++) {
+      if (musics[i]['id'] == favoritesList[index]['id']) {
+        print(musics[i]);
+        musics[i]['isFavorite'] = false;
+      }
+    }
+    Hive.box('musicBox').put(
+      'tracks',
+      musics,
+    );
+    favoritesList.removeAt(index);
   }
 }

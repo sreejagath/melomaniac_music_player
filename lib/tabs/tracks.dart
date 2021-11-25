@@ -188,75 +188,79 @@ class _TracksState extends State<Tracks> {
                                                           child: const Text(
                                                               'No Playlists\nCreate new from Playlist Section'),
                                                         )
-                                                      : ListView.builder(
-                                                          shrinkWrap: true,
-                                                          scrollDirection:
-                                                              Axis.vertical,
-                                                          itemCount:
-                                                              playlists.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            return Container(
-                                                              child: playlists
-                                                                      .isEmpty
-                                                                  ? Container(
-                                                                      child:
-                                                                          const Center(
-                                                                        child: Text(
-                                                                            'No Playlists\nCreate playlist manually from playlist section.'),
-                                                                      ),
-                                                                    )
-                                                                  : ListTile(
-                                                                      title: Text(
-                                                                          playlists[index]
-                                                                              [
-                                                                              'playlist']),
-                                                                      onTap:
-                                                                          () async {
-                                                                        var playlistBox =
-                                                                            await Hive.openBox('playlistBox');
+                                                      : Container(
+                                                        height:300,
+                                                        width: double.maxFinite,
+                                                        child: ListView.builder(
+                                                            shrinkWrap: true,
+                                                            scrollDirection:
+                                                                Axis.vertical,
+                                                            itemCount:
+                                                                playlists.length,
+                                                            itemBuilder:
+                                                                (BuildContext
+                                                                        context,
+                                                                    int index) {
+                                                              return Container(
+                                                                child: playlists
+                                                                        .isEmpty
+                                                                    ? Container(
+                                                                        child:
+                                                                            const Center(
+                                                                          child: Text(
+                                                                              'No Playlists\nCreate playlist manually from playlist section.'),
+                                                                        ),
+                                                                      )
+                                                                    : ListTile(
+                                                                        title: Text(
+                                                                            playlists[index]
+                                                                                [
+                                                                                'playlist']),
+                                                                        onTap:
+                                                                            () async {
+                                                                          var playlistBox =
+                                                                              await Hive.openBox('playlistBox');
 
-                                                                        if (playlistBox.getAt(index)['tracks'] ==
-                                                                            data) {
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(
-                                                                            const SnackBar(
-                                                                              content: Text(
-                                                                                'Song already in playlist',
+                                                                          if (playlistBox.getAt(index)['tracks'] ==
+                                                                              data) {
+                                                                            ScaffoldMessenger.of(context)
+                                                                                .showSnackBar(
+                                                                              const SnackBar(
+                                                                                content: Text(
+                                                                                  'Song already in playlist',
+                                                                                ),
+                                                                                duration: Duration(seconds: 1),
                                                                               ),
-                                                                              duration: Duration(seconds: 1),
-                                                                            ),
-                                                                          );
-                                                                        } else {
-                                                                          playlists[index]['tracks']
-                                                                              .add(data[0]);
-                                                                          setState(
-                                                                              () {
-                                                                            playlistBox.putAt(index,
-                                                                                playlists[index]);
-                                                                          });
-                                                                          String
-                                                                              trackName =
-                                                                              data[0]['title'];
-                                                                          String
-                                                                              playlistName =
-                                                                              playlists[index]['playlist'];
-                                                                          final snackBar =
-                                                                              SnackBar(
-                                                                            content:
-                                                                                Text('$trackName added to $playlistName successfully !'),
-                                                                          );
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(snackBar);
-                                                                        }
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                    ),
-                                                            );
-                                                          }),
+                                                                            );
+                                                                          } else {
+                                                                            playlists[index]['tracks']
+                                                                                .add(data[0]);
+                                                                            setState(
+                                                                                () {
+                                                                              playlistBox.putAt(index,
+                                                                                  playlists[index]);
+                                                                            });
+                                                                            String
+                                                                                trackName =
+                                                                                data[0]['title'];
+                                                                            String
+                                                                                playlistName =
+                                                                                playlists[index]['playlist'];
+                                                                            final snackBar =
+                                                                                SnackBar(
+                                                                              content:
+                                                                                  Text('$trackName added to $playlistName successfully !'),
+                                                                            );
+                                                                            ScaffoldMessenger.of(context)
+                                                                                .showSnackBar(snackBar);
+                                                                          }
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                      ),
+                                                              );
+                                                            }),
+                                                      ),
                                                 ),
                                               ],
                                             ),

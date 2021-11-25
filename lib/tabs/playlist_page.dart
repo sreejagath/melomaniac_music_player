@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/getx/Controller/add_playlist.dart';
@@ -14,14 +16,16 @@ class PlaylistData extends StatelessWidget {
         child: SingleChildScrollView(
             child: Column(
       children: [
-        addToPlaylist(context),
+        addToPlaylist(context, playlistWithGetx),
         const SizedBox(height: 5),
         favorites(context, playlistWithGetx),
+        const SizedBox(height: 5),
+        listPlaylists(context, playlistWithGetx),
       ],
     )));
   }
 
-  Widget addToPlaylist(context) {
+  Widget addToPlaylist(context, playlistWithGetx) {
     TextEditingController _playlistName = TextEditingController();
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -37,9 +41,13 @@ class PlaylistData extends StatelessWidget {
                         title: const Text("New Playlist"),
                         content: TextField(
                           controller: _playlistName,
-                          decoration: const InputDecoration(
-                            hintText: "Playlist Name",
-                          ),
+                          decoration: InputDecoration(
+                              hintText: "Playlist Name",
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    _playlistName.clear();
+                                  },
+                                  icon: Icon(Icons.clear))),
                         ),
                         actions: [
                           ElevatedButton(
@@ -51,6 +59,8 @@ class PlaylistData extends StatelessWidget {
                           ElevatedButton(
                             child: const Text("OK"),
                             onPressed: () {
+                              playlistWithGetx
+                                  .addNewPlaylist(_playlistName.text);
                               Get.back();
                             },
                           ),
@@ -104,15 +114,102 @@ class PlaylistData extends StatelessWidget {
                                               )));
                                 },
                                 subtitle: Text(playlistWithGetx
-                                    .favoritesList[index]['artist']));
+                                    .favoritesList[index]['artist']),
+                                trailing: PopupMenuButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    onSelected: (value) {
+                                      if (value == 'delete') {
+                                        playlistWithGetx.removeFavorite(index);
+                                        Get.back();
+                                        Get.snackbar(
+                                          'Item Removed',
+                                          'Song was removed from favorites.',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                        );
+                                      }
+                                    },
+                                    itemBuilder: (context) => [
+                                          const PopupMenuItem(
+                                              value: 'delete',
+                                              child: Text(
+                                                  'Remove from favorites',
+                                                  style: TextStyle(
+                                                      color: Colors.red)))
+                                        ]));
                           },
                         ),
-                      )
-                      );
+                      ));
                 });
           },
         )
       ],
     );
+  }
+
+  Widget listPlaylists(context, playlistWithGetx) {
+    return Container(
+        child: Obx(
+      () => ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: playlistWithGetx.playlistData.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                leading: const Icon(Icons.music_note),
+                title: Text(playlistWithGetx.playlistData[index]['playlist']),
+                subtitle: Text(playlistWithGetx
+                        .playlistData[index]['tracks'].length
+                        .toString() +
+                    ' Songs'),
+                trailing: PopupMenuButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    onSelected: (value) {
+                      if (value == 'delete') {
+                        //playlistWithGetx.removePlaylist(index);
+                        Get.back();
+                        Get.snackbar(
+                          'Item Removed',
+                          'Playlist was removed.',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                      if (value == 'rename') {
+                        Get.back();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                          const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Remove playlist',
+                                  style: TextStyle(color: Colors.red))),
+                          const PopupMenuItem(
+                            value: 'rename',
+                            child: Text('Rename playlist'),
+                          ),
+                        ]),
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: ListView.builder(
+                            itemCount: playlistWithGetx
+                                .playlistData[index]['tracks'].length,
+                            itemBuilder: (context, values) {
+                              return ListTile(
+                                title: Text(playlistWithGetx.playlistData[index]
+                                    ['tracks'][values]['title']),
+                              );
+                            },
+                          ),
+                        );
+                      });
+                });
+          }),
+    ));
   }
 }
