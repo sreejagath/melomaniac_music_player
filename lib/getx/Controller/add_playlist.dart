@@ -65,9 +65,30 @@ class PlaylistController extends GetxController {
     favoritesList.removeAt(index);
   }
 
-removePlaylist(int index) async {
+  removePlaylist(int index) async {
     var playlistBox = await Hive.openBox('playlistBox');
     playlistBox.deleteAt(index);
     playlistData.removeAt(index);
+  }
+
+  renamePlaylist(index, newName) async {
+    print(newName);
+    var playlistBox = await Hive.openBox('playlistBox');
+    playlistData[index]['playlist'] = newName;
+    playlistBox.putAt(index, playlistData[index]);
+    getPlaylist();
+    update();
+  }
+
+  removeTrack(int index, int values) async {
+    playlistData.clear();
+    var playlistBox = await Hive.openBox('playlistBox');
+    for (var i = 0; i < playlistBox.length; i++) {
+      playlistData.add(playlistBox.getAt(i));
+    }
+    print(playlistData);
+    print('index: $index &values: $values ');
+    playlistData[index]['tracks'].removeAt(values);
+    playlistBox.putAt(index, playlistData[index]);
   }
 }
