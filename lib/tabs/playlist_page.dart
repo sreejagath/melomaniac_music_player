@@ -82,10 +82,11 @@ class PlaylistData extends StatelessWidget {
             showModalBottomSheet(
                 context: context,
                 builder: (context) {
+                  playlistWithGetx.favoritesData();
                   return Container(
                       height: MediaQuery.of(context).size.height * 0.5,
-                      child: Obx(()=>
-                        ListView.builder(
+                      child: Obx(
+                        () => ListView.builder(
                           itemCount: playlistWithGetx.favoritesList.length,
                           itemBuilder: (context, index) {
                             return ListTile(
@@ -94,20 +95,19 @@ class PlaylistData extends StatelessWidget {
                                     .favoritesList[index]['title']),
                                 onTap: () {
                                   Navigator.push(
-                                              context,MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CurrentMusic(
-                                                        musicList:
-                                                            playlistWithGetx.favoritesList,
-                                                        currentIndex: index,
-                                                      )));
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CurrentMusic(
+                                                musicList: playlistWithGetx
+                                                    .favoritesList,
+                                                currentIndex: index,
+                                              )));
                                 },
                                 subtitle: Text(playlistWithGetx
                                     .favoritesList[index]['artist']));
                           },
                         ),
-                      )
-                      );
+                      ));
                 });
           },
         )

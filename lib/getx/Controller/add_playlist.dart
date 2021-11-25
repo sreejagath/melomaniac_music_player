@@ -35,6 +35,5 @@ class PlaylistController extends GetxController {
         favoritesList.add(musics[i]);
       }
     }
-    print(favoritesList);
   }
 }
