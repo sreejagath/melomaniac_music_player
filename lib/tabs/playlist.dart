@@ -48,7 +48,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     TextEditingController _playlist = TextEditingController();
     TextEditingController newPlaylistName = TextEditingController();
     int _len = musics.length;
-    List<bool> isChecked = List.generate(_len, (index) => false);
+    //List<bool> isChecked = List.generate(_len, (index) => false);
     return Container(
       child: Column(
         children: [

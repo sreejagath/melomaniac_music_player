@@ -7,6 +7,7 @@ import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
 import 'package:music_player/tabs/playlist.dart';
+import 'package:music_player/tabs/playlist_page.dart';
 import 'package:music_player/tabs/settings.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage>
   static final List<Widget> _widgetOptions = <Widget>[
     const Tracklist(),
     const SearchTrack(),
-    const PlaylistPage(),
+    const PlaylistData(),
     const Settings(),
   ];
 
