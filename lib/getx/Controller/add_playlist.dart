@@ -13,6 +13,7 @@ class PlaylistController extends GetxController {
   // }
 
   PlaylistController() {
+    favoritesList.clear();
     favoritesData();
   }
   addNewPlaylist(String playlistName) async {
@@ -26,14 +27,16 @@ class PlaylistController extends GetxController {
 
   favoritesData() async {
     List? musics;
+    List? favs;
     var musicBox = await Hive.openBox('musicBox');
     var favorites = await Hive.openBox('favorites');
     musics = musicBox.get('tracks');
-
+    favoritesList.clear();
     for (var i = 0; i < musics!.length; i++) {
       if (musics[i]['isFavorite'] == true) {
         favoritesList.add(musics[i]);
       }
     }
+    print(favoritesList);
   }
 }

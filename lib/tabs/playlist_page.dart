@@ -107,7 +107,8 @@ class PlaylistData extends StatelessWidget {
                                     .favoritesList[index]['artist']));
                           },
                         ),
-                      ));
+                      )
+                      );
                 });
           },
         )
