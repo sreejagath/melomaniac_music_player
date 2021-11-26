@@ -144,7 +144,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                         title:
                                             Text(favoritesList[index]['title']),
                                         onTap: () {
-                                          Get.to(Player());
+                                          print(favoritesList);
+                                          // Get.to(Player(),
+                                          //     arguments: [favoritesList,index]);
                                           // Navigator.push(
                                           //     context,
                                           //     MaterialPageRoute(
@@ -254,7 +256,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                           title: Text(playlistData[index]
                                               ['tracks'][values]['title']),
                                           onTap: () {
-                                            Get.to(Player());
+                                            Get.to(Player(), arguments: [
+                                              playlistData[index]['tracks'],
+                                              values
+                                            ]);
                                             // Navigator.push(
                                             //     context,
                                             //     MaterialPageRoute(

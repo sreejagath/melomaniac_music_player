@@ -40,7 +40,7 @@ class AlbumList extends StatelessWidget {
                       title: Text(albumList[index]['title']),
                       subtitle: Text(albumList[index]['artist']),
                       onTap: () {
-                        Get.to(Player());
+                        Get.to(Player(), arguments: [albumList,index]);
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(

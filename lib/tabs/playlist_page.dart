@@ -104,7 +104,9 @@ class PlaylistData extends StatelessWidget {
                                 title: Text(playlistWithGetx
                                     .favoritesList[index]['title']),
                                 onTap: () {
-                                  Get.to(Player());
+                                  print(playlistWithGetx.favoritesList);
+                                  print(index);
+                                  Get.to(Player(),arguments:[playlistWithGetx.favoritesList,index]);
                                   // Navigator.push(
                                   //     context,
                                   //     MaterialPageRoute(
@@ -257,7 +259,14 @@ class PlaylistData extends StatelessWidget {
                                                 ['tracks'][values]['artist']),
                                         leading: const Icon(Icons.music_note),
                                         onTap: () {
-                                          Get.to(Player());
+                                          print(playlistWithGetx
+                                              .playlistData[index]['tracks']);
+                                          print(values);
+                                          Get.to(Player(), arguments: [
+                                            playlistWithGetx.playlistData[index]
+                                                ['tracks'],
+                                            values
+                                          ]);
                                           // Navigator.push(
                                           //     context,
                                           //     MaterialPageRoute(
