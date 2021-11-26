@@ -48,7 +48,6 @@ class _TracksState extends State<Tracks> {
         var musicBox = await Hive.openBox('musicBox');
         var playlistBox = await Hive.openBox('playlistBox');
         var favorites = await Hive.openBox('favorites');
-        //var currentSong = await Hive.openBox('currentSong');
 
         List<SongModel> musicList = await _audioQuery.querySongs();
         musicList.forEach((element) {
@@ -116,7 +115,6 @@ class _TracksState extends State<Tracks> {
                               28, musics[index]['title'].length, '...')
                           : musics[index]['title'],
                       style: const TextStyle(
-                        //fontFamily: 'Genera',
                         fontSize: 15.0,
                         color: Colors.black,
                       ),
@@ -127,7 +125,6 @@ class _TracksState extends State<Tracks> {
                               28, musics[index]['artist'].length, '...')
                           : musics[index]['artist'],
                       style: const TextStyle(
-                        //fontFamily: 'Genera',
                         fontSize: 15.0,
                         color: Color(0xFF3A6878),
                       ),
@@ -376,14 +373,7 @@ class _TracksState extends State<Tracks> {
                       currentSong.put('currentSong', musics);
                       currentSong.put('index', index);
                       Get.to(Player(), arguments: [musics, index]);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (BuildContext context) =>
-                      //         // CurrentMusic(
-                      //         //     musicList: musics, currentIndex: index)
-                      //         Player()
-                      //             ));
+                      
                     },
                   ),
                   const Divider(

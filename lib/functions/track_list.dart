@@ -59,12 +59,7 @@ class _MusicListState extends State<MusicList> {
                   type: ArtworkType.AUDIO,
                 ),
                 onTap: () {
-                  Get.to(Player());
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) =>
-                  //             CurrentMusic(musicList: data,currentIndex: index,)));
+                  //Get.to(Player());
                 },
               )
             ],

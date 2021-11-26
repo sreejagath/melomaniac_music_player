@@ -28,12 +28,10 @@ Future main() async {
 
   runApp(GetMaterialApp(
     theme: ThemeData(
-        //fontFamily: 'Genera',
         fontFamily: GoogleFonts.montserrat().fontFamily,
     ),
     home: HomePage(),
   ));
-  //requestPermission();
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
   Hive.registerAdapter(FavoritesModelAdapter());
@@ -130,12 +128,7 @@ class _HomePageState extends State<HomePage>
               ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('No songs played yet.'),
                 ))
-              // : Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //     return CurrentMusic(
-              //       musicList: currentSong,
-              //       currentIndex: index,
-              //     );
-              //   }));
+              
               :Get.to(const Player());
         },
         label: Text('Last Played'),

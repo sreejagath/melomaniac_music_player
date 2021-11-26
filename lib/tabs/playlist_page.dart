@@ -33,7 +33,6 @@ class PlaylistData extends StatelessWidget {
         children: [
           TextButton(
               onPressed: () {
-                //showDialog
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -107,17 +106,7 @@ class PlaylistData extends StatelessWidget {
                                   print(playlistWithGetx.favoritesList);
                                   print(index);
                                   Get.to(Player(),arguments:[playlistWithGetx.favoritesList,index]);
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //         Player()
-                                  //         // CurrentMusic(
-                                  //         //       musicList: playlistWithGetx
-                                  //         //           .favoritesList,
-                                  //         //       currentIndex: index,
-                                  //         //     )
-                                  //             ));
+                                  
                                 },
                                 subtitle: Text(playlistWithGetx
                                     .favoritesList[index]['artist']),
@@ -219,7 +208,6 @@ class PlaylistData extends StatelessWidget {
                                 ],
                               );
                             });
-                        //Get.back();
                       }
                     },
                     itemBuilder: (context) => [
@@ -267,16 +255,6 @@ class PlaylistData extends StatelessWidget {
                                                 ['tracks'],
                                             values
                                           ]);
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             CurrentMusic(
-                                          //               musicList: playlistWithGetx
-                                          //                       .playlistData[
-                                          //                   index]['tracks'],
-                                          //               currentIndex: values,
-                                          //             )));
                                         },
                                         trailing: PopupMenuButton(
                                             shape: RoundedRectangleBorder(

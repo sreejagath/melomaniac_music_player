@@ -11,7 +11,6 @@ class PlayerController extends GetxController {
   var isPlaying = false.obs;
 
   PlayerController() {
-    //argumentData.clear();
     getData(Get.arguments);
     List musics = argumentData[0];
     final List<Audio> audios = (musics)
@@ -32,32 +31,11 @@ class PlayerController extends GetxController {
         trackTitle(current!.audio.audio.metas.title);
         trackArtist(current.audio.audio.metas.artist);
         trackId(int.parse(current.audio.audio.metas.id!));
-
-        // trackTitle = current.audio.audio.metas.title ?? 'No Title';
-        // trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
-        // trackId = int.parse(current.audio.audio.metas.id!);
-        // isFavorite = current.audio.audio.metas.extra!['isFavorite'];
-        // if (mounted) {
-        //   if (current == null) {
-        //     return;
-        //   } else {
-        //     setState(() {
-        //       trackTitle = current.audio.audio.metas.title ?? 'No Title';
-        //       trackArtist = current.audio.audio.metas.artist ?? 'No Artist';
-        //       trackId = int.parse(current.audio.audio.metas.id!);
-        //       isFavorite = current.audio.audio.metas.extra!['isFavorite'];
-        //     });
-        //   }
-        // }
       });
     }).then((value) =>
             audioPlayerSettings.isAudioPlayerPlaying.listen((isPlaying) {
               this.isPlaying(isPlaying);
-              // if (mounted) {
-              //   setState(() {
-              //     this.isPlaying = isPlaying;
-              //   });
-              // }
+              
             }));
   }
 

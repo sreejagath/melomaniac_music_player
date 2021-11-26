@@ -9,7 +9,6 @@ class AlbumController extends GetxController {
 
   final OnAudioQuery _audioQuery = OnAudioQuery();
 
-  //onint
   @override
   void onInit() {
     listAlbums();
@@ -38,7 +37,6 @@ class AlbumController extends GetxController {
 
   listAlbumData(List songs) async {
     listAlbumSongs.add(songs);
-    //print(songs);
     return listAlbumSongs;
   }
 }

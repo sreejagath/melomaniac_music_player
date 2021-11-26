@@ -56,7 +56,6 @@ class SearchTrack extends StatelessWidget {
       const SizedBox(
         height: 15,
       ),
-      //create listview builder with searched list using obx
       Obx(
         () => ListView.builder(
           shrinkWrap: true,
@@ -78,17 +77,7 @@ class SearchTrack extends StatelessWidget {
                       ),
               onTap: () {
                 Get.to(Player(), arguments: [searchWithGetx.searchList,index]);
-                // Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) => CurrentMusic(
-                //               musicList: searchWithGetx.searchList,
-                //               currentIndex: index,
-                //             ),
-                //           ),
-                //         );
-                // searchWithGetx.addToPlaylist(searchedList[index]);
-                // Get.to(Player());
+                
               },
             );
           },
