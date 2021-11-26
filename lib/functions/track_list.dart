@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -13,7 +14,7 @@ class MusicList extends StatefulWidget {
 List musics = [];
 void initState() async {
   var musicBox = await Hive.openBox('musicBox');
-  
+
   musics = musicBox.get(1);
 }
 
@@ -58,11 +59,12 @@ class _MusicListState extends State<MusicList> {
                   type: ArtworkType.AUDIO,
                 ),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              CurrentMusic(musicList: data,currentIndex: index,)));
+                  Get.to(Player());
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) =>
+                  //             CurrentMusic(musicList: data,currentIndex: index,)));
                 },
               )
             ],

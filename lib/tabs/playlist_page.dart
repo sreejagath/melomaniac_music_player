@@ -104,14 +104,18 @@ class PlaylistData extends StatelessWidget {
                                 title: Text(playlistWithGetx
                                     .favoritesList[index]['title']),
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CurrentMusic(
-                                                musicList: playlistWithGetx
-                                                    .favoritesList,
-                                                currentIndex: index,
-                                              )));
+                                  Get.to(Player());
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //         Player()
+                                  //         // CurrentMusic(
+                                  //         //       musicList: playlistWithGetx
+                                  //         //           .favoritesList,
+                                  //         //       currentIndex: index,
+                                  //         //     )
+                                  //             ));
                                 },
                                 subtitle: Text(playlistWithGetx
                                     .favoritesList[index]['artist']),
@@ -204,7 +208,8 @@ class PlaylistData extends StatelessWidget {
                                     child: const Text("OK"),
                                     onPressed: () {
                                       playlistWithGetx.renamePlaylist(
-                                        index, newPlaylistName.text,
+                                        index,
+                                        newPlaylistName.text,
                                       );
                                       Get.back();
                                     },
@@ -252,16 +257,17 @@ class PlaylistData extends StatelessWidget {
                                                 ['tracks'][values]['artist']),
                                         leading: const Icon(Icons.music_note),
                                         onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CurrentMusic(
-                                                        musicList: playlistWithGetx
-                                                                .playlistData[
-                                                            index]['tracks'],
-                                                        currentIndex: values,
-                                                      )));
+                                          Get.to(Player());
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             CurrentMusic(
+                                          //               musicList: playlistWithGetx
+                                          //                       .playlistData[
+                                          //                   index]['tracks'],
+                                          //               currentIndex: values,
+                                          //             )));
                                         },
                                         trailing: PopupMenuButton(
                                             shape: RoundedRectangleBorder(

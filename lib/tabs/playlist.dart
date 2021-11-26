@@ -144,15 +144,16 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                         title:
                                             Text(favoritesList[index]['title']),
                                         onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CurrentMusic(
-                                                        musicList:
-                                                            favoritesList,
-                                                        currentIndex: index,
-                                                      )));
+                                          Get.to(Player());
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             CurrentMusic(
+                                          //               musicList:
+                                          //                   favoritesList,
+                                          //               currentIndex: index,
+                                          //             )));
                                         },
                                         subtitle: Text(
                                             favoritesList[index]['artist']),
@@ -253,17 +254,18 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                           title: Text(playlistData[index]
                                               ['tracks'][values]['title']),
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CurrentMusic(
-                                                          musicList:
-                                                              playlistData[
-                                                                      index]
-                                                                  ['tracks'],
-                                                          currentIndex: values,
-                                                        )));
+                                            Get.to(Player());
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) =>
+                                            //             CurrentMusic(
+                                            //               musicList:
+                                            //                   playlistData[
+                                            //                           index]
+                                            //                       ['tracks'],
+                                            //               currentIndex: values,
+                                            //             )));
                                           },
                                           subtitle: Text(playlistData[index]
                                               ['tracks'][values]['artist']),

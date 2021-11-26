@@ -77,15 +77,16 @@ class SearchTrack extends StatelessWidget {
                         type: ArtworkType.AUDIO,
                       ),
               onTap: () {
-                Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CurrentMusic(
-                              musicList: searchWithGetx.searchList,
-                              currentIndex: index,
-                            ),
-                          ),
-                        );
+                Get.to(Player());
+                // Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //             builder: (context) => CurrentMusic(
+                //               musicList: searchWithGetx.searchList,
+                //               currentIndex: index,
+                //             ),
+                //           ),
+                //         );
                 // searchWithGetx.addToPlaylist(searchedList[index]);
                 // Get.to(Player());
               },
