@@ -276,14 +276,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 //   }
 // }
 
-Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 bool isPlaying = false;
 String trackArtist = "";
 String trackTitle = "";
 int trackId = 0;
 int track = 0;
-List favorite = [];
-List favorites = [];
 bool? notifications;
 List pathsForPlaying = [];
 Duration? duration;
@@ -297,6 +294,12 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     final argsController = Get.put(PlayerController());
     argsController.getData(Get.arguments);
+    var musics = argsController.argumentData[0];
+    var currentIndex = argsController.argumentData[1];
+    print(argsController.isPlaying);
+
+//    trackTitle = musics[currentIndex]['title'];
+    trackArtist = musics[currentIndex]['artist'];
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -318,11 +321,16 @@ class Player extends StatelessWidget {
         const SizedBox(
           height: 50,
         ),
-        //ArtImage(trackId),
+        artImage(
+          trackId,
+          musics,
+          currentIndex,
+        ),
         const SizedBox(
           height: 20,
         ),
-        //trackDetails(trackTitle, trackArtist),
+        Obx(() => trackDetails(
+            argsController.trackTitle, argsController.trackArtist)),
         audioPlayerSettings.infos(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -357,7 +365,9 @@ class Player extends StatelessWidget {
               backgroundColor: Colors.black,
               child: IconButton(
                 iconSize: 35,
-                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                icon: Obx(
+                  () => Icon(argsController.isPlaying.isTrue ? Icons.pause : Icons.play_arrow),
+                ),
                 onPressed: () {
                   audioPlayerSettings.playOrPauseAudio();
                 },
@@ -383,6 +393,64 @@ class Player extends StatelessWidget {
           ],
         )
       ]),
+    );
+  }
+
+  Widget artImage(trackId, musics, currentIndex) {
+    return SizedBox(
+      height: 250,
+      width: 250,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: QueryArtworkWidget(
+          id: trackId == 0 ? musics[currentIndex]['id'] : trackId,
+          type: ArtworkType.AUDIO,
+          nullArtworkWidget: const Icon(
+            Icons.music_note,
+            size: 80,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget trackDetails(trackTitle, trackArtist) {
+    trackTitle = trackTitle.toString();
+    trackArtist = trackArtist.toString();
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  trackTitle.length > 22
+                      ? trackTitle.replaceRange(22, trackTitle.length, '...')
+                      : trackTitle,
+                  style: const TextStyle(color: Colors.black, fontSize: 20),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  trackArtist.length > 20
+                      ? trackArtist.replaceRange(20, trackArtist.length, '...')
+                      : trackArtist,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 55,
+          ),
+        ],
+      ),
     );
   }
 }
