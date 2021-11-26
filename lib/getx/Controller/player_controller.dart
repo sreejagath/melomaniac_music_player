@@ -7,7 +7,7 @@ class PlayerController extends GetxController {
   final audioPlayerSettings = AudioPlayerSettings();
   var trackTitle = ''.obs;
   var trackArtist = ''.obs;
-  var trackId = ''.obs;
+  var trackId = 0.obs;
   var isPlaying = false.obs;
 
   PlayerController() {
@@ -31,7 +31,7 @@ class PlayerController extends GetxController {
       audioPlayerSettings.currentValues.listen((current) {
         trackTitle(current!.audio.audio.metas.title);
         trackArtist(current.audio.audio.metas.artist);
-        trackId(current.audio.audio.metas.id);
+        trackId(int.parse(current.audio.audio.metas.id!));
 
         // trackTitle = current.audio.audio.metas.title ?? 'No Title';
         // trackArtist = current.audio.audio.metas.artist ?? 'No Artist';

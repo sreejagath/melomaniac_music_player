@@ -321,10 +321,12 @@ class Player extends StatelessWidget {
         const SizedBox(
           height: 50,
         ),
-        artImage(
-          trackId,
-          musics,
-          currentIndex,
+        Obx(
+          () => artImage(
+            argsController.trackId,
+            musics,
+            currentIndex,
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -343,7 +345,7 @@ class Player extends StatelessWidget {
                 //   widget.currentIndex == 0
                 //       ? ScaffoldMessenger.of(context).showSnackBar(snackBar)
                 //       : widget.currentIndex--;
-                //   audioPlayerSettings.playPrevious();
+                  audioPlayerSettings.playPrevious();
                 // });
               },
               icon: const Icon(Icons.skip_previous),
@@ -366,7 +368,9 @@ class Player extends StatelessWidget {
               child: IconButton(
                 iconSize: 35,
                 icon: Obx(
-                  () => Icon(argsController.isPlaying.isTrue ? Icons.pause : Icons.play_arrow),
+                  () => Icon(argsController.isPlaying.isTrue
+                      ? Icons.pause
+                      : Icons.play_arrow),
                 ),
                 onPressed: () {
                   audioPlayerSettings.playOrPauseAudio();
@@ -396,14 +400,15 @@ class Player extends StatelessWidget {
     );
   }
 
-  Widget artImage(trackId, musics, currentIndex) {
+  Widget artImage(obxTrackId, musics, currentIndex) {
+    obxTrackId = obxTrackId.value;
     return SizedBox(
       height: 250,
       width: 250,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
         child: QueryArtworkWidget(
-          id: trackId == 0 ? musics[currentIndex]['id'] : trackId,
+          id: trackId == 0 ? obxTrackId : trackId,
           type: ArtworkType.AUDIO,
           nullArtworkWidget: const Icon(
             Icons.music_note,
