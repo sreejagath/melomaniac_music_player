@@ -1,6 +1,7 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_player/getx/Controller/tracks_controller.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -373,7 +374,6 @@ class _TracksState extends State<Tracks> {
                       currentSong.put('currentSong', musics);
                       currentSong.put('index', index);
                       Get.to(Player(), arguments: [musics, index]);
-                      
                     },
                   ),
                   const Divider(
@@ -382,5 +382,136 @@ class _TracksState extends State<Tracks> {
                 ],
               );
             });
+  }
+}
+
+class Track extends StatelessWidget {
+  const Track({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final trackListingWithGetX = Get.put(TrackController());
+    return Obx(()=>
+      trackListingWithGetX.musics.isEmpty
+          ? Center(
+              child: Text('No Songs Found !'),
+            )
+          : ListView.builder(
+              itemCount: trackListingWithGetX.musics.length,
+              itemBuilder: (context, index) {
+                // return TrackListing(index: index);
+                return ListTile(
+                  title: Text(trackListingWithGetX.musics[index]['title']),
+                  subtitle: Text(trackListingWithGetX.musics[index]['artist']),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: QueryArtworkWidget(
+                      id: trackListingWithGetX.musics[index]['id'],
+                      type: ArtworkType.AUDIO,
+                    ),
+                  ),
+                  trailing: PopupMenuButton(
+                    icon: const Icon(Icons.more_vert),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: TextButton(
+                          child: const Text('Add to Playlist'),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Add to Playlist',
+                                            style: const TextStyle(
+                                                fontSize: 20.0,
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(
+                                            height: 30,
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount:
+                                                  trackListingWithGetX.playlists
+                                                      .length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  title: Text(
+                                                      trackListingWithGetX
+                                                          .playlists[index]
+                                                          ['name']),
+                                                  onTap: () {
+                                                    // trackListingWithGetX
+                                                    //     .addToPlaylist(
+                                                    //         trackListingWithGetX
+                                                    //             .musics[index],
+                                                    //         trackListingWithGetX
+                                                    //             .playlists[index]
+                                                    //             ['name']);
+                                                    // Navigator.pop(context);
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ));
+                                });
+                          },
+                        ),
+                        value: 1,
+                      ),
+                      PopupMenuItem(
+                        child
+                            : TextButton(
+                          child: const Text('Add to Queue'),
+                          onPressed: () {
+                            // trackListingWithGetX.addToQueue(
+                            //     trackListingWithGetX.musics[index]);
+                          },
+                        ),
+                        value: 2,
+                      ),
+                      PopupMenuItem(
+                        child: TextButton(
+                          child: const Text('Share'),
+                          onPressed: () {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(
+                                  'This feature is not availiable now.Will be implemented in next update !'),
+                            ));
+                          },
+                        ),
+                        value: 3,
+                      ),
+                    ],
+                    onSelected: (value) {
+                      if (value == 3) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text(
+                              'This feature is not availiable now.Will be implemented in next update !'),
+                        ));
+                      }
+                    },
+                  ),
+                  onTap: () async {
+                    // var currentSong = await Hive.openBox('LastPlayed');
+                    // currentSong.put('currentSong', trackListingWithGetX.musics);
+                    // currentSong.put('index', index);
+                    Get.to(Player(), arguments: [trackListingWithGetX.musics, index]);
+                  },
+                );
+              },
+            ),
+    );
   }
 }

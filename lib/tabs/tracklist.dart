@@ -56,7 +56,7 @@ class Tracklist extends StatelessWidget {
                 controller: _tabx.controller,
                 children: [
                   Container(
-                    child: const Tracks(),
+                    child: const Track(),
                   ),
                   Container(child: const Albums()),
                 ],

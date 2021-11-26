@@ -129,7 +129,10 @@ class _HomePageState extends State<HomePage>
                   content: Text('No songs played yet.'),
                 ))
               
-              :Get.to(const Player());
+              :Get.to(Player(), arguments: [
+                  currentSong,
+                  index,
+              ]);
         },
         label: Text('Last Played'),
         icon: const Icon(
