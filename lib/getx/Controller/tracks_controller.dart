@@ -11,6 +11,7 @@ class TrackController extends GetxController {
 
   TrackController() {
     requestPermission();
+    update();
   }
 
   final OnAudioQuery _audioQuery = OnAudioQuery();
@@ -38,12 +39,45 @@ class TrackController extends GetxController {
           });
         });
         musicBox.put('tracks', musicData);
-
         musics = musicBox.get('tracks');
+        update();
         for (var i = 0; i < playlistBox.length; i++) {
           playlists.add(playlistBox.getAt(i));
         }
+        update();
       }
+      print(playlists);
     }
+  }
+
+  getMusicData() async {
+    var musicBox = await Hive.openBox('musicBox');
+    var playlistBox = await Hive.openBox('playlistBox');
+    var favorites = await Hive.openBox('favorites');
+
+    if (musicBox.get('tracks') != null) {
+      musicData = musicBox.get('tracks');
+      musics = musicBox.get('tracks');
+    } else {
+      List<SongModel> musicList = await _audioQuery.querySongs();
+      musicList.forEach((element) {
+        musicData.add({
+          'title': element.title,
+          'artist': element.artist,
+          'id': element.id,
+          'uri': element.uri,
+          'album': element.album,
+          'duration': element.duration,
+          'isFavorite': favorites.containsKey(element.id)
+        });
+      });
+      musicBox.put('tracks', musicData);
+      musics = musicBox.get('tracks');
+      update();
+    }
+    for (var i = 0; i < playlistBox.length; i++) {
+      playlists.add(playlistBox.getAt(i));
+    }
+    update();
   }
 }

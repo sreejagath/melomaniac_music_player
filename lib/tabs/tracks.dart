@@ -391,9 +391,9 @@ class Track extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trackListingWithGetX = Get.put(TrackController());
-    return Obx(()=>
-      trackListingWithGetX.musics.isEmpty
-          ? Center(
+    return Obx(
+      () => trackListingWithGetX.musicData.isEmpty
+          ? const Center(
               child: Text('No Songs Found !'),
             )
           : ListView.builder(
@@ -427,35 +427,33 @@ class Track extends StatelessWidget {
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Add to Playlist',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: 20.0,
                                                 color: Colors.black),
                                           ),
                                           const SizedBox(
                                             height: 30,
                                           ),
-                                          Expanded(
+                                          Container(
+                                            height: 300,
+                                            width: double.maxFinite,
                                             child: ListView.builder(
-                                              itemCount:
-                                                  trackListingWithGetX.playlists
-                                                      .length,
+                                              shrinkWrap: true,
+                                              itemCount: trackListingWithGetX
+                                                  .playlists.length,
                                               itemBuilder: (context, index) {
+                                                print(trackListingWithGetX
+                                                    .playlists);
                                                 return ListTile(
                                                   title: Text(
                                                       trackListingWithGetX
-                                                          .playlists[index]
-                                                          ['name']),
+                                                              .playlists[index]
+                                                          ['playlist']),
                                                   onTap: () {
-                                                    // trackListingWithGetX
-                                                    //     .addToPlaylist(
-                                                    //         trackListingWithGetX
-                                                    //             .musics[index],
-                                                    //         trackListingWithGetX
-                                                    //             .playlists[index]
-                                                    //             ['name']);
-                                                    // Navigator.pop(context);
+                                                    Get.back();
+                                                    Get.back();
                                                   },
                                                 );
                                               },
@@ -469,9 +467,8 @@ class Track extends StatelessWidget {
                         value: 1,
                       ),
                       PopupMenuItem(
-                        child
-                            : TextButton(
-                          child: const Text('Add to Queue'),
+                        child: TextButton(
+                          child: const Text('Add to Favorites'),
                           onPressed: () {
                             // trackListingWithGetX.addToQueue(
                             //     trackListingWithGetX.musics[index]);
@@ -481,16 +478,28 @@ class Track extends StatelessWidget {
                       ),
                       PopupMenuItem(
                         child: TextButton(
-                          child: const Text('Share'),
+                          child: const Text('Song Info'),
                           onPressed: () {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text(
-                                  'This feature is not availiable now.Will be implemented in next update !'),
-                            ));
+                            // trackListingWithGetX.addToQueue(
+                            //     trackListingWithGetX.musics[index]);
                           },
                         ),
                         value: 3,
+                      ),
+                      PopupMenuItem(
+                        child: TextButton(
+                          child: const Text('Share'),
+                          onPressed: () {
+                            Get.snackbar('Feature not availiable',
+                                'This feature is not availiable now.Will be implemented in next update !');
+                            // ScaffoldMessenger.of(context)
+                            //     .showSnackBar(const SnackBar(
+                            //   content: Text(
+                            //       'This feature is not availiable now.Will be implemented in next update !'),
+                            // ));
+                          },
+                        ),
+                        value: 4,
                       ),
                     ],
                     onSelected: (value) {
@@ -507,7 +516,8 @@ class Track extends StatelessWidget {
                     // var currentSong = await Hive.openBox('LastPlayed');
                     // currentSong.put('currentSong', trackListingWithGetX.musics);
                     // currentSong.put('index', index);
-                    Get.to(Player(), arguments: [trackListingWithGetX.musics, index]);
+                    Get.to(Player(),
+                        arguments: [trackListingWithGetX.musics, index]);
                   },
                 );
               },
