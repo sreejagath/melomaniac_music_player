@@ -95,4 +95,11 @@ class TrackController extends GetxController {
     print(index);
     print(musics);
   }
+
+  addToPlaylist(data, index) async {
+    var playlistBox = await Hive.openBox('playlistBox');
+    playlists[index]['tracks'].add(data[0]);
+    playlistBox.putAt(index, playlists[index]);
+    update();
+  }
 }

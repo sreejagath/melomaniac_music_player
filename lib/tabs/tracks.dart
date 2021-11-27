@@ -430,54 +430,92 @@ class Track extends StatelessWidget {
                             'Song added to favorites successfully !',
                             snackPosition: SnackPosition.BOTTOM);
                       }
-                      if(value == 1){
-                         showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0))),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text(
-                                            'Add to Playlist',
-                                            style: TextStyle(
-                                                fontSize: 20.0,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(
-                                            height: 30,
-                                          ),
-                                          Container(
-                                            height: 300,
-                                            width: double.maxFinite,
-                                            child: Obx(
-                                              () => ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: trackListingWithGetX
-                                                    .playlists.length,
-                                                itemBuilder: (context, index) {
-                                                  print(trackListingWithGetX
-                                                      .playlists);
-                                                  return ListTile(
-                                                    title: Text(
-                                                        trackListingWithGetX
-                                                                .playlists[
-                                                            index]['playlist']),
-                                                    onTap: () {
-                                                      Get.back();
-                                                      Get.back();
-                                                    },
+                      if (value == 1) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'Add to Playlist',
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Container(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: Obx(
+                                          () => ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: trackListingWithGetX
+                                                .playlists.length,
+                                            itemBuilder: (context, values) {
+                                              print(trackListingWithGetX
+                                                  .playlists);
+                                              print(index);
+                                              return ListTile(
+                                                title: Text(trackListingWithGetX
+                                                        .playlists[values]
+                                                    ['playlist']),
+                                                onTap: () {
+                                                  List data = [
+                                                    {
+                                                      'title':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['title'],
+                                                      'artist':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['artist'],
+                                                      'uri':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['uri'],
+                                                      'id': trackListingWithGetX
+                                                          .musics[index]['id'],
+                                                      'album':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['album'],
+                                                      'duration':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['duration'],
+                                                      'isFavorite':
+                                                          trackListingWithGetX
+                                                                  .musics[index]
+                                                              ['isFavorite'],
+                                                    }
+                                                  ];
+                                                  trackListingWithGetX
+                                                      .addToPlaylist(
+                                                    data,
+                                                    values,
                                                   );
+                                                  Get.back();
+                                                  Get.back();
+                                                  Get.snackbar(
+                                                      'Added Succesfully',
+                                                      'Song added to playlist successfully !');
                                                 },
-                                              ),
-                                            ),
+                                              );
+                                            },
                                           ),
-                                        ],
-                                      ));
-                                });
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            });
                       }
                     },
                     icon: const Icon(Icons.more_vert),
