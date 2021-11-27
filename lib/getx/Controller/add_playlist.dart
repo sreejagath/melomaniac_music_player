@@ -9,6 +9,7 @@ class PlaylistController extends GetxController {
   @override
   PlaylistController() {
     favoritesList.clear();
+    update();
     favoritesData();
     getPlaylist();
   }

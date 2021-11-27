@@ -414,23 +414,24 @@ class Track extends StatelessWidget {
                   trailing: PopupMenuButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
-                  onSelected: (value) {
-                    if (value == 4) {                            
-                      Get.snackbar('Feature not availiable',
-                      'This feature is not availiable now.Will be implemented in next update !');
-                    }
-                    if(value==3){
-                      Get.snackbar('Feature not availiable',
-                      'This feature is not availiable now.Will be implemented in next update !');
-                    }
-                  },
-                  icon: const Icon(Icons.more_vert),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: TextButton(
-                          child: const Text('Add to Playlist'),
-                          onPressed: () {
-                            showDialog(
+                    onSelected: (value) {
+                      if (value == 4) {
+                        Get.snackbar('Feature not availiable',
+                            'This feature is not availiable now.Will be implemented in next update !');
+                      }
+                      if (value == 3) {
+                        Get.snackbar('Feature not availiable',
+                            'This feature is not availiable now.Will be implemented in next update !');
+                      }
+                      if (value == 2) {
+                        trackListingWithGetX.addToFavorites(index);
+                        Get.back();
+                        Get.snackbar('Added Successfully',
+                            'Song added to favorites successfully !',
+                            snackPosition: SnackPosition.BOTTOM);
+                      }
+                      if(value == 1){
+                         showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
@@ -477,18 +478,16 @@ class Track extends StatelessWidget {
                                         ],
                                       ));
                                 });
-                          },
-                        ),
+                      }
+                    },
+                    icon: const Icon(Icons.more_vert),
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        child: Text('Add to Playlist'),
                         value: 1,
                       ),
-                      PopupMenuItem(
-                        child: TextButton(
-                          child: const Text('Add to Favorites'),
-                          onPressed: () {
-                            // trackListingWithGetX.addToQueue(
-                            //     trackListingWithGetX.musics[index]);
-                          },
-                        ),
+                      const PopupMenuItem(
+                        child: Text('Add to Favorites'),
                         value: 2,
                       ),
                       const PopupMenuItem(

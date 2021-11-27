@@ -81,4 +81,18 @@ class TrackController extends GetxController {
     }
     update();
   }
+
+  addToFavorites(index) async {
+    var favorites = await Hive.openBox('favorites');
+    var musicBox = await Hive.openBox('musicBox');
+    musics[index]['isFavorite'] = true;
+    Hive.box('musicBox').put(
+      'tracks',
+      musics,
+    );
+    Hive.box('favorites').put(musics[index]['id'], musics[index]);
+    update();
+    print(index);
+    print(musics);
+  }
 }
