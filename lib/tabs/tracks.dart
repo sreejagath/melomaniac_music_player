@@ -391,6 +391,7 @@ class Track extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trackListingWithGetX = Get.put(TrackController());
+    var playlists = trackListingWithGetX.playlists;
     return Obx(
       () => trackListingWithGetX.musicData.isEmpty
           ? const Center(
@@ -411,7 +412,19 @@ class Track extends StatelessWidget {
                     ),
                   ),
                   trailing: PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                  onSelected: (value) {
+                    if (value == 4) {                            
+                      Get.snackbar('Feature not availiable',
+                      'This feature is not availiable now.Will be implemented in next update !');
+                    }
+                    if(value==3){
+                      Get.snackbar('Feature not availiable',
+                      'This feature is not availiable now.Will be implemented in next update !');
+                    }
+                  },
+                  icon: const Icon(Icons.more_vert),
                     itemBuilder: (context) => [
                       PopupMenuItem(
                         child: TextButton(
@@ -439,24 +452,26 @@ class Track extends StatelessWidget {
                                           Container(
                                             height: 300,
                                             width: double.maxFinite,
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: trackListingWithGetX
-                                                  .playlists.length,
-                                              itemBuilder: (context, index) {
-                                                print(trackListingWithGetX
-                                                    .playlists);
-                                                return ListTile(
-                                                  title: Text(
-                                                      trackListingWithGetX
-                                                              .playlists[index]
-                                                          ['playlist']),
-                                                  onTap: () {
-                                                    Get.back();
-                                                    Get.back();
-                                                  },
-                                                );
-                                              },
+                                            child: Obx(
+                                              () => ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: trackListingWithGetX
+                                                    .playlists.length,
+                                                itemBuilder: (context, index) {
+                                                  print(trackListingWithGetX
+                                                      .playlists);
+                                                  return ListTile(
+                                                    title: Text(
+                                                        trackListingWithGetX
+                                                                .playlists[
+                                                            index]['playlist']),
+                                                    onTap: () {
+                                                      Get.back();
+                                                      Get.back();
+                                                    },
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -476,41 +491,24 @@ class Track extends StatelessWidget {
                         ),
                         value: 2,
                       ),
-                      PopupMenuItem(
-                        child: TextButton(
-                          child: const Text('Song Info'),
-                          onPressed: () {
-                            // trackListingWithGetX.addToQueue(
-                            //     trackListingWithGetX.musics[index]);
-                          },
-                        ),
+                      const PopupMenuItem(
+                        child: Text('Song Info'),
                         value: 3,
                       ),
-                      PopupMenuItem(
-                        child: TextButton(
-                          child: const Text('Share'),
-                          onPressed: () {
-                            Get.snackbar('Feature not availiable',
-                                'This feature is not availiable now.Will be implemented in next update !');
-                            // ScaffoldMessenger.of(context)
-                            //     .showSnackBar(const SnackBar(
-                            //   content: Text(
-                            //       'This feature is not availiable now.Will be implemented in next update !'),
-                            // ));
-                          },
-                        ),
+                      const PopupMenuItem(
+                        child: Text('Share'),
                         value: 4,
                       ),
                     ],
-                    onSelected: (value) {
-                      if (value == 3) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(
-                              'This feature is not availiable now.Will be implemented in next update !'),
-                        ));
-                      }
-                    },
+                    // onSelected: (value) {
+                    //   if (value == 3) {
+                    //     ScaffoldMessenger.of(context)
+                    //         .showSnackBar(const SnackBar(
+                    //       content: Text(
+                    //           'This feature is not availiable now.Will be implemented in next update !'),
+                    //     ));
+                    //   }
+                    // },
                   ),
                   onTap: () async {
                     // var currentSong = await Hive.openBox('LastPlayed');

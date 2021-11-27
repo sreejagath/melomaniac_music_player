@@ -10,6 +10,7 @@ class TrackController extends GetxController {
   var playlists = List.empty(growable: true).obs;
 
   TrackController() {
+    update();
     requestPermission();
     update();
   }
