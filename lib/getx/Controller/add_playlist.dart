@@ -24,6 +24,13 @@ class PlaylistController extends GetxController {
     update();
   }
 
+  addToPlaylist(data, index) async {
+    var playlistBox = await Hive.openBox('playlistBox');
+    playlistData[index]['tracks'].add(data[0]);
+    playlistBox.putAt(index, playlistData[index]);
+    update();
+  }
+
   addNewPlaylist(String playlistName) async {
     var playlistBox = await Hive.openBox('playlistBox');
     playlists = [

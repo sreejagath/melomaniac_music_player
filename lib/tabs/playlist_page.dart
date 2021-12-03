@@ -11,7 +11,7 @@ class PlaylistData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playlistWithGetx = Get.put(PlaylistController());
+    final playlistWithGetx = Get.find<PlaylistController>();
     return Container(
         child: SingleChildScrollView(
             child: Column(

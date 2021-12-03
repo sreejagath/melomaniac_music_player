@@ -1,6 +1,7 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_player/getx/Controller/add_playlist.dart';
 import 'package:music_player/getx/Controller/tracks_controller.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -391,7 +392,9 @@ class Track extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trackListingWithGetX = Get.put(TrackController());
-    var playlists = trackListingWithGetX.playlists;
+    final playlistListing = Get.put(PlaylistController());
+
+    //var playlists = trackListingWithGetX.playlists;
     return Obx(
       () => trackListingWithGetX.musicData.isEmpty
           ? const Center(
@@ -456,15 +459,12 @@ class Track extends StatelessWidget {
                                         child: Obx(
                                           () => ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: trackListingWithGetX
-                                                .playlists.length,
+                                            itemCount: playlistListing.playlistData.length,
                                             itemBuilder: (context, values) {
-                                              print(trackListingWithGetX
-                                                  .playlists);
+                                              //print();
                                               print(index);
                                               return ListTile(
-                                                title: Text(trackListingWithGetX
-                                                        .playlists[values]
+                                                title: Text(playlistListing.playlistData[values]
                                                     ['playlist']),
                                                 onTap: () {
                                                   List data = [
@@ -497,8 +497,7 @@ class Track extends StatelessWidget {
                                                               ['isFavorite'],
                                                     }
                                                   ];
-                                                  trackListingWithGetX
-                                                      .addToPlaylist(
+                                                  playlistListing.addToPlaylist(
                                                     data,
                                                     values,
                                                   );
@@ -548,9 +547,9 @@ class Track extends StatelessWidget {
                     // },
                   ),
                   onTap: () async {
-                    // var currentSong = await Hive.openBox('LastPlayed');
-                    // currentSong.put('currentSong', trackListingWithGetX.musics);
-                    // currentSong.put('index', index);
+                    var currentSong = await Hive.openBox('LastPlayed');
+                    currentSong.put('currentSong', trackListingWithGetX.musics);
+                    currentSong.put('index', index);
                     Get.to(Player(),
                         arguments: [trackListingWithGetX.musics, index]);
                   },
