@@ -78,7 +78,7 @@ class _TracksState extends State<Tracks> {
   Widget build(BuildContext context) {
     return musics.isEmpty
         ? Column(
-            mainAxisSize: MainAxisSize.min,
+            //mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
@@ -392,13 +392,21 @@ class Track extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final trackListingWithGetX = Get.put(TrackController());
-    final playlistListing = Get.put(PlaylistController());
 
     //var playlists = trackListingWithGetX.playlists;
     return Obx(
       () => trackListingWithGetX.musicData.isEmpty
-          ? const Center(
-              child: Text('No Songs Found !'),
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('No Songs Found !'),
+                DelayedDisplay(
+                child: Text(
+                    'If you enabled permissions,please restart the app...'),
+                delay: Duration(seconds: 6),
+              )],
+              ),
             )
           : ListView.builder(
               itemCount: trackListingWithGetX.musics.length,
@@ -437,6 +445,8 @@ class Track extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (context) {
+                              final playlistListing =
+                                  Get.put(PlaylistController());
                               return AlertDialog(
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -459,12 +469,14 @@ class Track extends StatelessWidget {
                                         child: Obx(
                                           () => ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: playlistListing.playlistData.length,
+                                            itemCount: playlistListing
+                                                .playlistData.length,
                                             itemBuilder: (context, values) {
                                               //print();
                                               print(index);
                                               return ListTile(
-                                                title: Text(playlistListing.playlistData[values]
+                                                title: Text(playlistListing
+                                                        .playlistData[values]
                                                     ['playlist']),
                                                 onTap: () {
                                                   List data = [

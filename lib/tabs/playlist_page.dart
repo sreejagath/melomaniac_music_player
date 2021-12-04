@@ -11,7 +11,8 @@ class PlaylistData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playlistWithGetx = Get.find<PlaylistController>();
+    final playlistWithGetx = Get.put(PlaylistController());
+
     return Container(
         child: SingleChildScrollView(
             child: Column(
@@ -105,8 +106,10 @@ class PlaylistData extends StatelessWidget {
                                 onTap: () {
                                   print(playlistWithGetx.favoritesList);
                                   print(index);
-                                  Get.to(Player(),arguments:[playlistWithGetx.favoritesList,index]);
-                                  
+                                  Get.to(Player(), arguments: [
+                                    playlistWithGetx.favoritesList,
+                                    index
+                                  ]);
                                 },
                                 subtitle: Text(playlistWithGetx
                                     .favoritesList[index]['artist']),
