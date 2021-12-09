@@ -56,10 +56,10 @@ class Player extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 20,
+          height: 80,
         ),
         Obx(() => trackDetails(
-            argsController.trackTitle, argsController.trackArtist)),
+            argsController.trackTitle, argsController.trackArtist, context)),
         audioPlayerSettings.infos(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,8 +69,7 @@ class Player extends StatelessWidget {
                 var snackBar =
                     const SnackBar(content: Text('No Previous Songs'));
 
-                  audioPlayerSettings.playPrevious();
-                
+                audioPlayerSettings.playPrevious();
               },
               icon: const Icon(Icons.skip_previous),
             ),
@@ -126,15 +125,16 @@ class Player extends StatelessWidget {
 
   Widget artImage(obxTrackId, musics, currentIndex) {
     obxTrackId = obxTrackId.value;
-    return SizedBox(
+    return Container(
       height: 250,
       width: 250,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
-        child: QueryArtworkWidget(
-          id: trackId == 0 ? obxTrackId : trackId,
-          type: ArtworkType.AUDIO,
-          nullArtworkWidget: const Icon(
+      child: QueryArtworkWidget(
+        artworkFit: BoxFit.cover,
+        id: trackId == 0 ? obxTrackId : trackId,
+        type: ArtworkType.AUDIO,
+        nullArtworkWidget: CircleAvatar(
+          backgroundColor: Colors.blueGrey,
+          child: const Icon(
             Icons.music_note,
             size: 80,
           ),
@@ -143,42 +143,36 @@ class Player extends StatelessWidget {
     );
   }
 
-  Widget trackDetails(trackTitle, trackArtist) {
+  Widget trackDetails(trackTitle, trackArtist, context) {
     trackTitle = trackTitle.toString();
     trackArtist = trackArtist.toString();
-    return Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  trackTitle.length > 22
-                      ? trackTitle.replaceRange(22, trackTitle.length, '...')
-                      : trackTitle,
-                  style: const TextStyle(color: Colors.black, fontSize: 20),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  trackArtist.length > 20
-                      ? trackArtist.replaceRange(20, trackArtist.length, '...')
-                      : trackArtist,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                )
-              ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              trackTitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black, fontSize: 20),
             ),
-          ),
-          const SizedBox(
-            width: 55,
-          ),
-        ],
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+              trackArtist.length > 20
+                  ? trackArtist.replaceRange(20, trackArtist.length, '...')
+                  : trackArtist,
+              style: const TextStyle(
+                color: Colors.grey,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

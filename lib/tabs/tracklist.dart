@@ -36,7 +36,7 @@ class Tracklist extends StatelessWidget {
               Container(
                 child: TabBar(
                   indicator: DotIndicator(
-                    color: Colors.black,
+                    color: Colors.blueGrey,
                     distanceFromCenter: 16,
                     radius: 3,
                     paintingStyle: PaintingStyle.fill,

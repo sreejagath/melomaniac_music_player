@@ -40,11 +40,10 @@ class SearchTrack extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 searchWithGetx.getSearch(searchKey.text);
-                
               },
               child: const Text('Search'),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
+                  primary: Colors.blueGrey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -62,24 +61,37 @@ class SearchTrack extends StatelessWidget {
           scrollDirection: Axis.vertical,
           itemCount: searchWithGetx.searchList.length,
           itemBuilder: (context, index) {
-            return searchWithGetx.searchList==[]?
-            const ListTile(
-              title: Text('No Results'),
-            ):
-            ListTile(
-              title: Text(searchWithGetx.searchList[index]['title']),
-              subtitle: Text(
-                        searchWithGetx.searchList[index]['artist'],
+            return searchWithGetx.searchList == []
+                ? const ListTile(
+                    title: Text('No Results'),
+                  )
+                : ListTile(
+                    title: Text(
+                      searchWithGetx.searchList[index]['title'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Text(
+                      searchWithGetx.searchList[index]['artist'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    leading: QueryArtworkWidget(
+                      id: searchWithGetx.searchList[index]['id'],
+                      type: ArtworkType.AUDIO,
+                      nullArtworkWidget: CircleAvatar(
+                        backgroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.music_note,
+                          color: Colors.white,
+                        ),
                       ),
-                      leading: QueryArtworkWidget(
-                        id: searchWithGetx.searchList[index]['id'],
-                        type: ArtworkType.AUDIO,
-                      ),
-              onTap: () {
-                Get.to(Player(), arguments: [searchWithGetx.searchList,index]);
-                
-              },
-            );
+                    ),
+                    onTap: () {
+                      Get.to(Player(),
+                          arguments: [searchWithGetx.searchList, index]);
+                    },
+                  );
           },
         ),
       ),

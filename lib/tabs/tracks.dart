@@ -401,11 +401,12 @@ class Track extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Text('No Songs Found !'),
-                DelayedDisplay(
-                child: Text(
-                    'If you enabled permissions,please restart the app...'),
-                delay: Duration(seconds: 6),
-              )],
+                  DelayedDisplay(
+                    child: Text(
+                        'If you enabled permissions,please restart the app...'),
+                    delay: Duration(seconds: 6),
+                  )
+                ],
               ),
             )
           : ListView.builder(
@@ -413,13 +414,28 @@ class Track extends StatelessWidget {
               itemBuilder: (context, index) {
                 // return TrackListing(index: index);
                 return ListTile(
-                  title: Text(trackListingWithGetX.musics[index]['title']),
-                  subtitle: Text(trackListingWithGetX.musics[index]['artist']),
+                  title: Text(
+                    trackListingWithGetX.musics[index]['title'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    trackListingWithGetX.musics[index]['artist'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: QueryArtworkWidget(
                       id: trackListingWithGetX.musics[index]['id'],
                       type: ArtworkType.AUDIO,
+                      nullArtworkWidget: CircleAvatar(
+                        backgroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.music_note,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   trailing: PopupMenuButton(

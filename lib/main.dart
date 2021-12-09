@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
+import 'package:music_player/getx/Controller/main_controllers.dart';
 import 'package:music_player/settings/player_settings.dart';
 import 'package:music_player/tabs/getstarted.dart';
 import 'package:music_player/tabs/player.dart';
@@ -28,7 +29,7 @@ Future main() async {
 
   runApp(GetMaterialApp(
     theme: ThemeData(
-        fontFamily: GoogleFonts.montserrat().fontFamily,
+      fontFamily: GoogleFonts.montserrat().fontFamily,
     ),
     home: HomePage(),
   ));
@@ -58,11 +59,11 @@ class _HomePageState extends State<HomePage>
     _tabController = TabController(vsync: this, length: 3);
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Tracklist(),
@@ -74,14 +75,16 @@ class _HomePageState extends State<HomePage>
   final audioPlayerSettings = AudioPlayerSettings();
   @override
   Widget build(BuildContext context) {
+    final mainController = Get.put(MainControllers());
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Melomaniac',
           style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,),
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueGrey,
+          ),
         ),
         elevation: 0,
         backgroundColor: Colors.white,
@@ -89,35 +92,48 @@ class _HomePageState extends State<HomePage>
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _widgetOptions.elementAt(_selectedIndex),
+            Obx(() =>
+                _widgetOptions.elementAt(mainController.selectedIndex.value)),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.music_note,
-              color: Colors.black,
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          selectedItemColor: Colors.blueGrey,
+          selectedIconTheme: const IconThemeData(color: Colors.blueGrey),
+          unselectedIconTheme: const IconThemeData(color: Colors.blueGrey),
+          backgroundColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.music_note,
+                //color: Colors.black,
+              ),
+              label: 'Tracks',
             ),
-            label: 'Tracks',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.black),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite, color: Colors.black),
-            label: 'Playlists',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, color: Colors.black),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                //color: Colors.black
+              ),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.playlist_play, 
+              //color: Colors.black
+              ),
+              label: 'Playlists',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings, 
+              //color: Colors.black
+              ),
+              label: 'Settings',
+            ),
+          ],
+          currentIndex: mainController.selectedIndex.value,
+          onTap: mainController.setSelectedIndex,
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
@@ -128,18 +144,17 @@ class _HomePageState extends State<HomePage>
               ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('No songs played yet.'),
                 ))
-              
-              :Get.to(Player(), arguments: [
+              : Get.to(Player(), arguments: [
                   currentSong,
                   index,
-              ]);
+                ]);
         },
         label: Text('Last Played'),
         icon: const Icon(
           Icons.play_arrow,
           color: Colors.white,
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey,
       ),
     );
   }

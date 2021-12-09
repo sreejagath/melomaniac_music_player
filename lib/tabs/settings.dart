@@ -20,6 +20,7 @@ class Settings extends StatelessWidget {
                 leading: const Icon(Icons.notifications),
                 trailing: GetBuilder<NotificationController>(
                   builder: (_) => Switch(
+                    activeColor: Colors.blueGrey,
                     value: notifications.notify,
                     onChanged: (value) {
                       notifications.toggleNotify(value);
