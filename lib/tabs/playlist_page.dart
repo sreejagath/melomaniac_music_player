@@ -94,10 +94,10 @@ class PlaylistData extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: Obx(
                         () => playlistWithGetx.favoritesList.length == 0
-                            ? ListTile(
-                                title: const Text("No favorites"),
+                            ? const ListTile(
+                                title: Text("No favorites"),
                                 subtitle: Text('Please add songs Manually.\nYou can add songs from the Home Screen.'),
-                                leading: const Icon(Icons.favorite_border),
+                                leading: Icon(Icons.favorite_border),
                               )
                             : ListView.builder(
                                 itemCount:
@@ -108,9 +108,7 @@ class PlaylistData extends StatelessWidget {
                                       title: Text(playlistWithGetx
                                           .favoritesList[index]['title']),
                                       onTap: () {
-                                        print(playlistWithGetx.favoritesList);
-                                        print(index);
-                                        Get.to(Player(), arguments: [
+                                        Get.to(const Player(), arguments: [
                                           playlistWithGetx.favoritesList,
                                           index
                                         ]);
@@ -254,9 +252,6 @@ class PlaylistData extends StatelessWidget {
                                                 ['tracks'][values]['artist']),
                                         leading: const Icon(Icons.music_note),
                                         onTap: () {
-                                          print(playlistWithGetx
-                                              .playlistData[index]['tracks']);
-                                          print(values);
                                           Get.to(Player(), arguments: [
                                             playlistWithGetx.playlistData[index]
                                                 ['tracks'],

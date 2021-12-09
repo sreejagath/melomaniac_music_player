@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:music_player/getx/Controller/tracks_controller.dart';
 
 class PlaylistController extends GetxController {
   var playlists = List.empty(growable: true);
@@ -21,7 +20,6 @@ class PlaylistController extends GetxController {
     for (var i = 0; i < playlistBox.length; i++) {
       playlistData.add(playlistBox.getAt(i));
     }
-    print(playlistData);
     update();
   }
 
@@ -62,7 +60,6 @@ class PlaylistController extends GetxController {
     Hive.box('favorites').delete(favoritesList[index]['id']);
     for (var i = 0; i < musics!.length; i++) {
       if (musics[i]['id'] == favoritesList[index]['id']) {
-        print(musics[i]);
         musics[i]['isFavorite'] = false;
       }
     }
@@ -80,7 +77,6 @@ class PlaylistController extends GetxController {
   }
 
   renamePlaylist(index, newName) async {
-    print(newName);
     var playlistBox = await Hive.openBox('playlistBox');
     playlistData[index]['playlist'] = newName;
     playlistBox.putAt(index, playlistData[index]);
@@ -94,8 +90,6 @@ class PlaylistController extends GetxController {
     for (var i = 0; i < playlistBox.length; i++) {
       playlistData.add(playlistBox.getAt(i));
     }
-    print(playlistData);
-    print('index: $index &values: $values ');
     playlistData[index]['tracks'].removeAt(values);
     playlistBox.putAt(index, playlistData[index]);
   }

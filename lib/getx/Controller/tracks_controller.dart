@@ -47,7 +47,6 @@ class TrackController extends GetxController {
         }
         update();
       }
-      print(playlists);
     }
   }
 
@@ -92,8 +91,6 @@ class TrackController extends GetxController {
     );
     Hive.box('favorites').put(musics[index]['id'], musics[index]);
     update();
-    print(index);
-    print(musics);
   }
 
   addToPlaylist(data, index) async {

@@ -15,7 +15,6 @@ class Track extends StatelessWidget {
   Widget build(BuildContext context) {
     final trackListingWithGetX = Get.put(TrackController());
 
-    //var playlists = trackListingWithGetX.playlists;
     return Obx(
       () => trackListingWithGetX.musicData.isEmpty
           ? Center(
@@ -34,7 +33,6 @@ class Track extends StatelessWidget {
           : ListView.builder(
               itemCount: trackListingWithGetX.musics.length,
               itemBuilder: (context, index) {
-                // return TrackListing(index: index);
                 return ListTile(
                   title: Text(
                     trackListingWithGetX.musics[index]['title'],
@@ -51,7 +49,7 @@ class Track extends StatelessWidget {
                     child: QueryArtworkWidget(
                       id: trackListingWithGetX.musics[index]['id'],
                       type: ArtworkType.AUDIO,
-                      nullArtworkWidget: CircleAvatar(
+                      nullArtworkWidget: const CircleAvatar(
                         backgroundColor: Colors.blueGrey,
                         child: Icon(
                           Icons.music_note,
@@ -106,61 +104,74 @@ class Track extends StatelessWidget {
                                         height: 300,
                                         width: double.maxFinite,
                                         child: Obx(
-                                          () => ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: playlistListing
-                                                .playlistData.length,
-                                            itemBuilder: (context, values) {
-                                              //print();
-                                              print(index);
-                                              return ListTile(
-                                                title: Text(playlistListing
-                                                        .playlistData[values]
-                                                    ['playlist']),
-                                                onTap: () {
-                                                  List data = [
-                                                    {
-                                                      'title':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['title'],
-                                                      'artist':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['artist'],
-                                                      'uri':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['uri'],
-                                                      'id': trackListingWithGetX
-                                                          .musics[index]['id'],
-                                                      'album':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['album'],
-                                                      'duration':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['duration'],
-                                                      'isFavorite':
-                                                          trackListingWithGetX
-                                                                  .musics[index]
-                                                              ['isFavorite'],
-                                                    }
-                                                  ];
-                                                  playlistListing.addToPlaylist(
-                                                    data,
-                                                    values,
-                                                  );
-                                                  Get.back();
-                                                  Get.back();
-                                                  Get.snackbar(
-                                                      'Added Succesfully',
-                                                      'Song added to playlist successfully !');
-                                                },
-                                              );
-                                            },
-                                          ),
+                                          () =>
+                                              playlistListing
+                                                      .playlistData.isEmpty
+                                                  ? const ListTile(
+                                                      leading: Icon(
+                                                          Icons.music_note),
+                                                      title: Text(
+                                                        'No Playlist Found !',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      subtitle: Text('Create new playlist manually from playlist tab'),
+                                                    )
+                                                  : ListView.builder(
+                                                      shrinkWrap: true,
+                                                      itemCount: playlistListing
+                                                          .playlistData.length,
+                                                      itemBuilder:
+                                                          (context, values) {
+                                                        return ListTile(
+                                                          title: Text(playlistListing
+                                                                  .playlistData[
+                                                              values]['playlist']),
+                                                          onTap: () {
+                                                            List data = [
+                                                              {
+                                                                'title': trackListingWithGetX
+                                                                        .musics[
+                                                                    index]['title'],
+                                                                'artist': trackListingWithGetX
+                                                                            .musics[
+                                                                        index]
+                                                                    ['artist'],
+                                                                'uri': trackListingWithGetX
+                                                                        .musics[
+                                                                    index]['uri'],
+                                                                'id': trackListingWithGetX
+                                                                        .musics[
+                                                                    index]['id'],
+                                                                'album': trackListingWithGetX
+                                                                        .musics[
+                                                                    index]['album'],
+                                                                'duration': trackListingWithGetX
+                                                                            .musics[
+                                                                        index][
+                                                                    'duration'],
+                                                                'isFavorite':
+                                                                    trackListingWithGetX
+                                                                            .musics[index]
+                                                                        [
+                                                                        'isFavorite'],
+                                                              }
+                                                            ];
+                                                            playlistListing
+                                                                .addToPlaylist(
+                                                              data,
+                                                              values,
+                                                            );
+                                                            Get.back();
+                                                            Get.back();
+                                                            Get.snackbar(
+                                                                'Added Succesfully',
+                                                                'Song added to playlist successfully !');
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
                                         ),
                                       ),
                                     ],
@@ -187,21 +198,12 @@ class Track extends StatelessWidget {
                         value: 4,
                       ),
                     ],
-                    // onSelected: (value) {
-                    //   if (value == 3) {
-                    //     ScaffoldMessenger.of(context)
-                    //         .showSnackBar(const SnackBar(
-                    //       content: Text(
-                    //           'This feature is not availiable now.Will be implemented in next update !'),
-                    //     ));
-                    //   }
-                    // },
                   ),
                   onTap: () async {
                     var currentSong = await Hive.openBox('LastPlayed');
                     currentSong.put('currentSong', trackListingWithGetX.musics);
                     currentSong.put('index', index);
-                    Get.to(Player(),
+                    Get.to(const Player(),
                         arguments: [trackListingWithGetX.musics, index]);
                   },
                 );

@@ -25,7 +25,6 @@ class Player extends StatelessWidget {
     argsController.getData(Get.arguments);
     var musics = argsController.argumentData[0];
     var currentIndex = argsController.argumentData[1];
-    print(argsController.isPlaying);
     trackArtist = musics[currentIndex]['artist'];
     return Scaffold(
       appBar: AppBar(

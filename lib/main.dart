@@ -8,15 +8,12 @@ import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
 import 'package:music_player/tabs/playlist_page.dart';
 import 'package:music_player/tabs/settings.dart';
-import 'package:hive/hive.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/db_model/data_model.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final OnAudioQuery _audioQuery = OnAudioQuery();
 List musicData = [];
 List musics = [];
 List playlists = [];
@@ -30,7 +27,7 @@ Future main() async {
     theme: ThemeData(
       fontFamily: GoogleFonts.montserrat().fontFamily,
     ),
-    home: HomePage(),
+    home: const HomePage(),
   ));
   Hive.registerAdapter(MusicModelAdapter());
   Hive.registerAdapter(PlaylistModelAdapter());
@@ -99,26 +96,22 @@ class _HomePageState extends State<HomePage>
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.music_note,
-                //color: Colors.black,
               ),
               label: 'Tracks',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.search,
-                //color: Colors.black
               ),
               label: 'Search',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.playlist_play, 
-              //color: Colors.black
               ),
               label: 'Playlists',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings, 
-              //color: Colors.black
               ),
               label: 'Settings',
             ),
@@ -133,15 +126,15 @@ class _HomePageState extends State<HomePage>
           List? currentSong = currentMusic.get('currentSong');
           var index = currentMusic.get('index');
           currentSong == null
-              ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('No songs played yet.'),
                 ))
-              : Get.to(Player(), arguments: [
+              : Get.to(const Player(), arguments: [
                   currentSong,
                   index,
                 ]);
         },
-        label: Text('Last Played'),
+        label: const Text('Last Played'),
         icon: const Icon(
           Icons.play_arrow,
           color: Colors.white,
