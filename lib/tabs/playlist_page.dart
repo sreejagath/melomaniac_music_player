@@ -1,10 +1,7 @@
-import 'dart:ui';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/getx/Controller/add_playlist.dart';
 import 'package:music_player/tabs/player.dart';
-import 'package:path/path.dart';
 
 class PlaylistData extends StatelessWidget {
   const PlaylistData({Key? key}) : super(key: key);

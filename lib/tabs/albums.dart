@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/getx/Controller/albumlisting.dart';
-import 'package:music_player/main.dart';
-import 'package:hive/hive.dart';
 import 'package:music_player/tabs/albumlist.dart';
-import 'package:music_player/tabs/tracks.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:get/get.dart';
 
 class Albums extends StatelessWidget {

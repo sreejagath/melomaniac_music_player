@@ -3,11 +3,9 @@ import 'package:music_player/db_model/favorites_model.dart';
 import 'package:music_player/db_model/playlist_model.dart';
 import 'package:music_player/getx/Controller/main_controllers.dart';
 import 'package:music_player/settings/player_settings.dart';
-import 'package:music_player/tabs/getstarted.dart';
 import 'package:music_player/tabs/player.dart';
 import 'package:music_player/tabs/tracklist.dart';
 import 'package:music_player/tabs/search.dart';
-import 'package:music_player/tabs/playlist.dart';
 import 'package:music_player/tabs/playlist_page.dart';
 import 'package:music_player/tabs/settings.dart';
 import 'package:hive/hive.dart';
@@ -28,6 +26,7 @@ Future main() async {
   await Hive.initFlutter();
 
   runApp(GetMaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       fontFamily: GoogleFonts.montserrat().fontFamily,
     ),
@@ -50,7 +49,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  static int _selectedIndex = 0;
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
 
   @override
@@ -58,12 +56,6 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
   }
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Tracklist(),

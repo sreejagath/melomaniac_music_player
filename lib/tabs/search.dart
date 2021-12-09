@@ -47,7 +47,7 @@ class SearchTrack extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  minimumSize: Size(300, 30)),
+                  minimumSize: const Size(300, 30)),
             ),
           ],
         ),
@@ -79,7 +79,7 @@ class SearchTrack extends StatelessWidget {
                     leading: QueryArtworkWidget(
                       id: searchWithGetx.searchList[index]['id'],
                       type: ArtworkType.AUDIO,
-                      nullArtworkWidget: CircleAvatar(
+                      nullArtworkWidget: const CircleAvatar(
                         backgroundColor: Colors.blueGrey,
                         child: Icon(
                           Icons.music_note,
@@ -88,7 +88,7 @@ class SearchTrack extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      Get.to(Player(),
+                      Get.to(const Player(),
                           arguments: [searchWithGetx.searchList, index]);
                     },
                   );

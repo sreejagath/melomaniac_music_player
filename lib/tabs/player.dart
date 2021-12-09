@@ -66,9 +66,6 @@ class Player extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                var snackBar =
-                    const SnackBar(content: Text('No Previous Songs'));
-
                 audioPlayerSettings.playPrevious();
               },
               icon: const Icon(Icons.skip_previous),
@@ -132,9 +129,9 @@ class Player extends StatelessWidget {
         artworkFit: BoxFit.cover,
         id: trackId == 0 ? obxTrackId : trackId,
         type: ArtworkType.AUDIO,
-        nullArtworkWidget: CircleAvatar(
+        nullArtworkWidget: const CircleAvatar(
           backgroundColor: Colors.blueGrey,
-          child: const Icon(
+          child: Icon(
             Icons.music_note,
             size: 80,
           ),
