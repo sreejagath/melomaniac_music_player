@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage>
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.blueGrey,
+            color: Colors.black,
           ),
         ),
         elevation: 0,

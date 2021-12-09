@@ -96,48 +96,56 @@ class PlaylistData extends StatelessWidget {
                   return Container(
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: Obx(
-                        () => ListView.builder(
-                          itemCount: playlistWithGetx.favoritesList.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                                leading: const Icon(Icons.music_note),
-                                title: Text(playlistWithGetx
-                                    .favoritesList[index]['title']),
-                                onTap: () {
-                                  print(playlistWithGetx.favoritesList);
-                                  print(index);
-                                  Get.to(Player(), arguments: [
-                                    playlistWithGetx.favoritesList,
-                                    index
-                                  ]);
+                        () => playlistWithGetx.favoritesList.length == 0
+                            ? ListTile(
+                                title: const Text("No favorites"),
+                                subtitle: Text('Please add songs Manually.\nYou can add songs from the Home Screen.'),
+                                leading: const Icon(Icons.favorite_border),
+                              )
+                            : ListView.builder(
+                                itemCount:
+                                    playlistWithGetx.favoritesList.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                      leading: const Icon(Icons.music_note),
+                                      title: Text(playlistWithGetx
+                                          .favoritesList[index]['title']),
+                                      onTap: () {
+                                        print(playlistWithGetx.favoritesList);
+                                        print(index);
+                                        Get.to(Player(), arguments: [
+                                          playlistWithGetx.favoritesList,
+                                          index
+                                        ]);
+                                      },
+                                      subtitle: Text(playlistWithGetx
+                                          .favoritesList[index]['artist']),
+                                      trailing: PopupMenuButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          onSelected: (value) {
+                                            if (value == 'delete') {
+                                              playlistWithGetx
+                                                  .removeFavorite(index);
+                                              Get.back();
+                                              Get.snackbar(
+                                                'Item Removed',
+                                                'Song was removed from favorites.',
+                                                
+                                              );
+                                            }
+                                          },
+                                          itemBuilder: (context) => [
+                                                const PopupMenuItem(
+                                                    value: 'delete',
+                                                    child: Text(
+                                                        'Remove from favorites',
+                                                        style: TextStyle(
+                                                            color: Colors.red)))
+                                              ]));
                                 },
-                                subtitle: Text(playlistWithGetx
-                                    .favoritesList[index]['artist']),
-                                trailing: PopupMenuButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    onSelected: (value) {
-                                      if (value == 'delete') {
-                                        playlistWithGetx.removeFavorite(index);
-                                        Get.back();
-                                        Get.snackbar(
-                                          'Item Removed',
-                                          'Song was removed from favorites.',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                        );
-                                      }
-                                    },
-                                    itemBuilder: (context) => [
-                                          const PopupMenuItem(
-                                              value: 'delete',
-                                              child: Text(
-                                                  'Remove from favorites',
-                                                  style: TextStyle(
-                                                      color: Colors.red)))
-                                        ]));
-                          },
-                        ),
+                              ),
                       ));
                 });
           },
@@ -172,7 +180,6 @@ class PlaylistData extends StatelessWidget {
                         Get.snackbar(
                           'Item Removed',
                           'Playlist was removed.',
-                          snackPosition: SnackPosition.BOTTOM,
                         );
                       }
                       if (value == 'rename') {
@@ -293,9 +300,6 @@ class PlaylistData extends StatelessWidget {
                                                                   Get.snackbar(
                                                                     'Item Removed',
                                                                     'Song was removed from playlist.',
-                                                                    snackPosition:
-                                                                        SnackPosition
-                                                                            .BOTTOM,
                                                                   );
                                                                 },
                                                                 child: const Text(

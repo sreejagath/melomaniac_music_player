@@ -454,8 +454,7 @@ class Track extends StatelessWidget {
                         trackListingWithGetX.addToFavorites(index);
                         Get.back();
                         Get.snackbar('Added Successfully',
-                            'Song added to favorites successfully !',
-                            snackPosition: SnackPosition.BOTTOM);
+                            'Song added to favorites successfully !',);
                       }
                       if (value == 1) {
                         showDialog(
